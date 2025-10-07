@@ -12,7 +12,6 @@ from .shared import (
     BaseResponse as BaseResponse,
 )
 from .account import Account as Account
-from .user_info import UserInfo as UserInfo
 from .open_response import OpenResponse as OpenResponse
 from .search_response import SearchResponse as SearchResponse
 from .chat_list_params import ChatListParams as ChatListParams
@@ -32,4 +31,5 @@ from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .contact_search_response import ContactSearchResponse as ContactSearchResponse
 from .download_asset_response import DownloadAssetResponse as DownloadAssetResponse
+from .get_token_info_response import GetTokenInfoResponse as GetTokenInfoResponse
 from .client_download_asset_params import ClientDownloadAssetParams as ClientDownloadAssetParams

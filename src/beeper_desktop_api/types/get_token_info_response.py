@@ -5,10 +5,10 @@ from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["UserInfo"]
+__all__ = ["GetTokenInfoResponse"]
 
 
-class UserInfo(BaseModel):
+class GetTokenInfoResponse(BaseModel):
     iat: float
     """Issued at timestamp (Unix epoch seconds)"""
 

@@ -15,10 +15,13 @@ from .account import Account as Account
 from .user_info import UserInfo as UserInfo
 from .open_response import OpenResponse as OpenResponse
 from .search_response import SearchResponse as SearchResponse
+from .chat_list_params import ChatListParams as ChatListParams
 from .chat_create_params import ChatCreateParams as ChatCreateParams
+from .chat_list_response import ChatListResponse as ChatListResponse
 from .chat_search_params import ChatSearchParams as ChatSearchParams
 from .client_open_params import ClientOpenParams as ClientOpenParams
 from .chat_archive_params import ChatArchiveParams as ChatArchiveParams
+from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_retrieve_params import ChatRetrieveParams as ChatRetrieveParams

@@ -8,7 +8,7 @@ from typing_extensions import Literal
 
 import httpx
 
-from ...types import chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
+from ...types import chat_list_params, chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
 from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
@@ -30,6 +30,7 @@ from ..._response import (
 from ...pagination import SyncCursor, AsyncCursor
 from ...types.chat import Chat
 from ..._base_client import AsyncPaginator, make_request_options
+from ...types.chat_list_response import ChatListResponse
 from ...types.chat_create_response import ChatCreateResponse
 from ...types.shared.base_response import BaseResponse
 
@@ -164,6 +165,65 @@ class ChatsResource(SyncAPIResource):
                 ),
             ),
             cast_to=Chat,
+        )
+
+    def list(
+        self,
+        *,
+        account_ids: SequenceNotStr[str] | Omit = omit,
+        cursor: str | Omit = omit,
+        direction: Literal["after", "before"] | Omit = omit,
+        limit: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SyncCursor[ChatListResponse]:
+        """List all chats sorted by last activity (most recent first).
+
+        Combines all
+        accounts into a single paginated list.
+
+        Args:
+          account_ids: Limit to specific account IDs. If omitted, fetches from all accounts.
+
+          cursor: Timestamp cursor (milliseconds since epoch) for pagination. Use with direction
+              to navigate results.
+
+          direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
+              fetches newer results. Defaults to 'before' when only 'cursor' is provided.
+
+          limit: Maximum number of chats to return (1–200). Defaults to 50.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
+            "/v1/chats",
+            page=SyncCursor[ChatListResponse],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "account_ids": account_ids,
+                        "cursor": cursor,
+                        "direction": direction,
+                        "limit": limit,
+                    },
+                    chat_list_params.ChatListParams,
+                ),
+            ),
+            model=ChatListResponse,
         )
 
     def archive(
@@ -436,6 +496,65 @@ class AsyncChatsResource(AsyncAPIResource):
             cast_to=Chat,
         )
 
+    def list(
+        self,
+        *,
+        account_ids: SequenceNotStr[str] | Omit = omit,
+        cursor: str | Omit = omit,
+        direction: Literal["after", "before"] | Omit = omit,
+        limit: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AsyncPaginator[ChatListResponse, AsyncCursor[ChatListResponse]]:
+        """List all chats sorted by last activity (most recent first).
+
+        Combines all
+        accounts into a single paginated list.
+
+        Args:
+          account_ids: Limit to specific account IDs. If omitted, fetches from all accounts.
+
+          cursor: Timestamp cursor (milliseconds since epoch) for pagination. Use with direction
+              to navigate results.
+
+          direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
+              fetches newer results. Defaults to 'before' when only 'cursor' is provided.
+
+          limit: Maximum number of chats to return (1–200). Defaults to 50.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
+            "/v1/chats",
+            page=AsyncCursor[ChatListResponse],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "account_ids": account_ids,
+                        "cursor": cursor,
+                        "direction": direction,
+                        "limit": limit,
+                    },
+                    chat_list_params.ChatListParams,
+                ),
+            ),
+            model=ChatListResponse,
+        )
+
     async def archive(
         self,
         chat_id: str,
@@ -586,6 +705,9 @@ class ChatsResourceWithRawResponse:
         self.retrieve = to_raw_response_wrapper(
             chats.retrieve,
         )
+        self.list = to_raw_response_wrapper(
+            chats.list,
+        )
         self.archive = to_raw_response_wrapper(
             chats.archive,
         )
@@ -608,6 +730,9 @@ class AsyncChatsResourceWithRawResponse:
         )
         self.retrieve = async_to_raw_response_wrapper(
             chats.retrieve,
+        )
+        self.list = async_to_raw_response_wrapper(
+            chats.list,
         )
         self.archive = async_to_raw_response_wrapper(
             chats.archive,
@@ -632,6 +757,9 @@ class ChatsResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             chats.retrieve,
         )
+        self.list = to_streamed_response_wrapper(
+            chats.list,
+        )
         self.archive = to_streamed_response_wrapper(
             chats.archive,
         )
@@ -654,6 +782,9 @@ class AsyncChatsResourceWithStreamingResponse:
         )
         self.retrieve = async_to_streamed_response_wrapper(
             chats.retrieve,
+        )
+        self.list = async_to_streamed_response_wrapper(
+            chats.list,
         )
         self.archive = async_to_streamed_response_wrapper(
             chats.archive,

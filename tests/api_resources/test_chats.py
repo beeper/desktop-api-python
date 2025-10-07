@@ -11,6 +11,7 @@ from tests.utils import assert_matches_type
 from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
 from beeper_desktop_api.types import (
     Chat,
+    ChatListResponse,
     ChatCreateResponse,
 )
 from beeper_desktop_api._utils import parse_datetime
@@ -116,6 +117,45 @@ class TestChats:
             client.chats.with_raw_response.retrieve(
                 chat_id="",
             )
+
+    @parametrize
+    def test_method_list(self, client: BeeperDesktop) -> None:
+        chat = client.chats.list()
+        assert_matches_type(SyncCursor[ChatListResponse], chat, path=["response"])
+
+    @parametrize
+    def test_method_list_with_all_params(self, client: BeeperDesktop) -> None:
+        chat = client.chats.list(
+            account_ids=[
+                "whatsapp",
+                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
+                "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
+            ],
+            cursor="1725489123456",
+            direction="before",
+            limit=1,
+        )
+        assert_matches_type(SyncCursor[ChatListResponse], chat, path=["response"])
+
+    @parametrize
+    def test_raw_response_list(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.list()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = response.parse()
+        assert_matches_type(SyncCursor[ChatListResponse], chat, path=["response"])
+
+    @parametrize
+    def test_streaming_response_list(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.list() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = response.parse()
+            assert_matches_type(SyncCursor[ChatListResponse], chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @parametrize
     def test_method_archive(self, client: BeeperDesktop) -> None:
@@ -308,6 +348,45 @@ class TestAsyncChats:
             await async_client.chats.with_raw_response.retrieve(
                 chat_id="",
             )
+
+    @parametrize
+    async def test_method_list(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.list()
+        assert_matches_type(AsyncCursor[ChatListResponse], chat, path=["response"])
+
+    @parametrize
+    async def test_method_list_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.list(
+            account_ids=[
+                "whatsapp",
+                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
+                "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
+            ],
+            cursor="1725489123456",
+            direction="before",
+            limit=1,
+        )
+        assert_matches_type(AsyncCursor[ChatListResponse], chat, path=["response"])
+
+    @parametrize
+    async def test_raw_response_list(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.list()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = await response.parse()
+        assert_matches_type(AsyncCursor[ChatListResponse], chat, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_list(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.list() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = await response.parse()
+            assert_matches_type(AsyncCursor[ChatListResponse], chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
 
     @parametrize
     async def test_method_archive(self, async_client: AsyncBeeperDesktop) -> None:

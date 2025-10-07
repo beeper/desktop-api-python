@@ -70,11 +70,11 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import MessageSearchResponse, MessageSendResponse
+from beeper_desktop_api.types import MessageSendResponse
 ```
 
 Methods:
 
 - <code title="get /v1/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">list</a>(\*\*<a href="src/beeper_desktop_api/types/message_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursor[Message]</a></code>
-- <code title="get /v1/messages/search">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/message_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_search_response.py">MessageSearchResponse</a></code>
+- <code title="get /v1/messages/search">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/message_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursor[Message]</a></code>
 - <code title="post /v1/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">send</a>(\*\*<a href="src/beeper_desktop_api/types/message_send_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_send_response.py">MessageSendResponse</a></code>

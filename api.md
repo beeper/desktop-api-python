@@ -1,0 +1,90 @@
+# Shared Types
+
+```python
+from beeper_desktop_api.types import Attachment, BaseResponse, Error, Message, Reaction, User
+```
+
+# BeeperDesktop
+
+Types:
+
+```python
+from beeper_desktop_api.types import DownloadAssetResponse, OpenResponse, SearchResponse
+```
+
+Methods:
+
+- <code title="post /v0/download-asset">client.<a href="./src/beeper_desktop_api/_client.py">download_asset</a>(\*\*<a href="src/beeper_desktop_api/types/client_download_asset_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/download_asset_response.py">DownloadAssetResponse</a></code>
+- <code title="post /v0/open-app">client.<a href="./src/beeper_desktop_api/_client.py">open</a>(\*\*<a href="src/beeper_desktop_api/types/client_open_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/open_response.py">OpenResponse</a></code>
+- <code title="get /v0/search">client.<a href="./src/beeper_desktop_api/_client.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/client_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/search_response.py">SearchResponse</a></code>
+
+# Accounts
+
+Types:
+
+```python
+from beeper_desktop_api.types import Account, AccountListResponse
+```
+
+Methods:
+
+- <code title="get /v0/get-accounts">client.accounts.<a href="./src/beeper_desktop_api/resources/accounts.py">list</a>() -> <a href="./src/beeper_desktop_api/types/account_list_response.py">AccountListResponse</a></code>
+
+# Contacts
+
+Types:
+
+```python
+from beeper_desktop_api.types import ContactSearchResponse
+```
+
+Methods:
+
+- <code title="get /v0/search-users">client.contacts.<a href="./src/beeper_desktop_api/resources/contacts.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/contact_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/contact_search_response.py">ContactSearchResponse</a></code>
+
+# Chats
+
+Types:
+
+```python
+from beeper_desktop_api.types import Chat, ChatCreateResponse
+```
+
+Methods:
+
+- <code title="post /v0/create-chat">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/chat_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chat_create_response.py">ChatCreateResponse</a></code>
+- <code title="get /v0/get-chat">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">retrieve</a>(\*\*<a href="src/beeper_desktop_api/types/chat_retrieve_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chat.py">Chat</a></code>
+- <code title="post /v0/archive-chat">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">archive</a>(\*\*<a href="src/beeper_desktop_api/types/chat_archive_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/base_response.py">BaseResponse</a></code>
+- <code title="get /v0/search-chats">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/chat_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chat.py">SyncCursor[Chat]</a></code>
+
+## Reminders
+
+Methods:
+
+- <code title="post /v0/set-chat-reminder">client.chats.reminders.<a href="./src/beeper_desktop_api/resources/chats/reminders.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/chats/reminder_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/base_response.py">BaseResponse</a></code>
+- <code title="post /v0/clear-chat-reminder">client.chats.reminders.<a href="./src/beeper_desktop_api/resources/chats/reminders.py">delete</a>(\*\*<a href="src/beeper_desktop_api/types/chats/reminder_delete_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/base_response.py">BaseResponse</a></code>
+
+# Messages
+
+Types:
+
+```python
+from beeper_desktop_api.types import MessageSendResponse
+```
+
+Methods:
+
+- <code title="get /v0/search-messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/message_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursor[Message]</a></code>
+- <code title="post /v0/send-message">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">send</a>(\*\*<a href="src/beeper_desktop_api/types/message_send_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_send_response.py">MessageSendResponse</a></code>
+
+# Token
+
+Types:
+
+```python
+from beeper_desktop_api.types import RevokeRequest, UserInfo
+```
+
+Methods:
+
+- <code title="get /oauth/userinfo">client.token.<a href="./src/beeper_desktop_api/resources/token.py">info</a>() -> <a href="./src/beeper_desktop_api/types/user_info.py">UserInfo</a></code>

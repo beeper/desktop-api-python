@@ -11,7 +11,7 @@ __all__ = ["MessageListParams"]
 
 class MessageListParams(TypedDict, total=False):
     chat_id: Required[Annotated[str, PropertyInfo(alias="chatID")]]
-    """The chat ID to list messages from"""
+    """Chat ID to list messages from"""
 
     cursor: str
     """Message cursor for pagination. Use with direction to navigate results."""
@@ -22,6 +22,3 @@ class MessageListParams(TypedDict, total=False):
     'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
     provided.
     """
-
-    limit: int
-    """Maximum number of messages to return (1–500). Defaults to 50."""

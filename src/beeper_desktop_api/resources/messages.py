@@ -8,7 +8,7 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..types import message_send_params, message_search_params
+from ..types import message_list_params, message_send_params, message_search_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -48,6 +48,64 @@ class MessagesResource(SyncAPIResource):
         For more information, see https://www.github.com/beeper/desktop-api-python#with_streaming_response
         """
         return MessagesResourceWithStreamingResponse(self)
+
+    def list(
+        self,
+        *,
+        chat_id: str,
+        cursor: str | Omit = omit,
+        direction: Literal["after", "before"] | Omit = omit,
+        limit: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SyncCursor[Message]:
+        """List all messages in a chat with cursor-based pagination.
+
+        Sorted by timestamp.
+
+        Args:
+          chat_id: The chat ID to list messages from
+
+          cursor: Message cursor for pagination. Use with direction to navigate results.
+
+          direction: Pagination direction used with 'cursor': 'before' fetches older messages,
+              'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
+              provided.
+
+          limit: Maximum number of messages to return (1–500). Defaults to 50.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
+            "/v1/messages",
+            page=SyncCursor[Message],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "chat_id": chat_id,
+                        "cursor": cursor,
+                        "direction": direction,
+                        "limit": limit,
+                    },
+                    message_list_params.MessageListParams,
+                ),
+            ),
+            model=Message,
+        )
 
     def search(
         self,
@@ -223,6 +281,64 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
 
+    def list(
+        self,
+        *,
+        chat_id: str,
+        cursor: str | Omit = omit,
+        direction: Literal["after", "before"] | Omit = omit,
+        limit: int | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AsyncPaginator[Message, AsyncCursor[Message]]:
+        """List all messages in a chat with cursor-based pagination.
+
+        Sorted by timestamp.
+
+        Args:
+          chat_id: The chat ID to list messages from
+
+          cursor: Message cursor for pagination. Use with direction to navigate results.
+
+          direction: Pagination direction used with 'cursor': 'before' fetches older messages,
+              'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
+              provided.
+
+          limit: Maximum number of messages to return (1–500). Defaults to 50.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get_api_list(
+            "/v1/messages",
+            page=AsyncCursor[Message],
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "chat_id": chat_id,
+                        "cursor": cursor,
+                        "direction": direction,
+                        "limit": limit,
+                    },
+                    message_list_params.MessageListParams,
+                ),
+            ),
+            model=Message,
+        )
+
     def search(
         self,
         *,
@@ -379,6 +495,9 @@ class MessagesResourceWithRawResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.list = to_raw_response_wrapper(
+            messages.list,
+        )
         self.search = to_raw_response_wrapper(
             messages.search,
         )
@@ -391,6 +510,9 @@ class AsyncMessagesResourceWithRawResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.list = async_to_raw_response_wrapper(
+            messages.list,
+        )
         self.search = async_to_raw_response_wrapper(
             messages.search,
         )
@@ -403,6 +525,9 @@ class MessagesResourceWithStreamingResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.list = to_streamed_response_wrapper(
+            messages.list,
+        )
         self.search = to_streamed_response_wrapper(
             messages.search,
         )
@@ -415,6 +540,9 @@ class AsyncMessagesResourceWithStreamingResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.list = async_to_streamed_response_wrapper(
+            messages.list,
+        )
         self.search = async_to_streamed_response_wrapper(
             messages.search,
         )

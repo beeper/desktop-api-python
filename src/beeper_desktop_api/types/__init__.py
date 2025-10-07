@@ -31,5 +31,4 @@ from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .contact_search_response import ContactSearchResponse as ContactSearchResponse
 from .download_asset_response import DownloadAssetResponse as DownloadAssetResponse
-from .get_token_info_response import GetTokenInfoResponse as GetTokenInfoResponse
 from .client_download_asset_params import ClientDownloadAssetParams as ClientDownloadAssetParams

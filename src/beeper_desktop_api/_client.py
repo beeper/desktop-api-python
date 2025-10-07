@@ -50,7 +50,6 @@ from .resources.chats import chats
 from .types.open_response import OpenResponse
 from .types.search_response import SearchResponse
 from .types.download_asset_response import DownloadAssetResponse
-from .types.get_token_info_response import GetTokenInfoResponse
 
 __all__ = [
     "Timeout",
@@ -231,31 +230,12 @@ class BeeperDesktop(SyncAPIClient):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self.post(
-            "/v1/app/download-asset",
+            "/v1/download-asset",
             body=maybe_transform({"url": url}, client_download_asset_params.ClientDownloadAssetParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=DownloadAssetResponse,
-        )
-
-    def get_token_info(
-        self,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> GetTokenInfoResponse:
-        """Returns information about the authenticated user/token"""
-        return self.get(
-            "/oauth/userinfo",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=GetTokenInfoResponse,
         )
 
     def open(
@@ -295,7 +275,7 @@ class BeeperDesktop(SyncAPIClient):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self.post(
-            "/v1/app/open",
+            "/v1/open",
             body=maybe_transform(
                 {
                     "chat_id": chat_id,
@@ -551,31 +531,12 @@ class AsyncBeeperDesktop(AsyncAPIClient):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self.post(
-            "/v1/app/download-asset",
+            "/v1/download-asset",
             body=await async_maybe_transform({"url": url}, client_download_asset_params.ClientDownloadAssetParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=DownloadAssetResponse,
-        )
-
-    async def get_token_info(
-        self,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> GetTokenInfoResponse:
-        """Returns information about the authenticated user/token"""
-        return await self.get(
-            "/oauth/userinfo",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=GetTokenInfoResponse,
         )
 
     async def open(
@@ -615,7 +576,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self.post(
-            "/v1/app/open",
+            "/v1/open",
             body=await async_maybe_transform(
                 {
                     "chat_id": chat_id,
@@ -714,9 +675,6 @@ class BeeperDesktopWithRawResponse:
         self.download_asset = to_raw_response_wrapper(
             client.download_asset,
         )
-        self.get_token_info = to_raw_response_wrapper(
-            client.get_token_info,
-        )
         self.open = to_raw_response_wrapper(
             client.open,
         )
@@ -734,9 +692,6 @@ class AsyncBeeperDesktopWithRawResponse:
 
         self.download_asset = async_to_raw_response_wrapper(
             client.download_asset,
-        )
-        self.get_token_info = async_to_raw_response_wrapper(
-            client.get_token_info,
         )
         self.open = async_to_raw_response_wrapper(
             client.open,
@@ -756,9 +711,6 @@ class BeeperDesktopWithStreamedResponse:
         self.download_asset = to_streamed_response_wrapper(
             client.download_asset,
         )
-        self.get_token_info = to_streamed_response_wrapper(
-            client.get_token_info,
-        )
         self.open = to_streamed_response_wrapper(
             client.open,
         )
@@ -776,9 +728,6 @@ class AsyncBeeperDesktopWithStreamedResponse:
 
         self.download_asset = async_to_streamed_response_wrapper(
             client.download_asset,
-        )
-        self.get_token_info = async_to_streamed_response_wrapper(
-            client.get_token_info,
         )
         self.open = async_to_streamed_response_wrapper(
             client.open,

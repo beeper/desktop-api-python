@@ -9,19 +9,13 @@ from beeper_desktop_api.types import Attachment, BaseResponse, Error, Message, R
 Types:
 
 ```python
-from beeper_desktop_api.types import (
-    DownloadAssetResponse,
-    GetTokenInfoResponse,
-    OpenResponse,
-    SearchResponse,
-)
+from beeper_desktop_api.types import DownloadAssetResponse, OpenResponse, SearchResponse
 ```
 
 Methods:
 
-- <code title="post /v1/app/download-asset">client.<a href="./src/beeper_desktop_api/_client.py">download_asset</a>(\*\*<a href="src/beeper_desktop_api/types/client_download_asset_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/download_asset_response.py">DownloadAssetResponse</a></code>
-- <code title="get /oauth/userinfo">client.<a href="./src/beeper_desktop_api/_client.py">get_token_info</a>() -> <a href="./src/beeper_desktop_api/types/get_token_info_response.py">GetTokenInfoResponse</a></code>
-- <code title="post /v1/app/open">client.<a href="./src/beeper_desktop_api/_client.py">open</a>(\*\*<a href="src/beeper_desktop_api/types/client_open_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/open_response.py">OpenResponse</a></code>
+- <code title="post /v1/download-asset">client.<a href="./src/beeper_desktop_api/_client.py">download_asset</a>(\*\*<a href="src/beeper_desktop_api/types/client_download_asset_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/download_asset_response.py">DownloadAssetResponse</a></code>
+- <code title="post /v1/open">client.<a href="./src/beeper_desktop_api/_client.py">open</a>(\*\*<a href="src/beeper_desktop_api/types/client_open_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/open_response.py">OpenResponse</a></code>
 - <code title="get /v1/search">client.<a href="./src/beeper_desktop_api/_client.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/client_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/search_response.py">SearchResponse</a></code>
 
 # Accounts

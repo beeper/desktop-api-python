@@ -19,7 +19,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncCursor, AsyncCursor
+from ..pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
 from ..types.message_send_response import MessageSendResponse
@@ -55,28 +55,25 @@ class MessagesResource(SyncAPIResource):
         chat_id: str,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
-        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursor[Message]:
+    ) -> SyncCursorList[Message]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
 
         Args:
-          chat_id: The chat ID to list messages from
+          chat_id: Chat ID to list messages from
 
           cursor: Message cursor for pagination. Use with direction to navigate results.
 
           direction: Pagination direction used with 'cursor': 'before' fetches older messages,
               'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
               provided.
-
-          limit: Maximum number of messages to return (1–500). Defaults to 50.
 
           extra_headers: Send extra headers
 
@@ -88,7 +85,7 @@ class MessagesResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v1/messages",
-            page=SyncCursor[Message],
+            page=SyncCursorList[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -99,7 +96,6 @@ class MessagesResource(SyncAPIResource):
                         "chat_id": chat_id,
                         "cursor": cursor,
                         "direction": direction,
-                        "limit": limit,
                     },
                     message_list_params.MessageListParams,
                 ),
@@ -129,7 +125,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursor[Message]:
+    ) -> SyncCursorSearch[Message]:
         """
         Search messages across chats using Beeper's message index
 
@@ -181,7 +177,7 @@ class MessagesResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v1/messages/search",
-            page=SyncCursor[Message],
+            page=SyncCursorSearch[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -287,28 +283,25 @@ class AsyncMessagesResource(AsyncAPIResource):
         chat_id: str,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
-        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncCursor[Message]]:
+    ) -> AsyncPaginator[Message, AsyncCursorList[Message]]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
 
         Args:
-          chat_id: The chat ID to list messages from
+          chat_id: Chat ID to list messages from
 
           cursor: Message cursor for pagination. Use with direction to navigate results.
 
           direction: Pagination direction used with 'cursor': 'before' fetches older messages,
               'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
               provided.
-
-          limit: Maximum number of messages to return (1–500). Defaults to 50.
 
           extra_headers: Send extra headers
 
@@ -320,7 +313,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v1/messages",
-            page=AsyncCursor[Message],
+            page=AsyncCursorList[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -331,7 +324,6 @@ class AsyncMessagesResource(AsyncAPIResource):
                         "chat_id": chat_id,
                         "cursor": cursor,
                         "direction": direction,
-                        "limit": limit,
                     },
                     message_list_params.MessageListParams,
                 ),
@@ -361,7 +353,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncCursor[Message]]:
+    ) -> AsyncPaginator[Message, AsyncCursorSearch[Message]]:
         """
         Search messages across chats using Beeper's message index
 
@@ -413,7 +405,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v1/messages/search",
-            page=AsyncCursor[Message],
+            page=AsyncCursorSearch[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

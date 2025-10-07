@@ -27,7 +27,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncCursor, AsyncCursor
+from ...pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
 from ...types.chat import Chat
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.chat_list_response import ChatListResponse
@@ -173,14 +173,13 @@ class ChatsResource(SyncAPIResource):
         account_ids: SequenceNotStr[str] | Omit = omit,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
-        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursor[ChatListResponse]:
+    ) -> SyncCursorList[ChatListResponse]:
         """List all chats sorted by last activity (most recent first).
 
         Combines all
@@ -195,8 +194,6 @@ class ChatsResource(SyncAPIResource):
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
 
-          limit: Maximum number of chats to return (1–200). Defaults to 50.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -207,7 +204,7 @@ class ChatsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v1/chats",
-            page=SyncCursor[ChatListResponse],
+            page=SyncCursorList[ChatListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -218,7 +215,6 @@ class ChatsResource(SyncAPIResource):
                         "account_ids": account_ids,
                         "cursor": cursor,
                         "direction": direction,
-                        "limit": limit,
                     },
                     chat_list_params.ChatListParams,
                 ),
@@ -289,7 +285,7 @@ class ChatsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursor[Chat]:
+    ) -> SyncCursorSearch[Chat]:
         """
         Search chats by title/network or participants using Beeper Desktop's renderer
         algorithm.
@@ -338,7 +334,7 @@ class ChatsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v1/chats/search",
-            page=SyncCursor[Chat],
+            page=SyncCursorSearch[Chat],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -502,14 +498,13 @@ class AsyncChatsResource(AsyncAPIResource):
         account_ids: SequenceNotStr[str] | Omit = omit,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
-        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[ChatListResponse, AsyncCursor[ChatListResponse]]:
+    ) -> AsyncPaginator[ChatListResponse, AsyncCursorList[ChatListResponse]]:
         """List all chats sorted by last activity (most recent first).
 
         Combines all
@@ -524,8 +519,6 @@ class AsyncChatsResource(AsyncAPIResource):
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
 
-          limit: Maximum number of chats to return (1–200). Defaults to 50.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -536,7 +529,7 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v1/chats",
-            page=AsyncCursor[ChatListResponse],
+            page=AsyncCursorList[ChatListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -547,7 +540,6 @@ class AsyncChatsResource(AsyncAPIResource):
                         "account_ids": account_ids,
                         "cursor": cursor,
                         "direction": direction,
-                        "limit": limit,
                     },
                     chat_list_params.ChatListParams,
                 ),
@@ -618,7 +610,7 @@ class AsyncChatsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Chat, AsyncCursor[Chat]]:
+    ) -> AsyncPaginator[Chat, AsyncCursorSearch[Chat]]:
         """
         Search chats by title/network or participants using Beeper Desktop's renderer
         algorithm.
@@ -667,7 +659,7 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v1/chats/search",
-            page=AsyncCursor[Chat],
+            page=AsyncCursorSearch[Chat],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,

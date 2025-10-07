@@ -25,6 +25,3 @@ class ChatListParams(TypedDict, total=False):
     Pagination direction used with 'cursor': 'before' fetches older results, 'after'
     fetches newer results. Defaults to 'before' when only 'cursor' is provided.
     """
-
-    limit: int
-    """Maximum number of chats to return (1–200). Defaults to 50."""

@@ -9,12 +9,18 @@ from beeper_desktop_api.types import Attachment, BaseResponse, Error, Message, R
 Types:
 
 ```python
-from beeper_desktop_api.types import DownloadAssetResponse, OpenResponse, SearchResponse
+from beeper_desktop_api.types import (
+    DownloadAssetResponse,
+    GetTokenInfoResponse,
+    OpenResponse,
+    SearchResponse,
+)
 ```
 
 Methods:
 
 - <code title="post /v1/app/download-asset">client.<a href="./src/beeper_desktop_api/_client.py">download_asset</a>(\*\*<a href="src/beeper_desktop_api/types/client_download_asset_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/download_asset_response.py">DownloadAssetResponse</a></code>
+- <code title="get /oauth/userinfo">client.<a href="./src/beeper_desktop_api/_client.py">get_token_info</a>() -> <a href="./src/beeper_desktop_api/types/get_token_info_response.py">GetTokenInfoResponse</a></code>
 - <code title="post /v1/app/open">client.<a href="./src/beeper_desktop_api/_client.py">open</a>(\*\*<a href="src/beeper_desktop_api/types/client_open_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/open_response.py">OpenResponse</a></code>
 - <code title="get /v1/search">client.<a href="./src/beeper_desktop_api/_client.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/client_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/search_response.py">SearchResponse</a></code>
 
@@ -78,15 +84,3 @@ Methods:
 - <code title="get /v1/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">list</a>(\*\*<a href="src/beeper_desktop_api/types/message_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursor[Message]</a></code>
 - <code title="get /v1/messages/search">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/message_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursor[Message]</a></code>
 - <code title="post /v1/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">send</a>(\*\*<a href="src/beeper_desktop_api/types/message_send_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_send_response.py">MessageSendResponse</a></code>
-
-# Token
-
-Types:
-
-```python
-from beeper_desktop_api.types import UserInfo
-```
-
-Methods:
-
-- <code title="get /oauth/userinfo">client.token.<a href="./src/beeper_desktop_api/resources/token.py">info</a>() -> <a href="./src/beeper_desktop_api/types/user_info.py">UserInfo</a></code>

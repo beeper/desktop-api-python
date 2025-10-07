@@ -8,14 +8,6 @@ from .chats import (
     ChatsResourceWithStreamingResponse,
     AsyncChatsResourceWithStreamingResponse,
 )
-from .token import (
-    TokenResource,
-    AsyncTokenResource,
-    TokenResourceWithRawResponse,
-    AsyncTokenResourceWithRawResponse,
-    TokenResourceWithStreamingResponse,
-    AsyncTokenResourceWithStreamingResponse,
-)
 from .accounts import (
     AccountsResource,
     AsyncAccountsResource,
@@ -66,10 +58,4 @@ __all__ = [
     "AsyncMessagesResourceWithRawResponse",
     "MessagesResourceWithStreamingResponse",
     "AsyncMessagesResourceWithStreamingResponse",
-    "TokenResource",
-    "AsyncTokenResource",
-    "TokenResourceWithRawResponse",
-    "AsyncTokenResourceWithRawResponse",
-    "TokenResourceWithStreamingResponse",
-    "AsyncTokenResourceWithStreamingResponse",
 ]

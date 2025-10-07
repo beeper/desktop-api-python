@@ -37,7 +37,7 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import token, accounts, contacts, messages
+from .resources import accounts, contacts, messages
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, BeeperDesktopError
 from ._base_client import (
@@ -50,6 +50,7 @@ from .resources.chats import chats
 from .types.open_response import OpenResponse
 from .types.search_response import SearchResponse
 from .types.download_asset_response import DownloadAssetResponse
+from .types.get_token_info_response import GetTokenInfoResponse
 
 __all__ = [
     "Timeout",
@@ -68,7 +69,6 @@ class BeeperDesktop(SyncAPIClient):
     contacts: contacts.ContactsResource
     chats: chats.ChatsResource
     messages: messages.MessagesResource
-    token: token.TokenResource
     with_raw_response: BeeperDesktopWithRawResponse
     with_streaming_response: BeeperDesktopWithStreamedResponse
 
@@ -130,7 +130,6 @@ class BeeperDesktop(SyncAPIClient):
         self.contacts = contacts.ContactsResource(self)
         self.chats = chats.ChatsResource(self)
         self.messages = messages.MessagesResource(self)
-        self.token = token.TokenResource(self)
         self.with_raw_response = BeeperDesktopWithRawResponse(self)
         self.with_streaming_response = BeeperDesktopWithStreamedResponse(self)
 
@@ -238,6 +237,25 @@ class BeeperDesktop(SyncAPIClient):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=DownloadAssetResponse,
+        )
+
+    def get_token_info(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> GetTokenInfoResponse:
+        """Returns information about the authenticated user/token"""
+        return self.get(
+            "/oauth/userinfo",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=GetTokenInfoResponse,
         )
 
     def open(
@@ -371,7 +389,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     contacts: contacts.AsyncContactsResource
     chats: chats.AsyncChatsResource
     messages: messages.AsyncMessagesResource
-    token: token.AsyncTokenResource
     with_raw_response: AsyncBeeperDesktopWithRawResponse
     with_streaming_response: AsyncBeeperDesktopWithStreamedResponse
 
@@ -433,7 +450,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         self.contacts = contacts.AsyncContactsResource(self)
         self.chats = chats.AsyncChatsResource(self)
         self.messages = messages.AsyncMessagesResource(self)
-        self.token = token.AsyncTokenResource(self)
         self.with_raw_response = AsyncBeeperDesktopWithRawResponse(self)
         self.with_streaming_response = AsyncBeeperDesktopWithStreamedResponse(self)
 
@@ -541,6 +557,25 @@ class AsyncBeeperDesktop(AsyncAPIClient):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=DownloadAssetResponse,
+        )
+
+    async def get_token_info(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> GetTokenInfoResponse:
+        """Returns information about the authenticated user/token"""
+        return await self.get(
+            "/oauth/userinfo",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=GetTokenInfoResponse,
         )
 
     async def open(
@@ -675,10 +710,12 @@ class BeeperDesktopWithRawResponse:
         self.contacts = contacts.ContactsResourceWithRawResponse(client.contacts)
         self.chats = chats.ChatsResourceWithRawResponse(client.chats)
         self.messages = messages.MessagesResourceWithRawResponse(client.messages)
-        self.token = token.TokenResourceWithRawResponse(client.token)
 
         self.download_asset = to_raw_response_wrapper(
             client.download_asset,
+        )
+        self.get_token_info = to_raw_response_wrapper(
+            client.get_token_info,
         )
         self.open = to_raw_response_wrapper(
             client.open,
@@ -694,10 +731,12 @@ class AsyncBeeperDesktopWithRawResponse:
         self.contacts = contacts.AsyncContactsResourceWithRawResponse(client.contacts)
         self.chats = chats.AsyncChatsResourceWithRawResponse(client.chats)
         self.messages = messages.AsyncMessagesResourceWithRawResponse(client.messages)
-        self.token = token.AsyncTokenResourceWithRawResponse(client.token)
 
         self.download_asset = async_to_raw_response_wrapper(
             client.download_asset,
+        )
+        self.get_token_info = async_to_raw_response_wrapper(
+            client.get_token_info,
         )
         self.open = async_to_raw_response_wrapper(
             client.open,
@@ -713,10 +752,12 @@ class BeeperDesktopWithStreamedResponse:
         self.contacts = contacts.ContactsResourceWithStreamingResponse(client.contacts)
         self.chats = chats.ChatsResourceWithStreamingResponse(client.chats)
         self.messages = messages.MessagesResourceWithStreamingResponse(client.messages)
-        self.token = token.TokenResourceWithStreamingResponse(client.token)
 
         self.download_asset = to_streamed_response_wrapper(
             client.download_asset,
+        )
+        self.get_token_info = to_streamed_response_wrapper(
+            client.get_token_info,
         )
         self.open = to_streamed_response_wrapper(
             client.open,
@@ -732,10 +773,12 @@ class AsyncBeeperDesktopWithStreamedResponse:
         self.contacts = contacts.AsyncContactsResourceWithStreamingResponse(client.contacts)
         self.chats = chats.AsyncChatsResourceWithStreamingResponse(client.chats)
         self.messages = messages.AsyncMessagesResourceWithStreamingResponse(client.messages)
-        self.token = token.AsyncTokenResourceWithStreamingResponse(client.token)
 
         self.download_asset = async_to_streamed_response_wrapper(
             client.download_asset,
+        )
+        self.get_token_info = async_to_streamed_response_wrapper(
+            client.get_token_info,
         )
         self.open = async_to_streamed_response_wrapper(
             client.open,

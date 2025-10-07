@@ -23,6 +23,7 @@ from ..pagination import SyncCursor, AsyncCursor
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
 from ..types.message_send_response import MessageSendResponse
+from ..types.message_search_response import MessageSearchResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -129,7 +130,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursor[Message]:
+    ) -> MessageSearchResponse:
         """
         Search messages across chats using Beeper's message index
 
@@ -179,9 +180,8 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get_api_list(
+        return self._get(
             "/v1/messages/search",
-            page=SyncCursor[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -206,7 +206,7 @@ class MessagesResource(SyncAPIResource):
                     message_search_params.MessageSearchParams,
                 ),
             ),
-            model=Message,
+            cast_to=MessageSearchResponse,
         )
 
     def send(
@@ -339,7 +339,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             model=Message,
         )
 
-    def search(
+    async def search(
         self,
         *,
         account_ids: SequenceNotStr[str] | Omit = omit,
@@ -361,7 +361,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncCursor[Message]]:
+    ) -> MessageSearchResponse:
         """
         Search messages across chats using Beeper's message index
 
@@ -411,15 +411,14 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get_api_list(
+        return await self._get(
             "/v1/messages/search",
-            page=AsyncCursor[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
+                query=await async_maybe_transform(
                     {
                         "account_ids": account_ids,
                         "chat_ids": chat_ids,
@@ -438,7 +437,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     message_search_params.MessageSearchParams,
                 ),
             ),
-            model=Message,
+            cast_to=MessageSearchResponse,
         )
 
     async def send(

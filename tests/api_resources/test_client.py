@@ -12,7 +12,6 @@ from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
 from beeper_desktop_api.types import (
     OpenResponse,
     SearchResponse,
-    GetTokenInfoResponse,
     DownloadAssetResponse,
 )
 
@@ -50,31 +49,6 @@ class TestClient:
 
             client_ = response.parse()
             assert_matches_type(DownloadAssetResponse, client_, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_get_token_info(self, client: BeeperDesktop) -> None:
-        client_ = client.get_token_info()
-        assert_matches_type(GetTokenInfoResponse, client_, path=["response"])
-
-    @parametrize
-    def test_raw_response_get_token_info(self, client: BeeperDesktop) -> None:
-        response = client.with_raw_response.get_token_info()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        client_ = response.parse()
-        assert_matches_type(GetTokenInfoResponse, client_, path=["response"])
-
-    @parametrize
-    def test_streaming_response_get_token_info(self, client: BeeperDesktop) -> None:
-        with client.with_streaming_response.get_token_info() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            client_ = response.parse()
-            assert_matches_type(GetTokenInfoResponse, client_, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -178,31 +152,6 @@ class TestAsyncClient:
 
             client = await response.parse()
             assert_matches_type(DownloadAssetResponse, client, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_get_token_info(self, async_client: AsyncBeeperDesktop) -> None:
-        client = await async_client.get_token_info()
-        assert_matches_type(GetTokenInfoResponse, client, path=["response"])
-
-    @parametrize
-    async def test_raw_response_get_token_info(self, async_client: AsyncBeeperDesktop) -> None:
-        response = await async_client.with_raw_response.get_token_info()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        client = await response.parse()
-        assert_matches_type(GetTokenInfoResponse, client, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_get_token_info(self, async_client: AsyncBeeperDesktop) -> None:
-        async with async_client.with_streaming_response.get_token_info() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            client = await response.parse()
-            assert_matches_type(GetTokenInfoResponse, client, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -19,10 +19,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncCursorSearch, AsyncCursorSearch
+from ..pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
-from ..types.message_list_response import MessageListResponse
 from ..types.message_send_response import MessageSendResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
@@ -52,8 +51,8 @@ class MessagesResource(SyncAPIResource):
 
     def list(
         self,
-        *,
         chat_id: str,
+        *,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -62,7 +61,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageListResponse:
+    ) -> SyncCursorList[Message]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -84,8 +83,11 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
-            "/v1/messages",
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._get_api_list(
+            f"/v1/chats/{chat_id}/messages",
+            page=SyncCursorList[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -93,14 +95,13 @@ class MessagesResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
-                        "chat_id": chat_id,
                         "cursor": cursor,
                         "direction": direction,
                     },
                     message_list_params.MessageListParams,
                 ),
             ),
-            cast_to=MessageListResponse,
+            model=Message,
         )
 
     def search(
@@ -206,8 +207,8 @@ class MessagesResource(SyncAPIResource):
 
     def send(
         self,
+        chat_id: str,
         *,
-        chat_id: str | Omit = omit,
         reply_to_message_id: str | Omit = omit,
         text: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -237,11 +238,12 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._post(
-            "/v1/messages",
+            f"/v1/chats/{chat_id}/messages",
             body=maybe_transform(
                 {
-                    "chat_id": chat_id,
                     "reply_to_message_id": reply_to_message_id,
                     "text": text,
                 },
@@ -276,10 +278,10 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
 
-    async def list(
+    def list(
         self,
-        *,
         chat_id: str,
+        *,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -288,7 +290,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MessageListResponse:
+    ) -> AsyncPaginator[Message, AsyncCursorList[Message]]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -310,23 +312,25 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
-            "/v1/messages",
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._get_api_list(
+            f"/v1/chats/{chat_id}/messages",
+            page=AsyncCursorList[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
-                        "chat_id": chat_id,
                         "cursor": cursor,
                         "direction": direction,
                     },
                     message_list_params.MessageListParams,
                 ),
             ),
-            cast_to=MessageListResponse,
+            model=Message,
         )
 
     def search(
@@ -432,8 +436,8 @@ class AsyncMessagesResource(AsyncAPIResource):
 
     async def send(
         self,
+        chat_id: str,
         *,
-        chat_id: str | Omit = omit,
         reply_to_message_id: str | Omit = omit,
         text: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -463,11 +467,12 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return await self._post(
-            "/v1/messages",
+            f"/v1/chats/{chat_id}/messages",
             body=await async_maybe_transform(
                 {
-                    "chat_id": chat_id,
                     "reply_to_message_id": reply_to_message_id,
                     "text": text,
                 },

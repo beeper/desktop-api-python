@@ -45,8 +45,8 @@ class ContactsResource(SyncAPIResource):
 
     def search(
         self,
-        *,
         account_id: str,
+        *,
         query: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -72,20 +72,16 @@ class ContactsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not account_id:
+            raise ValueError(f"Expected a non-empty value for `account_id` but received {account_id!r}")
         return self._get(
-            "/v1/contacts/search",
+            f"/v1/accounts/{account_id}/contacts/search",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "account_id": account_id,
-                        "query": query,
-                    },
-                    contact_search_params.ContactSearchParams,
-                ),
+                query=maybe_transform({"query": query}, contact_search_params.ContactSearchParams),
             ),
             cast_to=ContactSearchResponse,
         )
@@ -115,8 +111,8 @@ class AsyncContactsResource(AsyncAPIResource):
 
     async def search(
         self,
-        *,
         account_id: str,
+        *,
         query: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -142,20 +138,16 @@ class AsyncContactsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        if not account_id:
+            raise ValueError(f"Expected a non-empty value for `account_id` but received {account_id!r}")
         return await self._get(
-            "/v1/contacts/search",
+            f"/v1/accounts/{account_id}/contacts/search",
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "account_id": account_id,
-                        "query": query,
-                    },
-                    contact_search_params.ContactSearchParams,
-                ),
+                query=await async_maybe_transform({"query": query}, contact_search_params.ContactSearchParams),
             ),
             cast_to=ContactSearchResponse,
         )

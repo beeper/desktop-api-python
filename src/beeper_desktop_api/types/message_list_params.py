@@ -2,17 +2,12 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal, Required, Annotated, TypedDict
-
-from .._utils import PropertyInfo
+from typing_extensions import Literal, TypedDict
 
 __all__ = ["MessageListParams"]
 
 
 class MessageListParams(TypedDict, total=False):
-    chat_id: Required[Annotated[str, PropertyInfo(alias="chatID")]]
-    """Chat ID to list messages from"""
-
     cursor: str
     """Message cursor for pagination. Use with direction to navigate results."""
 

@@ -1,7 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Generic, TypeVar, Optional
-from typing_extensions import override
+from typing import Any, List, Generic, TypeVar, Optional, cast
+from typing_extensions import Protocol, override, runtime_checkable
 
 from pydantic import Field as FieldInfo
 
@@ -10,6 +10,11 @@ from ._base_client import BasePage, PageInfo, BaseSyncPage, BaseAsyncPage
 __all__ = ["SyncCursorSearch", "AsyncCursorSearch", "SyncCursorList", "AsyncCursorList"]
 
 _T = TypeVar("_T")
+
+
+@runtime_checkable
+class CursorListItem(Protocol):
+    sort_key: Optional[str]
 
 
 class SyncCursorSearch(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
@@ -75,8 +80,6 @@ class AsyncCursorSearch(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 class SyncCursorList(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
     items: List[_T]
     has_more: Optional[bool] = FieldInfo(alias="hasMore", default=None)
-    oldest_cursor: Optional[str] = FieldInfo(alias="oldestCursor", default=None)
-    newest_cursor: Optional[str] = FieldInfo(alias="newestCursor", default=None)
 
     @override
     def _get_page_items(self) -> List[_T]:
@@ -95,18 +98,21 @@ class SyncCursorList(BaseSyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        oldest_cursor = self.oldest_cursor
-        if not oldest_cursor:
+        items = self.items
+        if not items:
             return None
 
-        return PageInfo(params={"cursor": oldest_cursor})
+        item = cast(Any, items[-1])
+        if not isinstance(item, CursorListItem) or item.sort_key is None:
+            # TODO emit warning log
+            return None
+
+        return PageInfo(params={"cursor": item.sort_key})
 
 
 class AsyncCursorList(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
     items: List[_T]
     has_more: Optional[bool] = FieldInfo(alias="hasMore", default=None)
-    oldest_cursor: Optional[str] = FieldInfo(alias="oldestCursor", default=None)
-    newest_cursor: Optional[str] = FieldInfo(alias="newestCursor", default=None)
 
     @override
     def _get_page_items(self) -> List[_T]:
@@ -125,8 +131,13 @@ class AsyncCursorList(BaseAsyncPage[_T], BasePage[_T], Generic[_T]):
 
     @override
     def next_page_info(self) -> Optional[PageInfo]:
-        oldest_cursor = self.oldest_cursor
-        if not oldest_cursor:
+        items = self.items
+        if not items:
             return None
 
-        return PageInfo(params={"cursor": oldest_cursor})
+        item = cast(Any, items[-1])
+        if not isinstance(item, CursorListItem) or item.sort_key is None:
+            # TODO emit warning log
+            return None
+
+        return PageInfo(params={"cursor": item.sort_key})

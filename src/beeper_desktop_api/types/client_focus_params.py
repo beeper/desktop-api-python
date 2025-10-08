@@ -6,10 +6,10 @@ from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["ClientOpenParams"]
+__all__ = ["ClientFocusParams"]
 
 
-class ClientOpenParams(TypedDict, total=False):
+class ClientFocusParams(TypedDict, total=False):
     chat_id: Annotated[str, PropertyInfo(alias="chatID")]
     """Optional Beeper chat ID (or local chat ID) to focus after opening the app.
 

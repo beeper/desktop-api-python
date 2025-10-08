@@ -59,8 +59,7 @@ class RemindersResource(SyncAPIResource):
         Set a reminder for a chat at a specific time
 
         Args:
-          chat_id: The identifier of the chat to set reminder for (accepts both chatID and local
-              chat ID)
+          chat_id: Unique identifier of the chat.
 
           reminder: Reminder configuration
 
@@ -98,8 +97,7 @@ class RemindersResource(SyncAPIResource):
         Clear an existing reminder from a chat
 
         Args:
-          chat_id: The identifier of the chat to clear reminder from (accepts both chatID and local
-              chat ID)
+          chat_id: Unique identifier of the chat.
 
           extra_headers: Send extra headers
 
@@ -158,8 +156,7 @@ class AsyncRemindersResource(AsyncAPIResource):
         Set a reminder for a chat at a specific time
 
         Args:
-          chat_id: The identifier of the chat to set reminder for (accepts both chatID and local
-              chat ID)
+          chat_id: Unique identifier of the chat.
 
           reminder: Reminder configuration
 
@@ -197,8 +194,7 @@ class AsyncRemindersResource(AsyncAPIResource):
         Clear an existing reminder from a chat
 
         Args:
-          chat_id: The identifier of the chat to clear reminder from (accepts both chatID and local
-              chat ID)
+          chat_id: Unique identifier of the chat.
 
           extra_headers: Send extra headers
 

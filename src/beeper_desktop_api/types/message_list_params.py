@@ -9,11 +9,10 @@ __all__ = ["MessageListParams"]
 
 class MessageListParams(TypedDict, total=False):
     cursor: str
-    """Message cursor for pagination. Use with direction to navigate results."""
+    """Opaque pagination cursor; do not inspect. Use together with 'direction'."""
 
     direction: Literal["after", "before"]
     """
-    Pagination direction used with 'cursor': 'before' fetches older messages,
-    'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
-    provided.
+    Pagination direction used with 'cursor': 'before' fetches older results, 'after'
+    fetches newer results. Defaults to 'before' when only 'cursor' is provided.
     """

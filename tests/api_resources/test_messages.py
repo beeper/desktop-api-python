@@ -33,7 +33,7 @@ class TestMessages:
     def test_method_list_with_all_params(self, client: BeeperDesktop) -> None:
         message = client.messages.list(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            cursor="821744079",
+            cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
         )
         assert_matches_type(SyncCursorList[Message], message, path=["response"])
@@ -181,7 +181,7 @@ class TestAsyncMessages:
     async def test_method_list_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         message = await async_client.messages.list(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            cursor="821744079",
+            cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
         )
         assert_matches_type(AsyncCursorList[Message], message, path=["response"])

@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Union, Optional
+from typing import List, Optional
 from datetime import datetime
 
 from pydantic import Field as FieldInfo
@@ -14,21 +14,18 @@ __all__ = ["Message"]
 
 class Message(BaseModel):
     id: str
-    """Stable message ID for cursor pagination."""
+    """Message ID."""
 
     account_id: str = FieldInfo(alias="accountID")
     """Beeper account ID the message belongs to."""
 
     chat_id: str = FieldInfo(alias="chatID")
-    """Beeper chat/thread/room ID."""
-
-    message_id: str = FieldInfo(alias="messageID")
-    """Stable message ID (same as id)."""
+    """Unique identifier of the chat."""
 
     sender_id: str = FieldInfo(alias="senderID")
     """Sender user ID."""
 
-    sort_key: Union[str, float] = FieldInfo(alias="sortKey")
+    sort_key: str = FieldInfo(alias="sortKey")
     """A unique key used to sort messages"""
 
     timestamp: datetime

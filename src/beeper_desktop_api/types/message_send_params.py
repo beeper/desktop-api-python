@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing_extensions import Required, Annotated, TypedDict
+from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
@@ -10,7 +10,7 @@ __all__ = ["MessageSendParams"]
 
 
 class MessageSendParams(TypedDict, total=False):
-    chat_id: Required[Annotated[str, PropertyInfo(alias="chatID")]]
+    chat_id: Annotated[str, PropertyInfo(alias="chatID")]
     """Unique identifier of the chat."""
 
     reply_to_message_id: Annotated[str, PropertyInfo(alias="replyToMessageID")]

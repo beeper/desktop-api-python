@@ -56,11 +56,7 @@ class MessageSearchParams(TypedDict, total=False):
     """
 
     limit: int
-    """Maximum number of messages to return (1–500).
-
-    Defaults to 20. The current implementation caps each page at 20 items even if a
-    higher limit is requested.
-    """
+    """Maximum number of messages to return."""
 
     media_types: Annotated[List[Literal["any", "video", "image", "link", "file"]], PropertyInfo(alias="mediaTypes")]
     """Filter messages by media types.

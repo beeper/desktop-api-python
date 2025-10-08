@@ -27,6 +27,7 @@ from .chat_retrieve_params import ChatRetrieveParams as ChatRetrieveParams
 from .client_search_params import ClientSearchParams as ClientSearchParams
 from .account_list_response import AccountListResponse as AccountListResponse
 from .contact_search_params import ContactSearchParams as ContactSearchParams
+from .message_list_response import MessageListResponse as MessageListResponse
 from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .contact_search_response import ContactSearchResponse as ContactSearchResponse

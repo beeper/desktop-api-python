@@ -19,9 +19,10 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
+from ..pagination import SyncCursorSearch, AsyncCursorSearch
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
+from ..types.message_list_response import MessageListResponse
 from ..types.message_send_response import MessageSendResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
@@ -61,7 +62,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursorList[Message]:
+    ) -> MessageListResponse:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -83,9 +84,8 @@ class MessagesResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get_api_list(
+        return self._get(
             "/v1/messages",
-            page=SyncCursorList[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -100,7 +100,7 @@ class MessagesResource(SyncAPIResource):
                     message_list_params.MessageListParams,
                 ),
             ),
-            model=Message,
+            cast_to=MessageListResponse,
         )
 
     def search(
@@ -153,8 +153,7 @@ class MessagesResource(SyncAPIResource):
           include_muted: Include messages in chats marked as Muted by the user, which are usually less
               important. Default: true. Set to false if the user wants a more refined search.
 
-          limit: Maximum number of messages to return (1–500). Defaults to 20. The current
-              implementation caps each page at 20 items even if a higher limit is requested.
+          limit: Maximum number of messages to return.
 
           media_types: Filter messages by media types. Use ['any'] for any media type, or specify exact
               types like ['video', 'image']. Omit for no media filtering.
@@ -208,7 +207,7 @@ class MessagesResource(SyncAPIResource):
     def send(
         self,
         *,
-        chat_id: str,
+        chat_id: str | Omit = omit,
         reply_to_message_id: str | Omit = omit,
         text: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -277,7 +276,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
 
-    def list(
+    async def list(
         self,
         *,
         chat_id: str,
@@ -289,7 +288,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncCursorList[Message]]:
+    ) -> MessageListResponse:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -311,15 +310,14 @@ class AsyncMessagesResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get_api_list(
+        return await self._get(
             "/v1/messages",
-            page=AsyncCursorList[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
+                query=await async_maybe_transform(
                     {
                         "chat_id": chat_id,
                         "cursor": cursor,
@@ -328,7 +326,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     message_list_params.MessageListParams,
                 ),
             ),
-            model=Message,
+            cast_to=MessageListResponse,
         )
 
     def search(
@@ -381,8 +379,7 @@ class AsyncMessagesResource(AsyncAPIResource):
           include_muted: Include messages in chats marked as Muted by the user, which are usually less
               important. Default: true. Set to false if the user wants a more refined search.
 
-          limit: Maximum number of messages to return (1–500). Defaults to 20. The current
-              implementation caps each page at 20 items even if a higher limit is requested.
+          limit: Maximum number of messages to return.
 
           media_types: Filter messages by media types. Use ['any'] for any media type, or specify exact
               types like ['video', 'image']. Omit for no media filtering.
@@ -436,7 +433,7 @@ class AsyncMessagesResource(AsyncAPIResource):
     async def send(
         self,
         *,
-        chat_id: str,
+        chat_id: str | Omit = omit,
         reply_to_message_id: str | Omit = omit,
         text: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.

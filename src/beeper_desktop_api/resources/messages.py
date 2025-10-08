@@ -67,13 +67,12 @@ class MessagesResource(SyncAPIResource):
         Sorted by timestamp.
 
         Args:
-          chat_id: Chat ID to list messages from
+          chat_id: Unique identifier of the chat.
 
-          cursor: Message cursor for pagination. Use with direction to navigate results.
+          cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
-          direction: Pagination direction used with 'cursor': 'before' fetches older messages,
-              'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
-              provided.
+          direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
+              fetches newer results. Defaults to 'before' when only 'cursor' is provided.
 
           extra_headers: Send extra headers
 
@@ -176,7 +175,7 @@ class MessagesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._get_api_list(
-            "/v1/messages/search",
+            "/v1/search/messages",
             page=SyncCursorSearch[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -296,13 +295,12 @@ class AsyncMessagesResource(AsyncAPIResource):
         Sorted by timestamp.
 
         Args:
-          chat_id: Chat ID to list messages from
+          chat_id: Unique identifier of the chat.
 
-          cursor: Message cursor for pagination. Use with direction to navigate results.
+          cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
-          direction: Pagination direction used with 'cursor': 'before' fetches older messages,
-              'after' fetches newer messages. Defaults to 'before' when only 'cursor' is
-              provided.
+          direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
+              fetches newer results. Defaults to 'before' when only 'cursor' is provided.
 
           extra_headers: Send extra headers
 
@@ -405,7 +403,7 @@ class AsyncMessagesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._get_api_list(
-            "/v1/messages/search",
+            "/v1/search/messages",
             page=AsyncCursorSearch[Message],
             options=make_request_options(
                 extra_headers=extra_headers,

@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Union, Optional
-from datetime import datetime
+from typing import Optional
 from typing_extensions import Literal
 
 import httpx
 
-from ...types import chat_list_params, chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
+from ...types import chat_list_params, chat_create_params, chat_archive_params, chat_retrieve_params
 from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
@@ -27,7 +26,7 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
+from ...pagination import SyncCursorList, AsyncCursorList
 from ...types.chat import Chat
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.chat_list_response import ChatListResponse
@@ -137,8 +136,7 @@ class ChatsResource(SyncAPIResource):
         Retrieve chat details including metadata, participants, and latest message
 
         Args:
-          chat_id: Unique identifier of the chat to retrieve. Not available for iMessage chats.
-              Participants are limited by 'maxParticipantCount'.
+          chat_id: Unique identifier of the chat.
 
           max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0–500.
               Defaults to 20.
@@ -188,8 +186,7 @@ class ChatsResource(SyncAPIResource):
         Args:
           account_ids: Limit to specific account IDs. If omitted, fetches from all accounts.
 
-          cursor: Timestamp cursor (milliseconds since epoch) for pagination. Use with direction
-              to navigate results.
+          cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
@@ -240,8 +237,7 @@ class ChatsResource(SyncAPIResource):
         archived=false to move back to inbox
 
         Args:
-          chat_id: The identifier of the chat to archive or unarchive (accepts both chatID and
-              local chat ID)
+          chat_id: Unique identifier of the chat.
 
           archived: True to archive, false to unarchive
 
@@ -262,103 +258,6 @@ class ChatsResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=BaseResponse,
-        )
-
-    def search(
-        self,
-        *,
-        account_ids: SequenceNotStr[str] | Omit = omit,
-        cursor: str | Omit = omit,
-        direction: Literal["after", "before"] | Omit = omit,
-        inbox: Literal["primary", "low-priority", "archive"] | Omit = omit,
-        include_muted: Optional[bool] | Omit = omit,
-        last_activity_after: Union[str, datetime] | Omit = omit,
-        last_activity_before: Union[str, datetime] | Omit = omit,
-        limit: int | Omit = omit,
-        query: str | Omit = omit,
-        scope: Literal["titles", "participants"] | Omit = omit,
-        type: Literal["single", "group", "any"] | Omit = omit,
-        unread_only: Optional[bool] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursorSearch[Chat]:
-        """
-        Search chats by title/network or participants using Beeper Desktop's renderer
-        algorithm.
-
-        Args:
-          account_ids: Provide an array of account IDs to filter chats from specific messaging accounts
-              only
-
-          cursor: Pagination cursor from previous response. Use with direction to navigate results
-
-          direction: Pagination direction: "after" for newer page, "before" for older page. Defaults
-              to "before" when only cursor is provided.
-
-          inbox: Filter by inbox type: "primary" (non-archived, non-low-priority),
-              "low-priority", or "archive". If not specified, shows all chats.
-
-          include_muted: Include chats marked as Muted by the user, which are usually less important.
-              Default: true. Set to false if the user wants a more refined search.
-
-          last_activity_after: Provide an ISO datetime string to only retrieve chats with last activity after
-              this time
-
-          last_activity_before: Provide an ISO datetime string to only retrieve chats with last activity before
-              this time
-
-          limit: Set the maximum number of chats to retrieve. Valid range: 1-200, default is 50
-
-          query: Literal token search (non-semantic). Use single words users type (e.g.,
-              "dinner"). When multiple words provided, ALL must match. Case-insensitive.
-
-          scope: Search scope: 'titles' matches title + network; 'participants' matches
-              participant names.
-
-          type: Specify the type of chats to retrieve: use "single" for direct messages, "group"
-              for group chats, or "any" to get all types
-
-          unread_only: Set to true to only retrieve chats that have unread messages
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v1/chats/search",
-            page=SyncCursorSearch[Chat],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "account_ids": account_ids,
-                        "cursor": cursor,
-                        "direction": direction,
-                        "inbox": inbox,
-                        "include_muted": include_muted,
-                        "last_activity_after": last_activity_after,
-                        "last_activity_before": last_activity_before,
-                        "limit": limit,
-                        "query": query,
-                        "scope": scope,
-                        "type": type,
-                        "unread_only": unread_only,
-                    },
-                    chat_search_params.ChatSearchParams,
-                ),
-            ),
-            model=Chat,
         )
 
 
@@ -462,8 +361,7 @@ class AsyncChatsResource(AsyncAPIResource):
         Retrieve chat details including metadata, participants, and latest message
 
         Args:
-          chat_id: Unique identifier of the chat to retrieve. Not available for iMessage chats.
-              Participants are limited by 'maxParticipantCount'.
+          chat_id: Unique identifier of the chat.
 
           max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0–500.
               Defaults to 20.
@@ -513,8 +411,7 @@ class AsyncChatsResource(AsyncAPIResource):
         Args:
           account_ids: Limit to specific account IDs. If omitted, fetches from all accounts.
 
-          cursor: Timestamp cursor (milliseconds since epoch) for pagination. Use with direction
-              to navigate results.
+          cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
@@ -565,8 +462,7 @@ class AsyncChatsResource(AsyncAPIResource):
         archived=false to move back to inbox
 
         Args:
-          chat_id: The identifier of the chat to archive or unarchive (accepts both chatID and
-              local chat ID)
+          chat_id: Unique identifier of the chat.
 
           archived: True to archive, false to unarchive
 
@@ -589,103 +485,6 @@ class AsyncChatsResource(AsyncAPIResource):
             cast_to=BaseResponse,
         )
 
-    def search(
-        self,
-        *,
-        account_ids: SequenceNotStr[str] | Omit = omit,
-        cursor: str | Omit = omit,
-        direction: Literal["after", "before"] | Omit = omit,
-        inbox: Literal["primary", "low-priority", "archive"] | Omit = omit,
-        include_muted: Optional[bool] | Omit = omit,
-        last_activity_after: Union[str, datetime] | Omit = omit,
-        last_activity_before: Union[str, datetime] | Omit = omit,
-        limit: int | Omit = omit,
-        query: str | Omit = omit,
-        scope: Literal["titles", "participants"] | Omit = omit,
-        type: Literal["single", "group", "any"] | Omit = omit,
-        unread_only: Optional[bool] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Chat, AsyncCursorSearch[Chat]]:
-        """
-        Search chats by title/network or participants using Beeper Desktop's renderer
-        algorithm.
-
-        Args:
-          account_ids: Provide an array of account IDs to filter chats from specific messaging accounts
-              only
-
-          cursor: Pagination cursor from previous response. Use with direction to navigate results
-
-          direction: Pagination direction: "after" for newer page, "before" for older page. Defaults
-              to "before" when only cursor is provided.
-
-          inbox: Filter by inbox type: "primary" (non-archived, non-low-priority),
-              "low-priority", or "archive". If not specified, shows all chats.
-
-          include_muted: Include chats marked as Muted by the user, which are usually less important.
-              Default: true. Set to false if the user wants a more refined search.
-
-          last_activity_after: Provide an ISO datetime string to only retrieve chats with last activity after
-              this time
-
-          last_activity_before: Provide an ISO datetime string to only retrieve chats with last activity before
-              this time
-
-          limit: Set the maximum number of chats to retrieve. Valid range: 1-200, default is 50
-
-          query: Literal token search (non-semantic). Use single words users type (e.g.,
-              "dinner"). When multiple words provided, ALL must match. Case-insensitive.
-
-          scope: Search scope: 'titles' matches title + network; 'participants' matches
-              participant names.
-
-          type: Specify the type of chats to retrieve: use "single" for direct messages, "group"
-              for group chats, or "any" to get all types
-
-          unread_only: Set to true to only retrieve chats that have unread messages
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get_api_list(
-            "/v1/chats/search",
-            page=AsyncCursorSearch[Chat],
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "account_ids": account_ids,
-                        "cursor": cursor,
-                        "direction": direction,
-                        "inbox": inbox,
-                        "include_muted": include_muted,
-                        "last_activity_after": last_activity_after,
-                        "last_activity_before": last_activity_before,
-                        "limit": limit,
-                        "query": query,
-                        "scope": scope,
-                        "type": type,
-                        "unread_only": unread_only,
-                    },
-                    chat_search_params.ChatSearchParams,
-                ),
-            ),
-            model=Chat,
-        )
-
 
 class ChatsResourceWithRawResponse:
     def __init__(self, chats: ChatsResource) -> None:
@@ -702,9 +501,6 @@ class ChatsResourceWithRawResponse:
         )
         self.archive = to_raw_response_wrapper(
             chats.archive,
-        )
-        self.search = to_raw_response_wrapper(
-            chats.search,
         )
 
     @cached_property
@@ -729,9 +525,6 @@ class AsyncChatsResourceWithRawResponse:
         self.archive = async_to_raw_response_wrapper(
             chats.archive,
         )
-        self.search = async_to_raw_response_wrapper(
-            chats.search,
-        )
 
     @cached_property
     def reminders(self) -> AsyncRemindersResourceWithRawResponse:
@@ -755,9 +548,6 @@ class ChatsResourceWithStreamingResponse:
         self.archive = to_streamed_response_wrapper(
             chats.archive,
         )
-        self.search = to_streamed_response_wrapper(
-            chats.search,
-        )
 
     @cached_property
     def reminders(self) -> RemindersResourceWithStreamingResponse:
@@ -780,9 +570,6 @@ class AsyncChatsResourceWithStreamingResponse:
         )
         self.archive = async_to_streamed_response_wrapper(
             chats.archive,
-        )
-        self.search = async_to_streamed_response_wrapper(
-            chats.search,
         )
 
     @cached_property

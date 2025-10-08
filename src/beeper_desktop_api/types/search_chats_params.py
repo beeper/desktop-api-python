@@ -9,10 +9,10 @@ from typing_extensions import Literal, Annotated, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["ChatSearchParams"]
+__all__ = ["SearchChatsParams"]
 
 
-class ChatSearchParams(TypedDict, total=False):
+class SearchChatsParams(TypedDict, total=False):
     account_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="accountIDs")]
     """
     Provide an array of account IDs to filter chats from specific messaging accounts
@@ -20,15 +20,12 @@ class ChatSearchParams(TypedDict, total=False):
     """
 
     cursor: str
-    """Pagination cursor from previous response.
-
-    Use with direction to navigate results
-    """
+    """Opaque pagination cursor; do not inspect. Use together with 'direction'."""
 
     direction: Literal["after", "before"]
-    """Pagination direction: "after" for newer page, "before" for older page.
-
-    Defaults to "before" when only cursor is provided.
+    """
+    Pagination direction used with 'cursor': 'before' fetches older results, 'after'
+    fetches newer results. Defaults to 'before' when only 'cursor' is provided.
     """
 
     inbox: Literal["primary", "low-priority", "archive"]

@@ -15,10 +15,7 @@ class ChatListParams(TypedDict, total=False):
     """Limit to specific account IDs. If omitted, fetches from all accounts."""
 
     cursor: str
-    """Timestamp cursor (milliseconds since epoch) for pagination.
-
-    Use with direction to navigate results.
-    """
+    """Opaque pagination cursor; do not inspect. Use together with 'direction'."""
 
     direction: Literal["after", "before"]
     """

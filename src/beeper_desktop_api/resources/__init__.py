@@ -8,6 +8,14 @@ from .chats import (
     ChatsResourceWithStreamingResponse,
     AsyncChatsResourceWithStreamingResponse,
 )
+from .search import (
+    SearchResource,
+    AsyncSearchResource,
+    SearchResourceWithRawResponse,
+    AsyncSearchResourceWithRawResponse,
+    SearchResourceWithStreamingResponse,
+    AsyncSearchResourceWithStreamingResponse,
+)
 from .accounts import (
     AccountsResource,
     AsyncAccountsResource,
@@ -15,14 +23,6 @@ from .accounts import (
     AsyncAccountsResourceWithRawResponse,
     AccountsResourceWithStreamingResponse,
     AsyncAccountsResourceWithStreamingResponse,
-)
-from .contacts import (
-    ContactsResource,
-    AsyncContactsResource,
-    ContactsResourceWithRawResponse,
-    AsyncContactsResourceWithRawResponse,
-    ContactsResourceWithStreamingResponse,
-    AsyncContactsResourceWithStreamingResponse,
 )
 from .messages import (
     MessagesResource,
@@ -40,12 +40,12 @@ __all__ = [
     "AsyncAccountsResourceWithRawResponse",
     "AccountsResourceWithStreamingResponse",
     "AsyncAccountsResourceWithStreamingResponse",
-    "ContactsResource",
-    "AsyncContactsResource",
-    "ContactsResourceWithRawResponse",
-    "AsyncContactsResourceWithRawResponse",
-    "ContactsResourceWithStreamingResponse",
-    "AsyncContactsResourceWithStreamingResponse",
+    "SearchResource",
+    "AsyncSearchResource",
+    "SearchResourceWithRawResponse",
+    "AsyncSearchResourceWithRawResponse",
+    "SearchResourceWithStreamingResponse",
+    "AsyncSearchResourceWithStreamingResponse",
     "ChatsResource",
     "AsyncChatsResource",
     "ChatsResourceWithRawResponse",

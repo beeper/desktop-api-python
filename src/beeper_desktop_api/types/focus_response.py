@@ -2,9 +2,9 @@
 
 from .._models import BaseModel
 
-__all__ = ["OpenResponse"]
+__all__ = ["FocusResponse"]
 
 
-class OpenResponse(BaseModel):
+class FocusResponse(BaseModel):
     success: bool
     """Whether the app was successfully opened/focused."""

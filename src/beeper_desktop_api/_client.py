@@ -10,7 +10,7 @@ import httpx
 
 from . import _exceptions
 from ._qs import Querystring
-from .types import client_open_params, client_search_params, client_download_asset_params
+from .types import client_focus_params, client_search_params, client_download_asset_params
 from ._types import (
     Body,
     Omit,
@@ -37,7 +37,7 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import accounts, contacts, messages
+from .resources import search, accounts, messages
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, BeeperDesktopError
 from ._base_client import (
@@ -47,7 +47,7 @@ from ._base_client import (
     make_request_options,
 )
 from .resources.chats import chats
-from .types.open_response import OpenResponse
+from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
 from .types.download_asset_response import DownloadAssetResponse
 
@@ -65,7 +65,7 @@ __all__ = [
 
 class BeeperDesktop(SyncAPIClient):
     accounts: accounts.AccountsResource
-    contacts: contacts.ContactsResource
+    search: search.SearchResource
     chats: chats.ChatsResource
     messages: messages.MessagesResource
     with_raw_response: BeeperDesktopWithRawResponse
@@ -126,7 +126,7 @@ class BeeperDesktop(SyncAPIClient):
         )
 
         self.accounts = accounts.AccountsResource(self)
-        self.contacts = contacts.ContactsResource(self)
+        self.search = search.SearchResource(self)
         self.chats = chats.ChatsResource(self)
         self.messages = messages.MessagesResource(self)
         self.with_raw_response = BeeperDesktopWithRawResponse(self)
@@ -238,7 +238,7 @@ class BeeperDesktop(SyncAPIClient):
             cast_to=DownloadAssetResponse,
         )
 
-    def open(
+    def focus(
         self,
         *,
         chat_id: str | Omit = omit,
@@ -251,9 +251,9 @@ class BeeperDesktop(SyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> OpenResponse:
+    ) -> FocusResponse:
         """
-        Open Beeper Desktop and optionally navigate to a specific chat, message, or
+        Focus Beeper Desktop and optionally navigate to a specific chat, message, or
         pre-fill draft text and attachment.
 
         Args:
@@ -275,7 +275,7 @@ class BeeperDesktop(SyncAPIClient):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self.post(
-            "/v1/open",
+            "/v1/focus",
             body=maybe_transform(
                 {
                     "chat_id": chat_id,
@@ -283,12 +283,12 @@ class BeeperDesktop(SyncAPIClient):
                     "draft_text": draft_text,
                     "message_id": message_id,
                 },
-                client_open_params.ClientOpenParams,
+                client_focus_params.ClientFocusParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=OpenResponse,
+            cast_to=FocusResponse,
         )
 
     def search(
@@ -366,7 +366,7 @@ class BeeperDesktop(SyncAPIClient):
 
 class AsyncBeeperDesktop(AsyncAPIClient):
     accounts: accounts.AsyncAccountsResource
-    contacts: contacts.AsyncContactsResource
+    search: search.AsyncSearchResource
     chats: chats.AsyncChatsResource
     messages: messages.AsyncMessagesResource
     with_raw_response: AsyncBeeperDesktopWithRawResponse
@@ -427,7 +427,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         )
 
         self.accounts = accounts.AsyncAccountsResource(self)
-        self.contacts = contacts.AsyncContactsResource(self)
+        self.search = search.AsyncSearchResource(self)
         self.chats = chats.AsyncChatsResource(self)
         self.messages = messages.AsyncMessagesResource(self)
         self.with_raw_response = AsyncBeeperDesktopWithRawResponse(self)
@@ -539,7 +539,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
             cast_to=DownloadAssetResponse,
         )
 
-    async def open(
+    async def focus(
         self,
         *,
         chat_id: str | Omit = omit,
@@ -552,9 +552,9 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> OpenResponse:
+    ) -> FocusResponse:
         """
-        Open Beeper Desktop and optionally navigate to a specific chat, message, or
+        Focus Beeper Desktop and optionally navigate to a specific chat, message, or
         pre-fill draft text and attachment.
 
         Args:
@@ -576,7 +576,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self.post(
-            "/v1/open",
+            "/v1/focus",
             body=await async_maybe_transform(
                 {
                     "chat_id": chat_id,
@@ -584,12 +584,12 @@ class AsyncBeeperDesktop(AsyncAPIClient):
                     "draft_text": draft_text,
                     "message_id": message_id,
                 },
-                client_open_params.ClientOpenParams,
+                client_focus_params.ClientFocusParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=OpenResponse,
+            cast_to=FocusResponse,
         )
 
     async def search(
@@ -668,15 +668,15 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 class BeeperDesktopWithRawResponse:
     def __init__(self, client: BeeperDesktop) -> None:
         self.accounts = accounts.AccountsResourceWithRawResponse(client.accounts)
-        self.contacts = contacts.ContactsResourceWithRawResponse(client.contacts)
+        self.search = search.SearchResourceWithRawResponse(client.search)
         self.chats = chats.ChatsResourceWithRawResponse(client.chats)
         self.messages = messages.MessagesResourceWithRawResponse(client.messages)
 
         self.download_asset = to_raw_response_wrapper(
             client.download_asset,
         )
-        self.open = to_raw_response_wrapper(
-            client.open,
+        self.focus = to_raw_response_wrapper(
+            client.focus,
         )
         self.search = to_raw_response_wrapper(
             client.search,
@@ -686,15 +686,15 @@ class BeeperDesktopWithRawResponse:
 class AsyncBeeperDesktopWithRawResponse:
     def __init__(self, client: AsyncBeeperDesktop) -> None:
         self.accounts = accounts.AsyncAccountsResourceWithRawResponse(client.accounts)
-        self.contacts = contacts.AsyncContactsResourceWithRawResponse(client.contacts)
+        self.search = search.AsyncSearchResourceWithRawResponse(client.search)
         self.chats = chats.AsyncChatsResourceWithRawResponse(client.chats)
         self.messages = messages.AsyncMessagesResourceWithRawResponse(client.messages)
 
         self.download_asset = async_to_raw_response_wrapper(
             client.download_asset,
         )
-        self.open = async_to_raw_response_wrapper(
-            client.open,
+        self.focus = async_to_raw_response_wrapper(
+            client.focus,
         )
         self.search = async_to_raw_response_wrapper(
             client.search,
@@ -704,15 +704,15 @@ class AsyncBeeperDesktopWithRawResponse:
 class BeeperDesktopWithStreamedResponse:
     def __init__(self, client: BeeperDesktop) -> None:
         self.accounts = accounts.AccountsResourceWithStreamingResponse(client.accounts)
-        self.contacts = contacts.ContactsResourceWithStreamingResponse(client.contacts)
+        self.search = search.SearchResourceWithStreamingResponse(client.search)
         self.chats = chats.ChatsResourceWithStreamingResponse(client.chats)
         self.messages = messages.MessagesResourceWithStreamingResponse(client.messages)
 
         self.download_asset = to_streamed_response_wrapper(
             client.download_asset,
         )
-        self.open = to_streamed_response_wrapper(
-            client.open,
+        self.focus = to_streamed_response_wrapper(
+            client.focus,
         )
         self.search = to_streamed_response_wrapper(
             client.search,
@@ -722,15 +722,15 @@ class BeeperDesktopWithStreamedResponse:
 class AsyncBeeperDesktopWithStreamedResponse:
     def __init__(self, client: AsyncBeeperDesktop) -> None:
         self.accounts = accounts.AsyncAccountsResourceWithStreamingResponse(client.accounts)
-        self.contacts = contacts.AsyncContactsResourceWithStreamingResponse(client.contacts)
+        self.search = search.AsyncSearchResourceWithStreamingResponse(client.search)
         self.chats = chats.AsyncChatsResourceWithStreamingResponse(client.chats)
         self.messages = messages.AsyncMessagesResourceWithStreamingResponse(client.messages)
 
         self.download_asset = async_to_streamed_response_wrapper(
             client.download_asset,
         )
-        self.open = async_to_streamed_response_wrapper(
-            client.open,
+        self.focus = async_to_streamed_response_wrapper(
+            client.focus,
         )
         self.search = async_to_streamed_response_wrapper(
             client.search,

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["ContactSearchParams"]
+__all__ = ["SearchContactsParams"]
 
 
-class ContactSearchParams(TypedDict, total=False):
+class SearchContactsParams(TypedDict, total=False):
     query: Required[str]
     """Text to search users by. Network-specific behavior."""

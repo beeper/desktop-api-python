@@ -10,9 +10,6 @@ __all__ = ["MessageSendParams"]
 
 
 class MessageSendParams(TypedDict, total=False):
-    chat_id: Annotated[str, PropertyInfo(alias="chatID")]
-    """Unique identifier of the chat."""
-
     reply_to_message_id: Annotated[str, PropertyInfo(alias="replyToMessageID")]
     """Provide a message ID to send this as a reply to an existing message"""
 

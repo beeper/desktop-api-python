@@ -40,7 +40,7 @@ from beeper_desktop_api.types import ContactSearchResponse
 
 Methods:
 
-- <code title="get /v1/contacts/search">client.contacts.<a href="./src/beeper_desktop_api/resources/contacts.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/contact_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/contact_search_response.py">ContactSearchResponse</a></code>
+- <code title="get /v1/accounts/{accountID}/contacts/search">client.contacts.<a href="./src/beeper_desktop_api/resources/contacts.py">search</a>(account_id, \*\*<a href="src/beeper_desktop_api/types/contact_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/contact_search_response.py">ContactSearchResponse</a></code>
 
 # Chats
 
@@ -70,11 +70,11 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import MessageListResponse, MessageSendResponse
+from beeper_desktop_api.types import MessageSendResponse
 ```
 
 Methods:
 
-- <code title="get /v1/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">list</a>(\*\*<a href="src/beeper_desktop_api/types/message_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_list_response.py">MessageListResponse</a></code>
+- <code title="get /v1/chats/{chatID}/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">list</a>(chat_id, \*\*<a href="src/beeper_desktop_api/types/message_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursorList[Message]</a></code>
 - <code title="get /v1/messages/search">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/message_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/message.py">SyncCursorSearch[Message]</a></code>
-- <code title="post /v1/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">send</a>(\*\*<a href="src/beeper_desktop_api/types/message_send_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_send_response.py">MessageSendResponse</a></code>
+- <code title="post /v1/chats/{chatID}/messages">client.messages.<a href="./src/beeper_desktop_api/resources/messages.py">send</a>(chat_id, \*\*<a href="src/beeper_desktop_api/types/message_send_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/message_send_response.py">MessageSendResponse</a></code>

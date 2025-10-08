@@ -51,6 +51,14 @@ class TestContacts:
 
         assert cast(Any, response.is_closed) is True
 
+    @parametrize
+    def test_path_params_search(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `account_id` but received ''"):
+            client.contacts.with_raw_response.search(
+                account_id="",
+                query="x",
+            )
+
 
 class TestAsyncContacts:
     parametrize = pytest.mark.parametrize(
@@ -90,3 +98,11 @@ class TestAsyncContacts:
             assert_matches_type(ContactSearchResponse, contact, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_search(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `account_id` but received ''"):
+            await async_client.contacts.with_raw_response.search(
+                account_id="",
+                query="x",
+            )

@@ -14,12 +14,9 @@ The REST API documentation can be found on [developers.beeper.com](https://devel
 ## Installation
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/beeper/desktop-api-python.git
+# install from PyPI
+pip install beeper_desktop_api
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install beeper_desktop_api`
 
 ## Usage
 
@@ -81,8 +78,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from the production repo
-pip install 'beeper_desktop_api[aiohttp] @ git+ssh://git@github.com/beeper/desktop-api-python.git'
+# install from PyPI
+pip install beeper_desktop_api[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:

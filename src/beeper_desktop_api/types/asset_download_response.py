@@ -6,10 +6,10 @@ from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
-__all__ = ["DownloadAssetResponse"]
+__all__ = ["AssetDownloadResponse"]
 
 
-class DownloadAssetResponse(BaseModel):
+class AssetDownloadResponse(BaseModel):
     error: Optional[str] = None
     """Error message if the download failed."""
 

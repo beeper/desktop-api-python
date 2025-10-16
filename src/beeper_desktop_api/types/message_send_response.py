@@ -2,12 +2,12 @@
 
 from pydantic import Field as FieldInfo
 
-from .shared.base_response import BaseResponse
+from .._models import BaseModel
 
 __all__ = ["MessageSendResponse"]
 
 
-class MessageSendResponse(BaseResponse):
+class MessageSendResponse(BaseModel):
     chat_id: str = FieldInfo(alias="chatID")
     """Unique identifier of the chat."""
 

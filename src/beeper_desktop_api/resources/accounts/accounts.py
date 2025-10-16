@@ -4,23 +4,36 @@ from __future__ import annotations
 
 import httpx
 
-from .._types import Body, Query, Headers, NotGiven, not_given
-from .._compat import cached_property
-from .._resource import SyncAPIResource, AsyncAPIResource
-from .._response import (
+from ..._types import Body, Query, Headers, NotGiven, not_given
+from .contacts import (
+    ContactsResource,
+    AsyncContactsResource,
+    ContactsResourceWithRawResponse,
+    AsyncContactsResourceWithRawResponse,
+    ContactsResourceWithStreamingResponse,
+    AsyncContactsResourceWithStreamingResponse,
+)
+from ..._compat import cached_property
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.account_list_response import AccountListResponse
+from ..._base_client import make_request_options
+from ...types.account_list_response import AccountListResponse
 
 __all__ = ["AccountsResource", "AsyncAccountsResource"]
 
 
 class AccountsResource(SyncAPIResource):
     """Manage connected chat accounts"""
+
+    @cached_property
+    def contacts(self) -> ContactsResource:
+        """Manage contacts on a specific account"""
+        return ContactsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AccountsResourceWithRawResponse:
@@ -66,6 +79,11 @@ class AccountsResource(SyncAPIResource):
 
 class AsyncAccountsResource(AsyncAPIResource):
     """Manage connected chat accounts"""
+
+    @cached_property
+    def contacts(self) -> AsyncContactsResource:
+        """Manage contacts on a specific account"""
+        return AsyncContactsResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncAccountsResourceWithRawResponse:
@@ -117,6 +135,11 @@ class AccountsResourceWithRawResponse:
             accounts.list,
         )
 
+    @cached_property
+    def contacts(self) -> ContactsResourceWithRawResponse:
+        """Manage contacts on a specific account"""
+        return ContactsResourceWithRawResponse(self._accounts.contacts)
+
 
 class AsyncAccountsResourceWithRawResponse:
     def __init__(self, accounts: AsyncAccountsResource) -> None:
@@ -125,6 +148,11 @@ class AsyncAccountsResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             accounts.list,
         )
+
+    @cached_property
+    def contacts(self) -> AsyncContactsResourceWithRawResponse:
+        """Manage contacts on a specific account"""
+        return AsyncContactsResourceWithRawResponse(self._accounts.contacts)
 
 
 class AccountsResourceWithStreamingResponse:
@@ -135,6 +163,11 @@ class AccountsResourceWithStreamingResponse:
             accounts.list,
         )
 
+    @cached_property
+    def contacts(self) -> ContactsResourceWithStreamingResponse:
+        """Manage contacts on a specific account"""
+        return ContactsResourceWithStreamingResponse(self._accounts.contacts)
+
 
 class AsyncAccountsResourceWithStreamingResponse:
     def __init__(self, accounts: AsyncAccountsResource) -> None:
@@ -143,3 +176,8 @@ class AsyncAccountsResourceWithStreamingResponse:
         self.list = async_to_streamed_response_wrapper(
             accounts.list,
         )
+
+    @cached_property
+    def contacts(self) -> AsyncContactsResourceWithStreamingResponse:
+        """Manage contacts on a specific account"""
+        return AsyncContactsResourceWithStreamingResponse(self._accounts.contacts)

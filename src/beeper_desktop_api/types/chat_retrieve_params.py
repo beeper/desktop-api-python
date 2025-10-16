@@ -14,5 +14,5 @@ class ChatRetrieveParams(TypedDict, total=False):
     max_participant_count: Annotated[Optional[int], PropertyInfo(alias="maxParticipantCount")]
     """Maximum number of participants to return.
 
-    Use -1 for all; otherwise 0–500. Defaults to 20.
+    Use -1 for all; otherwise 0–500. Defaults to all (-1).
     """

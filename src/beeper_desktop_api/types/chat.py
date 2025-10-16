@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Union, Optional
+from typing import List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -25,10 +25,10 @@ class Participants(BaseModel):
 
 class Chat(BaseModel):
     id: str
-    """Unique identifier of the chat (room/thread ID, same as id) across Beeper."""
+    """Unique identifier of the chat across Beeper."""
 
     account_id: str = FieldInfo(alias="accountID")
-    """Beeper account ID this chat belongs to."""
+    """Account ID this chat belongs to."""
 
     network: str
     """Display-only human-readable network name (e.g., 'WhatsApp', 'Messenger')."""
@@ -55,13 +55,10 @@ class Chat(BaseModel):
     """True if chat is pinned."""
 
     last_activity: Optional[datetime] = FieldInfo(alias="lastActivity", default=None)
-    """Timestamp of last activity.
+    """Timestamp of last activity."""
 
-    Chats with more recent activity are often more important.
-    """
-
-    last_read_message_sort_key: Union[int, str, None] = FieldInfo(alias="lastReadMessageSortKey", default=None)
-    """Last read message sortKey (hsOrder). Used to compute 'isUnread'."""
+    last_read_message_sort_key: Optional[str] = FieldInfo(alias="lastReadMessageSortKey", default=None)
+    """Last read message sortKey."""
 
     local_chat_id: Optional[str] = FieldInfo(alias="localChatID", default=None)
     """Local chat ID specific to this Beeper Desktop installation."""

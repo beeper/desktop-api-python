@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Query, Headers, NotGiven, not_given
+from ..._types import Body, Query, Headers, NoneType, NotGiven, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -16,13 +16,12 @@ from ..._response import (
 )
 from ...types.chats import reminder_create_params
 from ..._base_client import make_request_options
-from ...types.shared.base_response import BaseResponse
 
 __all__ = ["RemindersResource", "AsyncRemindersResource"]
 
 
 class RemindersResource(SyncAPIResource):
-    """Reminders operations"""
+    """Manage reminders for chats"""
 
     @cached_property
     def with_raw_response(self) -> RemindersResourceWithRawResponse:
@@ -54,7 +53,7 @@ class RemindersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BaseResponse:
+    ) -> None:
         """
         Set a reminder for a chat at a specific time
 
@@ -73,13 +72,14 @@ class RemindersResource(SyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
             f"/v1/chats/{chat_id}/reminders",
             body=maybe_transform({"reminder": reminder}, reminder_create_params.ReminderCreateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BaseResponse,
+            cast_to=NoneType,
         )
 
     def delete(
@@ -92,7 +92,7 @@ class RemindersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BaseResponse:
+    ) -> None:
         """
         Clear an existing reminder from a chat
 
@@ -109,17 +109,18 @@ class RemindersResource(SyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
             f"/v1/chats/{chat_id}/reminders",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BaseResponse,
+            cast_to=NoneType,
         )
 
 
 class AsyncRemindersResource(AsyncAPIResource):
-    """Reminders operations"""
+    """Manage reminders for chats"""
 
     @cached_property
     def with_raw_response(self) -> AsyncRemindersResourceWithRawResponse:
@@ -151,7 +152,7 @@ class AsyncRemindersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BaseResponse:
+    ) -> None:
         """
         Set a reminder for a chat at a specific time
 
@@ -170,13 +171,14 @@ class AsyncRemindersResource(AsyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
             f"/v1/chats/{chat_id}/reminders",
             body=await async_maybe_transform({"reminder": reminder}, reminder_create_params.ReminderCreateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BaseResponse,
+            cast_to=NoneType,
         )
 
     async def delete(
@@ -189,7 +191,7 @@ class AsyncRemindersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BaseResponse:
+    ) -> None:
         """
         Clear an existing reminder from a chat
 
@@ -206,12 +208,13 @@ class AsyncRemindersResource(AsyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
             f"/v1/chats/{chat_id}/reminders",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BaseResponse,
+            cast_to=NoneType,
         )
 
 

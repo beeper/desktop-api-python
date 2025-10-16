@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["ClientDownloadAssetParams"]
+__all__ = ["AssetDownloadParams"]
 
 
-class ClientDownloadAssetParams(TypedDict, total=False):
+class AssetDownloadParams(TypedDict, total=False):
     url: Required[str]
     """Matrix content URL (mxc:// or localmxc://) for the asset to download."""

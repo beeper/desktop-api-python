@@ -9,10 +9,10 @@ from typing_extensions import Literal, Annotated, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["SearchChatsParams"]
+__all__ = ["ChatSearchParams"]
 
 
-class SearchChatsParams(TypedDict, total=False):
+class ChatSearchParams(TypedDict, total=False):
     account_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="accountIDs")]
     """
     Provide an array of account IDs to filter chats from specific messaging accounts

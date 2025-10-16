@@ -10,7 +10,7 @@ import httpx
 
 from . import _exceptions
 from ._qs import Querystring
-from .types import client_focus_params, client_search_params, client_download_asset_params
+from .types import client_focus_params, client_search_params
 from ._types import (
     Body,
     Omit,
@@ -37,7 +37,7 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import search, accounts, messages
+from .resources import assets, messages
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, BeeperDesktopError
 from ._base_client import (
@@ -47,9 +47,9 @@ from ._base_client import (
     make_request_options,
 )
 from .resources.chats import chats
+from .resources.accounts import accounts
 from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
-from .types.download_asset_response import DownloadAssetResponse
 
 __all__ = [
     "Timeout",
@@ -65,9 +65,9 @@ __all__ = [
 
 class BeeperDesktop(SyncAPIClient):
     accounts: accounts.AccountsResource
-    search: search.SearchResource
     chats: chats.ChatsResource
     messages: messages.MessagesResource
+    assets: assets.AssetsResource
     with_raw_response: BeeperDesktopWithRawResponse
     with_streaming_response: BeeperDesktopWithStreamedResponse
 
@@ -126,9 +126,9 @@ class BeeperDesktop(SyncAPIClient):
         )
 
         self.accounts = accounts.AccountsResource(self)
-        self.search = search.SearchResource(self)
         self.chats = chats.ChatsResource(self)
         self.messages = messages.MessagesResource(self)
+        self.assets = assets.AssetsResource(self)
         self.with_raw_response = BeeperDesktopWithRawResponse(self)
         self.with_streaming_response = BeeperDesktopWithStreamedResponse(self)
 
@@ -202,41 +202,6 @@ class BeeperDesktop(SyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
-
-    def download_asset(
-        self,
-        *,
-        url: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DownloadAssetResponse:
-        """
-        Download a Matrix asset using its mxc:// or localmxc:// URL and return the local
-        file URL.
-
-        Args:
-          url: Matrix content URL (mxc:// or localmxc://) for the asset to download.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self.post(
-            "/v1/download-asset",
-            body=maybe_transform({"url": url}, client_download_asset_params.ClientDownloadAssetParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DownloadAssetResponse,
-        )
 
     def focus(
         self,
@@ -366,9 +331,9 @@ class BeeperDesktop(SyncAPIClient):
 
 class AsyncBeeperDesktop(AsyncAPIClient):
     accounts: accounts.AsyncAccountsResource
-    search: search.AsyncSearchResource
     chats: chats.AsyncChatsResource
     messages: messages.AsyncMessagesResource
+    assets: assets.AsyncAssetsResource
     with_raw_response: AsyncBeeperDesktopWithRawResponse
     with_streaming_response: AsyncBeeperDesktopWithStreamedResponse
 
@@ -427,9 +392,9 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         )
 
         self.accounts = accounts.AsyncAccountsResource(self)
-        self.search = search.AsyncSearchResource(self)
         self.chats = chats.AsyncChatsResource(self)
         self.messages = messages.AsyncMessagesResource(self)
+        self.assets = assets.AsyncAssetsResource(self)
         self.with_raw_response = AsyncBeeperDesktopWithRawResponse(self)
         self.with_streaming_response = AsyncBeeperDesktopWithStreamedResponse(self)
 
@@ -503,41 +468,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     # Alias for `copy` for nicer inline usage, e.g.
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
-
-    async def download_asset(
-        self,
-        *,
-        url: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DownloadAssetResponse:
-        """
-        Download a Matrix asset using its mxc:// or localmxc:// URL and return the local
-        file URL.
-
-        Args:
-          url: Matrix content URL (mxc:// or localmxc://) for the asset to download.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self.post(
-            "/v1/download-asset",
-            body=await async_maybe_transform({"url": url}, client_download_asset_params.ClientDownloadAssetParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DownloadAssetResponse,
-        )
 
     async def focus(
         self,
@@ -668,13 +598,10 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 class BeeperDesktopWithRawResponse:
     def __init__(self, client: BeeperDesktop) -> None:
         self.accounts = accounts.AccountsResourceWithRawResponse(client.accounts)
-        self.search = search.SearchResourceWithRawResponse(client.search)
         self.chats = chats.ChatsResourceWithRawResponse(client.chats)
         self.messages = messages.MessagesResourceWithRawResponse(client.messages)
+        self.assets = assets.AssetsResourceWithRawResponse(client.assets)
 
-        self.download_asset = to_raw_response_wrapper(
-            client.download_asset,
-        )
         self.focus = to_raw_response_wrapper(
             client.focus,
         )
@@ -686,13 +613,10 @@ class BeeperDesktopWithRawResponse:
 class AsyncBeeperDesktopWithRawResponse:
     def __init__(self, client: AsyncBeeperDesktop) -> None:
         self.accounts = accounts.AsyncAccountsResourceWithRawResponse(client.accounts)
-        self.search = search.AsyncSearchResourceWithRawResponse(client.search)
         self.chats = chats.AsyncChatsResourceWithRawResponse(client.chats)
         self.messages = messages.AsyncMessagesResourceWithRawResponse(client.messages)
+        self.assets = assets.AsyncAssetsResourceWithRawResponse(client.assets)
 
-        self.download_asset = async_to_raw_response_wrapper(
-            client.download_asset,
-        )
         self.focus = async_to_raw_response_wrapper(
             client.focus,
         )
@@ -704,13 +628,10 @@ class AsyncBeeperDesktopWithRawResponse:
 class BeeperDesktopWithStreamedResponse:
     def __init__(self, client: BeeperDesktop) -> None:
         self.accounts = accounts.AccountsResourceWithStreamingResponse(client.accounts)
-        self.search = search.SearchResourceWithStreamingResponse(client.search)
         self.chats = chats.ChatsResourceWithStreamingResponse(client.chats)
         self.messages = messages.MessagesResourceWithStreamingResponse(client.messages)
+        self.assets = assets.AssetsResourceWithStreamingResponse(client.assets)
 
-        self.download_asset = to_streamed_response_wrapper(
-            client.download_asset,
-        )
         self.focus = to_streamed_response_wrapper(
             client.focus,
         )
@@ -722,13 +643,10 @@ class BeeperDesktopWithStreamedResponse:
 class AsyncBeeperDesktopWithStreamedResponse:
     def __init__(self, client: AsyncBeeperDesktop) -> None:
         self.accounts = accounts.AsyncAccountsResourceWithStreamingResponse(client.accounts)
-        self.search = search.AsyncSearchResourceWithStreamingResponse(client.search)
         self.chats = chats.AsyncChatsResourceWithStreamingResponse(client.chats)
         self.messages = messages.AsyncMessagesResourceWithStreamingResponse(client.messages)
+        self.assets = assets.AsyncAssetsResourceWithStreamingResponse(client.assets)
 
-        self.download_asset = async_to_streamed_response_wrapper(
-            client.download_asset,
-        )
         self.focus = async_to_streamed_response_wrapper(
             client.focus,
         )

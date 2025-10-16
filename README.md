@@ -33,7 +33,12 @@ client = BeeperDesktop(
     access_token=os.environ.get("BEEPER_ACCESS_TOKEN"),  # This is the default and can be omitted
 )
 
-accounts = client.accounts.list()
+page = client.chats.search(
+    include_muted=True,
+    limit=3,
+    type="single",
+)
+print(page.items)
 ```
 
 While you can provide a `access_token` keyword argument,
@@ -56,7 +61,12 @@ client = AsyncBeeperDesktop(
 
 
 async def main() -> None:
-    accounts = await client.accounts.list()
+    page = await client.chats.search(
+        include_muted=True,
+        limit=3,
+        type="single",
+    )
+    print(page.items)
 
 
 asyncio.run(main())
@@ -88,7 +98,12 @@ async def main() -> None:
         access_token="My Access Token",
         http_client=DefaultAioHttpClient(),
     ) as client:
-        accounts = await client.accounts.list()
+        page = await client.chats.search(
+            include_muted=True,
+            limit=3,
+            type="single",
+        )
+        print(page.items)
 
 
 asyncio.run(main())
@@ -103,6 +118,85 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
+## Pagination
+
+List methods in the Beeper Desktop API are paginated.
+
+This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
+
+```python
+from beeper_desktop_api import BeeperDesktop
+
+client = BeeperDesktop()
+
+all_messages = []
+# Automatically fetches more pages as needed.
+for message in client.messages.search(
+    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    limit=10,
+    query="deployment",
+):
+    # Do something with message here
+    all_messages.append(message)
+print(all_messages)
+```
+
+Or, asynchronously:
+
+```python
+import asyncio
+from beeper_desktop_api import AsyncBeeperDesktop
+
+client = AsyncBeeperDesktop()
+
+
+async def main() -> None:
+    all_messages = []
+    # Iterate through items across all pages, issuing requests as needed.
+    async for message in client.messages.search(
+        account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+        limit=10,
+        query="deployment",
+    ):
+        all_messages.append(message)
+    print(all_messages)
+
+
+asyncio.run(main())
+```
+
+Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
+
+```python
+first_page = await client.messages.search(
+    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    limit=10,
+    query="deployment",
+)
+if first_page.has_next_page():
+    print(f"will fetch next page using these details: {first_page.next_page_info()}")
+    next_page = await first_page.get_next_page()
+    print(f"number of items we just fetched: {len(next_page.items)}")
+
+# Remove `await` for non-async usage.
+```
+
+Or just work directly with the returned data:
+
+```python
+first_page = await client.messages.search(
+    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    limit=10,
+    query="deployment",
+)
+
+print(f"next page cursor: {first_page.oldest_cursor}")  # => "next page cursor: ..."
+for message in first_page.items:
+    print(message.id)
+
+# Remove `await` for non-async usage.
+```
+
 ## Nested params
 
 Nested parameters are dictionaries, typed using `TypedDict`, for example:
@@ -112,11 +206,10 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-base_response = client.chats.reminders.create(
+client.chats.reminders.create(
     chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
     reminder={"remind_at_ms": 0},
 )
-print(base_response.reminder)
 ```
 
 ## Handling errors
@@ -135,10 +228,7 @@ from beeper_desktop_api import BeeperDesktop
 client = BeeperDesktop()
 
 try:
-    client.messages.send(
-        chat_id="1229391",
-        text="Hello! Just checking in on the project status.",
-    )
+    client.accounts.list()
 except beeper_desktop_api.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.

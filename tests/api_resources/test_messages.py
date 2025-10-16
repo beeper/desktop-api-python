@@ -13,7 +13,7 @@ from beeper_desktop_api.types import (
     MessageSendResponse,
 )
 from beeper_desktop_api._utils import parse_datetime
-from beeper_desktop_api.pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
+from beeper_desktop_api.pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorSortKey, AsyncCursorSortKey
 from beeper_desktop_api.types.shared import Message
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -27,7 +27,7 @@ class TestMessages:
         message = client.messages.list(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
         )
-        assert_matches_type(SyncCursorList[Message], message, path=["response"])
+        assert_matches_type(SyncCursorSortKey[Message], message, path=["response"])
 
     @parametrize
     def test_method_list_with_all_params(self, client: BeeperDesktop) -> None:
@@ -36,7 +36,7 @@ class TestMessages:
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
         )
-        assert_matches_type(SyncCursorList[Message], message, path=["response"])
+        assert_matches_type(SyncCursorSortKey[Message], message, path=["response"])
 
     @parametrize
     def test_raw_response_list(self, client: BeeperDesktop) -> None:
@@ -47,7 +47,7 @@ class TestMessages:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         message = response.parse()
-        assert_matches_type(SyncCursorList[Message], message, path=["response"])
+        assert_matches_type(SyncCursorSortKey[Message], message, path=["response"])
 
     @parametrize
     def test_streaming_response_list(self, client: BeeperDesktop) -> None:
@@ -58,7 +58,7 @@ class TestMessages:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             message = response.parse()
-            assert_matches_type(SyncCursorList[Message], message, path=["response"])
+            assert_matches_type(SyncCursorSortKey[Message], message, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -175,7 +175,7 @@ class TestAsyncMessages:
         message = await async_client.messages.list(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
         )
-        assert_matches_type(AsyncCursorList[Message], message, path=["response"])
+        assert_matches_type(AsyncCursorSortKey[Message], message, path=["response"])
 
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
@@ -184,7 +184,7 @@ class TestAsyncMessages:
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
         )
-        assert_matches_type(AsyncCursorList[Message], message, path=["response"])
+        assert_matches_type(AsyncCursorSortKey[Message], message, path=["response"])
 
     @parametrize
     async def test_raw_response_list(self, async_client: AsyncBeeperDesktop) -> None:
@@ -195,7 +195,7 @@ class TestAsyncMessages:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         message = await response.parse()
-        assert_matches_type(AsyncCursorList[Message], message, path=["response"])
+        assert_matches_type(AsyncCursorSortKey[Message], message, path=["response"])
 
     @parametrize
     async def test_streaming_response_list(self, async_client: AsyncBeeperDesktop) -> None:
@@ -206,7 +206,7 @@ class TestAsyncMessages:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             message = await response.parse()
-            assert_matches_type(AsyncCursorList[Message], message, path=["response"])
+            assert_matches_type(AsyncCursorSortKey[Message], message, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

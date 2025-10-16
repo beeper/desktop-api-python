@@ -19,7 +19,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncCursorList, AsyncCursorList, SyncCursorSearch, AsyncCursorSearch
+from ..pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorSortKey, AsyncCursorSortKey
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
 from ..types.message_send_response import MessageSendResponse
@@ -28,7 +28,7 @@ __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
 
 class MessagesResource(SyncAPIResource):
-    """Messages operations"""
+    """Manage messages in chats"""
 
     @cached_property
     def with_raw_response(self) -> MessagesResourceWithRawResponse:
@@ -61,7 +61,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursorList[Message]:
+    ) -> SyncCursorSortKey[Message]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -86,7 +86,7 @@ class MessagesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get_api_list(
             f"/v1/chats/{chat_id}/messages",
-            page=SyncCursorList[Message],
+            page=SyncCursorSortKey[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -175,7 +175,7 @@ class MessagesResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._get_api_list(
-            "/v1/search/messages",
+            "/v1/messages/search",
             page=SyncCursorSearch[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -256,7 +256,7 @@ class MessagesResource(SyncAPIResource):
 
 
 class AsyncMessagesResource(AsyncAPIResource):
-    """Messages operations"""
+    """Manage messages in chats"""
 
     @cached_property
     def with_raw_response(self) -> AsyncMessagesResourceWithRawResponse:
@@ -289,7 +289,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncCursorList[Message]]:
+    ) -> AsyncPaginator[Message, AsyncCursorSortKey[Message]]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -314,7 +314,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get_api_list(
             f"/v1/chats/{chat_id}/messages",
-            page=AsyncCursorList[Message],
+            page=AsyncCursorSortKey[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -403,7 +403,7 @@ class AsyncMessagesResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._get_api_list(
-            "/v1/search/messages",
+            "/v1/messages/search",
             page=AsyncCursorSearch[Message],
             options=make_request_options(
                 extra_headers=extra_headers,

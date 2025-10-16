@@ -26,7 +26,7 @@ class Message(BaseModel):
     """Sender user ID."""
 
     sort_key: str = FieldInfo(alias="sortKey")
-    """A unique key used to sort messages"""
+    """A unique, sortable key used to sort messages."""
 
     timestamp: datetime
     """Message timestamp."""

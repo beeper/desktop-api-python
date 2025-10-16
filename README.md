@@ -14,12 +14,9 @@ The REST API documentation can be found on [developers.beeper.com](https://devel
 ## Installation
 
 ```sh
-# install from this staging repo
-pip install git+ssh://git@github.com/stainless-sdks/beeper-desktop-api-python.git
+# install from PyPI
+pip install beeper_desktop_api
 ```
-
-> [!NOTE]
-> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install beeper_desktop_api`
 
 ## Usage
 
@@ -33,8 +30,12 @@ client = BeeperDesktop(
     access_token=os.environ.get("BEEPER_ACCESS_TOKEN"),  # This is the default and can be omitted
 )
 
-user_info = client.token.info()
-print(user_info.sub)
+page = client.chats.search(
+    include_muted=True,
+    limit=3,
+    type="single",
+)
+print(page.items)
 ```
 
 While you can provide a `access_token` keyword argument,
@@ -57,8 +58,12 @@ client = AsyncBeeperDesktop(
 
 
 async def main() -> None:
-    user_info = await client.token.info()
-    print(user_info.sub)
+    page = await client.chats.search(
+        include_muted=True,
+        limit=3,
+        type="single",
+    )
+    print(page.items)
 
 
 asyncio.run(main())
@@ -73,8 +78,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from this staging repo
-pip install 'beeper_desktop_api[aiohttp] @ git+ssh://git@github.com/stainless-sdks/beeper-desktop-api-python.git'
+# install from PyPI
+pip install beeper_desktop_api[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -90,8 +95,12 @@ async def main() -> None:
         access_token="My Access Token",
         http_client=DefaultAioHttpClient(),
     ) as client:
-        user_info = await client.token.info()
-        print(user_info.sub)
+        page = await client.chats.search(
+            include_muted=True,
+            limit=3,
+            type="single",
+        )
+        print(page.items)
 
 
 asyncio.run(main())
@@ -105,6 +114,100 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Pagination
+
+List methods in the Beeper Desktop API are paginated.
+
+This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
+
+```python
+from beeper_desktop_api import BeeperDesktop
+
+client = BeeperDesktop()
+
+all_messages = []
+# Automatically fetches more pages as needed.
+for message in client.messages.search(
+    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    limit=10,
+    query="deployment",
+):
+    # Do something with message here
+    all_messages.append(message)
+print(all_messages)
+```
+
+Or, asynchronously:
+
+```python
+import asyncio
+from beeper_desktop_api import AsyncBeeperDesktop
+
+client = AsyncBeeperDesktop()
+
+
+async def main() -> None:
+    all_messages = []
+    # Iterate through items across all pages, issuing requests as needed.
+    async for message in client.messages.search(
+        account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+        limit=10,
+        query="deployment",
+    ):
+        all_messages.append(message)
+    print(all_messages)
+
+
+asyncio.run(main())
+```
+
+Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
+
+```python
+first_page = await client.messages.search(
+    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    limit=10,
+    query="deployment",
+)
+if first_page.has_next_page():
+    print(f"will fetch next page using these details: {first_page.next_page_info()}")
+    next_page = await first_page.get_next_page()
+    print(f"number of items we just fetched: {len(next_page.items)}")
+
+# Remove `await` for non-async usage.
+```
+
+Or just work directly with the returned data:
+
+```python
+first_page = await client.messages.search(
+    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    limit=10,
+    query="deployment",
+)
+
+print(f"next page cursor: {first_page.oldest_cursor}")  # => "next page cursor: ..."
+for message in first_page.items:
+    print(message.id)
+
+# Remove `await` for non-async usage.
+```
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from beeper_desktop_api import BeeperDesktop
+
+client = BeeperDesktop()
+
+client.chats.reminders.create(
+    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+    reminder={"remind_at_ms": 0},
+)
+```
 
 ## Handling errors
 
@@ -122,7 +225,7 @@ from beeper_desktop_api import BeeperDesktop
 client = BeeperDesktop()
 
 try:
-    client.token.info()
+    client.accounts.list()
 except beeper_desktop_api.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -165,7 +268,7 @@ client = BeeperDesktop(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).token.info()
+client.with_options(max_retries=5).accounts.list()
 ```
 
 ### Timeouts
@@ -188,7 +291,7 @@ client = BeeperDesktop(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).token.info()
+client.with_options(timeout=5.0).accounts.list()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -229,16 +332,16 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
-response = client.token.with_raw_response.info()
+response = client.accounts.with_raw_response.list()
 print(response.headers.get('X-My-Header'))
 
-token = response.parse()  # get the object that `token.info()` would have returned
-print(token.sub)
+account = response.parse()  # get the object that `accounts.list()` would have returned
+print(account)
 ```
 
-These methods return an [`APIResponse`](https://github.com/stainless-sdks/beeper-desktop-api-python/tree/main/src/beeper_desktop_api/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/beeper/desktop-api-python/tree/main/src/beeper_desktop_api/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/beeper-desktop-api-python/tree/main/src/beeper_desktop_api/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/beeper/desktop-api-python/tree/main/src/beeper_desktop_api/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -247,7 +350,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.token.with_streaming_response.info() as response:
+with client.accounts.with_streaming_response.list() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -342,7 +445,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/beeper-desktop-api-python/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/beeper/desktop-api-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

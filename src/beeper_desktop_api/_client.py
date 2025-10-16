@@ -10,25 +10,46 @@ import httpx
 
 from . import _exceptions
 from ._qs import Querystring
+from .types import client_focus_params, client_search_params
 from ._types import (
+    Body,
     Omit,
+    Query,
+    Headers,
     Timeout,
     NotGiven,
     Transport,
     ProxiesTypes,
     RequestOptions,
+    omit,
     not_given,
 )
-from ._utils import is_given, get_async_library
+from ._utils import (
+    is_given,
+    maybe_transform,
+    get_async_library,
+    async_maybe_transform,
+)
 from ._version import __version__
-from .resources import token
+from ._response import (
+    to_raw_response_wrapper,
+    to_streamed_response_wrapper,
+    async_to_raw_response_wrapper,
+    async_to_streamed_response_wrapper,
+)
+from .resources import assets, messages
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, BeeperDesktopError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
     AsyncAPIClient,
+    make_request_options,
 )
+from .resources.chats import chats
+from .resources.accounts import accounts
+from .types.focus_response import FocusResponse
+from .types.search_response import SearchResponse
 
 __all__ = [
     "Timeout",
@@ -43,7 +64,10 @@ __all__ = [
 
 
 class BeeperDesktop(SyncAPIClient):
-    token: token.TokenResource
+    accounts: accounts.AccountsResource
+    chats: chats.ChatsResource
+    messages: messages.MessagesResource
+    assets: assets.AssetsResource
     with_raw_response: BeeperDesktopWithRawResponse
     with_streaming_response: BeeperDesktopWithStreamedResponse
 
@@ -101,7 +125,10 @@ class BeeperDesktop(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.token = token.TokenResource(self)
+        self.accounts = accounts.AccountsResource(self)
+        self.chats = chats.ChatsResource(self)
+        self.messages = messages.MessagesResource(self)
+        self.assets = assets.AssetsResource(self)
         self.with_raw_response = BeeperDesktopWithRawResponse(self)
         self.with_streaming_response = BeeperDesktopWithStreamedResponse(self)
 
@@ -176,6 +203,98 @@ class BeeperDesktop(SyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
+    def focus(
+        self,
+        *,
+        chat_id: str | Omit = omit,
+        draft_attachment_path: str | Omit = omit,
+        draft_text: str | Omit = omit,
+        message_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FocusResponse:
+        """
+        Focus Beeper Desktop and optionally navigate to a specific chat, message, or
+        pre-fill draft text and attachment.
+
+        Args:
+          chat_id: Optional Beeper chat ID (or local chat ID) to focus after opening the app. If
+              omitted, only opens/focuses the app.
+
+          draft_attachment_path: Optional draft attachment path to populate in the message input field.
+
+          draft_text: Optional draft text to populate in the message input field.
+
+          message_id: Optional message ID. Jumps to that message in the chat when opening.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self.post(
+            "/v1/focus",
+            body=maybe_transform(
+                {
+                    "chat_id": chat_id,
+                    "draft_attachment_path": draft_attachment_path,
+                    "draft_text": draft_text,
+                    "message_id": message_id,
+                },
+                client_focus_params.ClientFocusParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FocusResponse,
+        )
+
+    def search(
+        self,
+        *,
+        query: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SearchResponse:
+        """
+        Returns matching chats, participant name matches in groups, and the first page
+        of messages in one call. Paginate messages via search-messages. Paginate chats
+        via search-chats. Uses the same sorting as the chat search in the app.
+
+        Args:
+          query: User-typed search text. Literal word matching (NOT semantic).
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self.get(
+            "/v1/search",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"query": query}, client_search_params.ClientSearchParams),
+            ),
+            cast_to=SearchResponse,
+        )
+
     @override
     def _make_status_error(
         self,
@@ -211,7 +330,10 @@ class BeeperDesktop(SyncAPIClient):
 
 
 class AsyncBeeperDesktop(AsyncAPIClient):
-    token: token.AsyncTokenResource
+    accounts: accounts.AsyncAccountsResource
+    chats: chats.AsyncChatsResource
+    messages: messages.AsyncMessagesResource
+    assets: assets.AsyncAssetsResource
     with_raw_response: AsyncBeeperDesktopWithRawResponse
     with_streaming_response: AsyncBeeperDesktopWithStreamedResponse
 
@@ -269,7 +391,10 @@ class AsyncBeeperDesktop(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.token = token.AsyncTokenResource(self)
+        self.accounts = accounts.AsyncAccountsResource(self)
+        self.chats = chats.AsyncChatsResource(self)
+        self.messages = messages.AsyncMessagesResource(self)
+        self.assets = assets.AsyncAssetsResource(self)
         self.with_raw_response = AsyncBeeperDesktopWithRawResponse(self)
         self.with_streaming_response = AsyncBeeperDesktopWithStreamedResponse(self)
 
@@ -344,6 +469,98 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     # client.with_options(timeout=10).foo.create(...)
     with_options = copy
 
+    async def focus(
+        self,
+        *,
+        chat_id: str | Omit = omit,
+        draft_attachment_path: str | Omit = omit,
+        draft_text: str | Omit = omit,
+        message_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FocusResponse:
+        """
+        Focus Beeper Desktop and optionally navigate to a specific chat, message, or
+        pre-fill draft text and attachment.
+
+        Args:
+          chat_id: Optional Beeper chat ID (or local chat ID) to focus after opening the app. If
+              omitted, only opens/focuses the app.
+
+          draft_attachment_path: Optional draft attachment path to populate in the message input field.
+
+          draft_text: Optional draft text to populate in the message input field.
+
+          message_id: Optional message ID. Jumps to that message in the chat when opening.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self.post(
+            "/v1/focus",
+            body=await async_maybe_transform(
+                {
+                    "chat_id": chat_id,
+                    "draft_attachment_path": draft_attachment_path,
+                    "draft_text": draft_text,
+                    "message_id": message_id,
+                },
+                client_focus_params.ClientFocusParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FocusResponse,
+        )
+
+    async def search(
+        self,
+        *,
+        query: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> SearchResponse:
+        """
+        Returns matching chats, participant name matches in groups, and the first page
+        of messages in one call. Paginate messages via search-messages. Paginate chats
+        via search-chats. Uses the same sorting as the chat search in the app.
+
+        Args:
+          query: User-typed search text. Literal word matching (NOT semantic).
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self.get(
+            "/v1/search",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"query": query}, client_search_params.ClientSearchParams),
+            ),
+            cast_to=SearchResponse,
+        )
+
     @override
     def _make_status_error(
         self,
@@ -380,22 +597,62 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 
 class BeeperDesktopWithRawResponse:
     def __init__(self, client: BeeperDesktop) -> None:
-        self.token = token.TokenResourceWithRawResponse(client.token)
+        self.accounts = accounts.AccountsResourceWithRawResponse(client.accounts)
+        self.chats = chats.ChatsResourceWithRawResponse(client.chats)
+        self.messages = messages.MessagesResourceWithRawResponse(client.messages)
+        self.assets = assets.AssetsResourceWithRawResponse(client.assets)
+
+        self.focus = to_raw_response_wrapper(
+            client.focus,
+        )
+        self.search = to_raw_response_wrapper(
+            client.search,
+        )
 
 
 class AsyncBeeperDesktopWithRawResponse:
     def __init__(self, client: AsyncBeeperDesktop) -> None:
-        self.token = token.AsyncTokenResourceWithRawResponse(client.token)
+        self.accounts = accounts.AsyncAccountsResourceWithRawResponse(client.accounts)
+        self.chats = chats.AsyncChatsResourceWithRawResponse(client.chats)
+        self.messages = messages.AsyncMessagesResourceWithRawResponse(client.messages)
+        self.assets = assets.AsyncAssetsResourceWithRawResponse(client.assets)
+
+        self.focus = async_to_raw_response_wrapper(
+            client.focus,
+        )
+        self.search = async_to_raw_response_wrapper(
+            client.search,
+        )
 
 
 class BeeperDesktopWithStreamedResponse:
     def __init__(self, client: BeeperDesktop) -> None:
-        self.token = token.TokenResourceWithStreamingResponse(client.token)
+        self.accounts = accounts.AccountsResourceWithStreamingResponse(client.accounts)
+        self.chats = chats.ChatsResourceWithStreamingResponse(client.chats)
+        self.messages = messages.MessagesResourceWithStreamingResponse(client.messages)
+        self.assets = assets.AssetsResourceWithStreamingResponse(client.assets)
+
+        self.focus = to_streamed_response_wrapper(
+            client.focus,
+        )
+        self.search = to_streamed_response_wrapper(
+            client.search,
+        )
 
 
 class AsyncBeeperDesktopWithStreamedResponse:
     def __init__(self, client: AsyncBeeperDesktop) -> None:
-        self.token = token.AsyncTokenResourceWithStreamingResponse(client.token)
+        self.accounts = accounts.AsyncAccountsResourceWithStreamingResponse(client.accounts)
+        self.chats = chats.AsyncChatsResourceWithStreamingResponse(client.chats)
+        self.messages = messages.AsyncMessagesResourceWithStreamingResponse(client.messages)
+        self.assets = assets.AsyncAssetsResourceWithStreamingResponse(client.assets)
+
+        self.focus = async_to_streamed_response_wrapper(
+            client.focus,
+        )
+        self.search = async_to_streamed_response_wrapper(
+            client.search,
+        )
 
 
 Client = BeeperDesktop

@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.296 (2025-10-18)
+
+Full Changelog: [v4.1.295...v4.1.296](https://github.com/beeper/desktop-api-python/compare/v4.1.295...v4.1.296)
+
+### Chores
+
+* bump `httpx-aiohttp` version to 0.1.9 ([18f66be](https://github.com/beeper/desktop-api-python/commit/18f66bed7a97283166eccdda8832c698aaca6f4a))
+
 ## 4.1.295 (2025-10-16)
 
 Full Changelog: [v0.0.1...v4.1.295](https://github.com/beeper/desktop-api-python/compare/v0.0.1...v4.1.295)

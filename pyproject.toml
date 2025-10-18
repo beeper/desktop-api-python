@@ -1,6 +1,6 @@
 [project]
 name = "beeper_desktop_api"
-version = "4.1.295"
+version = "4.1.296"
 description = "The official Python library for the beeperdesktop API"
 dynamic = ["readme"]
 license = "MIT"

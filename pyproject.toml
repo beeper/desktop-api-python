@@ -1,6 +1,6 @@
 [project]
 name = "beeper_desktop_api"
-version = "4.1.295"
+version = "4.1.296"
 description = "The official Python library for the beeperdesktop API"
 dynamic = ["readme"]
 license = "MIT"
@@ -39,7 +39,7 @@ Homepage = "https://github.com/beeper/desktop-api-python"
 Repository = "https://github.com/beeper/desktop-api-python"
 
 [project.optional-dependencies]
-aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.8"]
+aiohttp = ["aiohttp", "httpx_aiohttp>=0.1.9"]
 
 [tool.rye]
 managed = true

@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.2.0 (2025-10-23)
+
+Full Changelog: [v4.1.296...v4.2.0](https://github.com/beeper/desktop-api-python/compare/v4.1.296...v4.2.0)
+
+### Features
+
+* **api:** add `description` field to chats, make `title` optional ([4ea0387](https://github.com/beeper/desktop-api-python/commit/4ea0387eaec221fd3bbfc38dd0d78bec923a8d81))
+
 ## 4.1.296 (2025-10-18)
 
 Full Changelog: [v4.1.295...v4.1.296](https://github.com/beeper/desktop-api-python/compare/v4.1.295...v4.1.296)

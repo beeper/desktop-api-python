@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.2.0 (2025-10-31)
+
+Full Changelog: [v4.1.296...v4.2.0](https://github.com/beeper/desktop-api-python/compare/v4.1.296...v4.2.0)
+
+### Features
+
+* **api:** add `description` field to chats, make `title` optional ([4ea0387](https://github.com/beeper/desktop-api-python/commit/4ea0387eaec221fd3bbfc38dd0d78bec923a8d81))
+
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([5449667](https://github.com/beeper/desktop-api-python/commit/544966767cb709bb67daf01b3e01fc0a1f5b78c8))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([3b3c246](https://github.com/beeper/desktop-api-python/commit/3b3c24628854e4fea29e0594ef5ecc31f9444c02))
+
 ## 4.1.296 (2025-10-18)
 
 Full Changelog: [v4.1.295...v4.1.296](https://github.com/beeper/desktop-api-python/compare/v4.1.295...v4.1.296)

@@ -1,5 +1,27 @@
 # Changelog
 
+## 4.2.0 (2025-11-12)
+
+Full Changelog: [v4.1.296...v4.2.0](https://github.com/beeper/desktop-api-python/compare/v4.1.296...v4.2.0)
+
+### Features
+
+* **api:** add `description` field to chats, make `title` optional ([4ea0387](https://github.com/beeper/desktop-api-python/commit/4ea0387eaec221fd3bbfc38dd0d78bec923a8d81))
+
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([5449667](https://github.com/beeper/desktop-api-python/commit/544966767cb709bb67daf01b3e01fc0a1f5b78c8))
+* compat with Python 3.14 ([ed03f21](https://github.com/beeper/desktop-api-python/commit/ed03f2168fe6f88ecc7068c8914065784d11561c))
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([e185aed](https://github.com/beeper/desktop-api-python/commit/e185aede9d368ba424a73e42e19eafb7ba581222))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([3b3c246](https://github.com/beeper/desktop-api-python/commit/3b3c24628854e4fea29e0594ef5ecc31f9444c02))
+* **internal:** grammar fix (it's -&gt; its) ([9dd17e2](https://github.com/beeper/desktop-api-python/commit/9dd17e2b322aedd17dc0cd2e5cc78a1ac38ae53a))
+* **package:** drop Python 3.8 support ([3926021](https://github.com/beeper/desktop-api-python/commit/3926021bbdb4c56732364e1b4dc065ec47cf85c0))
+
 ## 4.1.296 (2025-10-18)
 
 Full Changelog: [v4.1.295...v4.1.296](https://github.com/beeper/desktop-api-python/compare/v4.1.295...v4.1.296)

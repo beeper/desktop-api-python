@@ -36,23 +36,23 @@ class Chat(BaseModel):
     participants: Participants
     """Chat participants information."""
 
-    title: str
-    """Display title of the chat as computed by the client/server."""
-
     type: Literal["single", "group"]
     """Chat type: 'single' for direct messages, 'group' for group chats."""
 
     unread_count: int = FieldInfo(alias="unreadCount")
     """Number of unread messages."""
 
+    description: Optional[str] = None
+    """Description of the chat."""
+
     is_archived: Optional[bool] = FieldInfo(alias="isArchived", default=None)
     """True if chat is archived."""
 
     is_muted: Optional[bool] = FieldInfo(alias="isMuted", default=None)
-    """True if chat notifications are muted."""
+    """True if the chat is muted."""
 
     is_pinned: Optional[bool] = FieldInfo(alias="isPinned", default=None)
-    """True if chat is pinned."""
+    """True if the chat is pinned."""
 
     last_activity: Optional[datetime] = FieldInfo(alias="lastActivity", default=None)
     """Timestamp of last activity."""
@@ -62,3 +62,6 @@ class Chat(BaseModel):
 
     local_chat_id: Optional[str] = FieldInfo(alias="localChatID", default=None)
     """Local chat ID specific to this Beeper Desktop installation."""
+
+    title: Optional[str] = None
+    """Display title of the chat."""

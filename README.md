@@ -85,6 +85,7 @@ pip install beeper_desktop_api[aiohttp]
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
+import os
 import asyncio
 from beeper_desktop_api import DefaultAioHttpClient
 from beeper_desktop_api import AsyncBeeperDesktop
@@ -92,7 +93,9 @@ from beeper_desktop_api import AsyncBeeperDesktop
 
 async def main() -> None:
     async with AsyncBeeperDesktop(
-        access_token="My Access Token",
+        access_token=os.environ.get(
+            "BEEPER_ACCESS_TOKEN"
+        ),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
         page = await client.chats.search(

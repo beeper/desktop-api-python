@@ -15,6 +15,8 @@ class ReminderCreateParams(TypedDict, total=False):
 
 
 class Reminder(TypedDict, total=False):
+    """Reminder configuration"""
+
     remind_at_ms: Required[Annotated[float, PropertyInfo(alias="remindAtMs")]]
     """Unix timestamp in milliseconds when reminder should trigger"""
 

@@ -10,6 +10,8 @@ __all__ = ["User"]
 
 
 class User(BaseModel):
+    """User the account belongs to."""
+
     id: str
     """Stable Beeper user ID. Use as the primary key when referencing a person."""
 

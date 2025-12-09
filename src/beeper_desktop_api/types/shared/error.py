@@ -20,6 +20,8 @@ class DetailsIssuesIssue(BaseModel):
 
 
 class DetailsIssues(BaseModel):
+    """Validation error details"""
+
     issues: List[DetailsIssuesIssue]
     """List of validation issues"""
 

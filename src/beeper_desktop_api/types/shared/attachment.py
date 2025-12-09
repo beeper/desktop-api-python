@@ -11,6 +11,8 @@ __all__ = ["Attachment", "Size"]
 
 
 class Size(BaseModel):
+    """Pixel dimensions of the attachment: width/height in px."""
+
     height: Optional[float] = None
 
     width: Optional[float] = None

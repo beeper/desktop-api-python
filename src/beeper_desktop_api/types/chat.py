@@ -13,6 +13,8 @@ __all__ = ["Chat", "Participants"]
 
 
 class Participants(BaseModel):
+    """Chat participants information."""
+
     has_more: bool = FieldInfo(alias="hasMore")
     """True if there are more participants than included in items."""
 

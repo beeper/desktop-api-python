@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -30,6 +30,7 @@ from ._utils import (
     get_async_library,
     async_maybe_transform,
 )
+from ._compat import cached_property
 from ._version import __version__
 from ._response import (
     to_raw_response_wrapper,
@@ -37,7 +38,6 @@ from ._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .resources import assets, messages
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import APIStatusError, BeeperDesktopError
 from ._base_client import (
@@ -46,10 +46,15 @@ from ._base_client import (
     AsyncAPIClient,
     make_request_options,
 )
-from .resources.chats import chats
-from .resources.accounts import accounts
 from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
+
+if TYPE_CHECKING:
+    from .resources import chats, assets, accounts, messages
+    from .resources.assets import AssetsResource, AsyncAssetsResource
+    from .resources.messages import MessagesResource, AsyncMessagesResource
+    from .resources.chats.chats import ChatsResource, AsyncChatsResource
+    from .resources.accounts.accounts import AccountsResource, AsyncAccountsResource
 
 __all__ = [
     "Timeout",
@@ -64,13 +69,6 @@ __all__ = [
 
 
 class BeeperDesktop(SyncAPIClient):
-    accounts: accounts.AccountsResource
-    chats: chats.ChatsResource
-    messages: messages.MessagesResource
-    assets: assets.AssetsResource
-    with_raw_response: BeeperDesktopWithRawResponse
-    with_streaming_response: BeeperDesktopWithStreamedResponse
-
     # client options
     access_token: str
 
@@ -125,12 +123,41 @@ class BeeperDesktop(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.accounts = accounts.AccountsResource(self)
-        self.chats = chats.ChatsResource(self)
-        self.messages = messages.MessagesResource(self)
-        self.assets = assets.AssetsResource(self)
-        self.with_raw_response = BeeperDesktopWithRawResponse(self)
-        self.with_streaming_response = BeeperDesktopWithStreamedResponse(self)
+    @cached_property
+    def accounts(self) -> AccountsResource:
+        """Manage connected chat accounts"""
+        from .resources.accounts import AccountsResource
+
+        return AccountsResource(self)
+
+    @cached_property
+    def chats(self) -> ChatsResource:
+        """Manage chats"""
+        from .resources.chats import ChatsResource
+
+        return ChatsResource(self)
+
+    @cached_property
+    def messages(self) -> MessagesResource:
+        """Manage messages in chats"""
+        from .resources.messages import MessagesResource
+
+        return MessagesResource(self)
+
+    @cached_property
+    def assets(self) -> AssetsResource:
+        """Manage assets in Beeper Desktop, like message attachments"""
+        from .resources.assets import AssetsResource
+
+        return AssetsResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> BeeperDesktopWithRawResponse:
+        return BeeperDesktopWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> BeeperDesktopWithStreamedResponse:
+        return BeeperDesktopWithStreamedResponse(self)
 
     @property
     @override
@@ -330,13 +357,6 @@ class BeeperDesktop(SyncAPIClient):
 
 
 class AsyncBeeperDesktop(AsyncAPIClient):
-    accounts: accounts.AsyncAccountsResource
-    chats: chats.AsyncChatsResource
-    messages: messages.AsyncMessagesResource
-    assets: assets.AsyncAssetsResource
-    with_raw_response: AsyncBeeperDesktopWithRawResponse
-    with_streaming_response: AsyncBeeperDesktopWithStreamedResponse
-
     # client options
     access_token: str
 
@@ -391,12 +411,41 @@ class AsyncBeeperDesktop(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.accounts = accounts.AsyncAccountsResource(self)
-        self.chats = chats.AsyncChatsResource(self)
-        self.messages = messages.AsyncMessagesResource(self)
-        self.assets = assets.AsyncAssetsResource(self)
-        self.with_raw_response = AsyncBeeperDesktopWithRawResponse(self)
-        self.with_streaming_response = AsyncBeeperDesktopWithStreamedResponse(self)
+    @cached_property
+    def accounts(self) -> AsyncAccountsResource:
+        """Manage connected chat accounts"""
+        from .resources.accounts import AsyncAccountsResource
+
+        return AsyncAccountsResource(self)
+
+    @cached_property
+    def chats(self) -> AsyncChatsResource:
+        """Manage chats"""
+        from .resources.chats import AsyncChatsResource
+
+        return AsyncChatsResource(self)
+
+    @cached_property
+    def messages(self) -> AsyncMessagesResource:
+        """Manage messages in chats"""
+        from .resources.messages import AsyncMessagesResource
+
+        return AsyncMessagesResource(self)
+
+    @cached_property
+    def assets(self) -> AsyncAssetsResource:
+        """Manage assets in Beeper Desktop, like message attachments"""
+        from .resources.assets import AsyncAssetsResource
+
+        return AsyncAssetsResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncBeeperDesktopWithRawResponse:
+        return AsyncBeeperDesktopWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncBeeperDesktopWithStreamedResponse:
+        return AsyncBeeperDesktopWithStreamedResponse(self)
 
     @property
     @override
@@ -596,11 +645,10 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 
 
 class BeeperDesktopWithRawResponse:
+    _client: BeeperDesktop
+
     def __init__(self, client: BeeperDesktop) -> None:
-        self.accounts = accounts.AccountsResourceWithRawResponse(client.accounts)
-        self.chats = chats.ChatsResourceWithRawResponse(client.chats)
-        self.messages = messages.MessagesResourceWithRawResponse(client.messages)
-        self.assets = assets.AssetsResourceWithRawResponse(client.assets)
+        self._client = client
 
         self.focus = to_raw_response_wrapper(
             client.focus,
@@ -609,13 +657,40 @@ class BeeperDesktopWithRawResponse:
             client.search,
         )
 
+    @cached_property
+    def accounts(self) -> accounts.AccountsResourceWithRawResponse:
+        """Manage connected chat accounts"""
+        from .resources.accounts import AccountsResourceWithRawResponse
+
+        return AccountsResourceWithRawResponse(self._client.accounts)
+
+    @cached_property
+    def chats(self) -> chats.ChatsResourceWithRawResponse:
+        """Manage chats"""
+        from .resources.chats import ChatsResourceWithRawResponse
+
+        return ChatsResourceWithRawResponse(self._client.chats)
+
+    @cached_property
+    def messages(self) -> messages.MessagesResourceWithRawResponse:
+        """Manage messages in chats"""
+        from .resources.messages import MessagesResourceWithRawResponse
+
+        return MessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def assets(self) -> assets.AssetsResourceWithRawResponse:
+        """Manage assets in Beeper Desktop, like message attachments"""
+        from .resources.assets import AssetsResourceWithRawResponse
+
+        return AssetsResourceWithRawResponse(self._client.assets)
+
 
 class AsyncBeeperDesktopWithRawResponse:
+    _client: AsyncBeeperDesktop
+
     def __init__(self, client: AsyncBeeperDesktop) -> None:
-        self.accounts = accounts.AsyncAccountsResourceWithRawResponse(client.accounts)
-        self.chats = chats.AsyncChatsResourceWithRawResponse(client.chats)
-        self.messages = messages.AsyncMessagesResourceWithRawResponse(client.messages)
-        self.assets = assets.AsyncAssetsResourceWithRawResponse(client.assets)
+        self._client = client
 
         self.focus = async_to_raw_response_wrapper(
             client.focus,
@@ -624,13 +699,40 @@ class AsyncBeeperDesktopWithRawResponse:
             client.search,
         )
 
+    @cached_property
+    def accounts(self) -> accounts.AsyncAccountsResourceWithRawResponse:
+        """Manage connected chat accounts"""
+        from .resources.accounts import AsyncAccountsResourceWithRawResponse
+
+        return AsyncAccountsResourceWithRawResponse(self._client.accounts)
+
+    @cached_property
+    def chats(self) -> chats.AsyncChatsResourceWithRawResponse:
+        """Manage chats"""
+        from .resources.chats import AsyncChatsResourceWithRawResponse
+
+        return AsyncChatsResourceWithRawResponse(self._client.chats)
+
+    @cached_property
+    def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
+        """Manage messages in chats"""
+        from .resources.messages import AsyncMessagesResourceWithRawResponse
+
+        return AsyncMessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def assets(self) -> assets.AsyncAssetsResourceWithRawResponse:
+        """Manage assets in Beeper Desktop, like message attachments"""
+        from .resources.assets import AsyncAssetsResourceWithRawResponse
+
+        return AsyncAssetsResourceWithRawResponse(self._client.assets)
+
 
 class BeeperDesktopWithStreamedResponse:
+    _client: BeeperDesktop
+
     def __init__(self, client: BeeperDesktop) -> None:
-        self.accounts = accounts.AccountsResourceWithStreamingResponse(client.accounts)
-        self.chats = chats.ChatsResourceWithStreamingResponse(client.chats)
-        self.messages = messages.MessagesResourceWithStreamingResponse(client.messages)
-        self.assets = assets.AssetsResourceWithStreamingResponse(client.assets)
+        self._client = client
 
         self.focus = to_streamed_response_wrapper(
             client.focus,
@@ -639,13 +741,40 @@ class BeeperDesktopWithStreamedResponse:
             client.search,
         )
 
+    @cached_property
+    def accounts(self) -> accounts.AccountsResourceWithStreamingResponse:
+        """Manage connected chat accounts"""
+        from .resources.accounts import AccountsResourceWithStreamingResponse
+
+        return AccountsResourceWithStreamingResponse(self._client.accounts)
+
+    @cached_property
+    def chats(self) -> chats.ChatsResourceWithStreamingResponse:
+        """Manage chats"""
+        from .resources.chats import ChatsResourceWithStreamingResponse
+
+        return ChatsResourceWithStreamingResponse(self._client.chats)
+
+    @cached_property
+    def messages(self) -> messages.MessagesResourceWithStreamingResponse:
+        """Manage messages in chats"""
+        from .resources.messages import MessagesResourceWithStreamingResponse
+
+        return MessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def assets(self) -> assets.AssetsResourceWithStreamingResponse:
+        """Manage assets in Beeper Desktop, like message attachments"""
+        from .resources.assets import AssetsResourceWithStreamingResponse
+
+        return AssetsResourceWithStreamingResponse(self._client.assets)
+
 
 class AsyncBeeperDesktopWithStreamedResponse:
+    _client: AsyncBeeperDesktop
+
     def __init__(self, client: AsyncBeeperDesktop) -> None:
-        self.accounts = accounts.AsyncAccountsResourceWithStreamingResponse(client.accounts)
-        self.chats = chats.AsyncChatsResourceWithStreamingResponse(client.chats)
-        self.messages = messages.AsyncMessagesResourceWithStreamingResponse(client.messages)
-        self.assets = assets.AsyncAssetsResourceWithStreamingResponse(client.assets)
+        self._client = client
 
         self.focus = async_to_streamed_response_wrapper(
             client.focus,
@@ -653,6 +782,34 @@ class AsyncBeeperDesktopWithStreamedResponse:
         self.search = async_to_streamed_response_wrapper(
             client.search,
         )
+
+    @cached_property
+    def accounts(self) -> accounts.AsyncAccountsResourceWithStreamingResponse:
+        """Manage connected chat accounts"""
+        from .resources.accounts import AsyncAccountsResourceWithStreamingResponse
+
+        return AsyncAccountsResourceWithStreamingResponse(self._client.accounts)
+
+    @cached_property
+    def chats(self) -> chats.AsyncChatsResourceWithStreamingResponse:
+        """Manage chats"""
+        from .resources.chats import AsyncChatsResourceWithStreamingResponse
+
+        return AsyncChatsResourceWithStreamingResponse(self._client.chats)
+
+    @cached_property
+    def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
+        """Manage messages in chats"""
+        from .resources.messages import AsyncMessagesResourceWithStreamingResponse
+
+        return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def assets(self) -> assets.AsyncAssetsResourceWithStreamingResponse:
+        """Manage assets in Beeper Desktop, like message attachments"""
+        from .resources.assets import AsyncAssetsResourceWithStreamingResponse
+
+        return AsyncAssetsResourceWithStreamingResponse(self._client.assets)
 
 
 Client = BeeperDesktop

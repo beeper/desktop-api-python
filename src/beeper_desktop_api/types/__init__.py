@@ -27,3 +27,5 @@ from .message_send_response import MessageSendResponse as MessageSendResponse
 from .message_update_params import MessageUpdateParams as MessageUpdateParams
 from .asset_download_response import AssetDownloadResponse as AssetDownloadResponse
 from .message_update_response import MessageUpdateResponse as MessageUpdateResponse
+from .asset_upload_base64_params import AssetUploadBase64Params as AssetUploadBase64Params
+from .asset_upload_base64_response import AssetUploadBase64Response as AssetUploadBase64Response

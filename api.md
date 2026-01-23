@@ -84,10 +84,15 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import AssetDownloadResponse, AssetUploadResponse
+from beeper_desktop_api.types import (
+    AssetDownloadResponse,
+    AssetUploadResponse,
+    AssetUploadBase64Response,
+)
 ```
 
 Methods:
 
 - <code title="post /v1/assets/download">client.assets.<a href="./src/beeper_desktop_api/resources/assets.py">download</a>(\*\*<a href="src/beeper_desktop_api/types/asset_download_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/asset_download_response.py">AssetDownloadResponse</a></code>
 - <code title="post /v1/assets/upload">client.assets.<a href="./src/beeper_desktop_api/resources/assets.py">upload</a>(\*\*<a href="src/beeper_desktop_api/types/asset_upload_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/asset_upload_response.py">AssetUploadResponse</a></code>
+- <code title="post /v1/assets/upload/base64">client.assets.<a href="./src/beeper_desktop_api/resources/assets.py">upload_base64</a>(\*\*<a href="src/beeper_desktop_api/types/asset_upload_base64_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/asset_upload_base64_response.py">AssetUploadBase64Response</a></code>

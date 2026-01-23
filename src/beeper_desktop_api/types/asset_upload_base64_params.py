@@ -4,18 +4,17 @@ from __future__ import annotations
 
 from typing_extensions import Required, Annotated, TypedDict
 
-from .._types import FileTypes
 from .._utils import PropertyInfo
 
-__all__ = ["AssetUploadParams"]
+__all__ = ["AssetUploadBase64Params"]
 
 
-class AssetUploadParams(TypedDict, total=False):
-    file: Required[FileTypes]
-    """The file to upload (max 500 MB)."""
+class AssetUploadBase64Params(TypedDict, total=False):
+    content: Required[str]
+    """Base64-encoded file content (max ~500MB decoded)"""
 
     file_name: Annotated[str, PropertyInfo(alias="fileName")]
-    """Original filename. Defaults to the uploaded file name if omitted"""
+    """Original filename. Generated if omitted"""
 
     mime_type: Annotated[str, PropertyInfo(alias="mimeType")]
     """MIME type. Auto-detected from magic bytes if omitted"""

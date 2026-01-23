@@ -8,7 +8,7 @@ from typing_extensions import Literal
 
 import httpx
 
-from ..types import message_list_params, message_send_params, message_search_params
+from ..types import message_list_params, message_send_params, message_search_params, message_update_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -23,6 +23,7 @@ from ..pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorSortKey,
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
 from ..types.message_send_response import MessageSendResponse
+from ..types.message_update_response import MessageUpdateResponse
 
 __all__ = ["MessagesResource", "AsyncMessagesResource"]
 
@@ -48,6 +49,50 @@ class MessagesResource(SyncAPIResource):
         For more information, see https://www.github.com/beeper/desktop-api-python#with_streaming_response
         """
         return MessagesResourceWithStreamingResponse(self)
+
+    def update(
+        self,
+        message_id: str,
+        *,
+        chat_id: str,
+        text: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageUpdateResponse:
+        """Edit the text content of an existing message.
+
+        Messages with attachments cannot
+        be edited.
+
+        Args:
+          chat_id: Unique identifier of the chat.
+
+          text: New text content for the message
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        return self._put(
+            f"/v1/chats/{chat_id}/messages/{message_id}",
+            body=maybe_transform({"text": text}, message_update_params.MessageUpdateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageUpdateResponse,
+        )
 
     def list(
         self,
@@ -158,7 +203,7 @@ class MessagesResource(SyncAPIResource):
           media_types: Filter messages by media types. Use ['any'] for any media type, or specify exact
               types like ['video', 'image']. Omit for no media filtering.
 
-          query: Literal word search (NOT semantic). Finds messages containing these EXACT words
+          query: Literal word search (non-semantic). Finds messages containing these EXACT words
               in any order. Use single words users actually type, not concepts or phrases.
               Example: use "dinner" not "dinner plans", use "sick" not "health issues". If
               omitted, returns results filtered only by other parameters.
@@ -208,6 +253,7 @@ class MessagesResource(SyncAPIResource):
         self,
         chat_id: str,
         *,
+        attachment: message_send_params.Attachment | Omit = omit,
         reply_to_message_id: str | Omit = omit,
         text: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -220,10 +266,12 @@ class MessagesResource(SyncAPIResource):
         """Send a text message to a specific chat.
 
         Supports replying to existing messages.
-        Returns the sent message ID.
+        Returns a pending message ID.
 
         Args:
           chat_id: Unique identifier of the chat.
+
+          attachment: Single attachment to send with the message
 
           reply_to_message_id: Provide a message ID to send this as a reply to an existing message
 
@@ -243,6 +291,7 @@ class MessagesResource(SyncAPIResource):
             f"/v1/chats/{chat_id}/messages",
             body=maybe_transform(
                 {
+                    "attachment": attachment,
                     "reply_to_message_id": reply_to_message_id,
                     "text": text,
                 },
@@ -276,6 +325,50 @@ class AsyncMessagesResource(AsyncAPIResource):
         For more information, see https://www.github.com/beeper/desktop-api-python#with_streaming_response
         """
         return AsyncMessagesResourceWithStreamingResponse(self)
+
+    async def update(
+        self,
+        message_id: str,
+        *,
+        chat_id: str,
+        text: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MessageUpdateResponse:
+        """Edit the text content of an existing message.
+
+        Messages with attachments cannot
+        be edited.
+
+        Args:
+          chat_id: Unique identifier of the chat.
+
+          text: New text content for the message
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        if not message_id:
+            raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        return await self._put(
+            f"/v1/chats/{chat_id}/messages/{message_id}",
+            body=await async_maybe_transform({"text": text}, message_update_params.MessageUpdateParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MessageUpdateResponse,
+        )
 
     def list(
         self,
@@ -386,7 +479,7 @@ class AsyncMessagesResource(AsyncAPIResource):
           media_types: Filter messages by media types. Use ['any'] for any media type, or specify exact
               types like ['video', 'image']. Omit for no media filtering.
 
-          query: Literal word search (NOT semantic). Finds messages containing these EXACT words
+          query: Literal word search (non-semantic). Finds messages containing these EXACT words
               in any order. Use single words users actually type, not concepts or phrases.
               Example: use "dinner" not "dinner plans", use "sick" not "health issues". If
               omitted, returns results filtered only by other parameters.
@@ -436,6 +529,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         self,
         chat_id: str,
         *,
+        attachment: message_send_params.Attachment | Omit = omit,
         reply_to_message_id: str | Omit = omit,
         text: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -448,10 +542,12 @@ class AsyncMessagesResource(AsyncAPIResource):
         """Send a text message to a specific chat.
 
         Supports replying to existing messages.
-        Returns the sent message ID.
+        Returns a pending message ID.
 
         Args:
           chat_id: Unique identifier of the chat.
+
+          attachment: Single attachment to send with the message
 
           reply_to_message_id: Provide a message ID to send this as a reply to an existing message
 
@@ -471,6 +567,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             f"/v1/chats/{chat_id}/messages",
             body=await async_maybe_transform(
                 {
+                    "attachment": attachment,
                     "reply_to_message_id": reply_to_message_id,
                     "text": text,
                 },
@@ -487,6 +584,9 @@ class MessagesResourceWithRawResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.update = to_raw_response_wrapper(
+            messages.update,
+        )
         self.list = to_raw_response_wrapper(
             messages.list,
         )
@@ -502,6 +602,9 @@ class AsyncMessagesResourceWithRawResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.update = async_to_raw_response_wrapper(
+            messages.update,
+        )
         self.list = async_to_raw_response_wrapper(
             messages.list,
         )
@@ -517,6 +620,9 @@ class MessagesResourceWithStreamingResponse:
     def __init__(self, messages: MessagesResource) -> None:
         self._messages = messages
 
+        self.update = to_streamed_response_wrapper(
+            messages.update,
+        )
         self.list = to_streamed_response_wrapper(
             messages.list,
         )
@@ -532,6 +638,9 @@ class AsyncMessagesResourceWithStreamingResponse:
     def __init__(self, messages: AsyncMessagesResource) -> None:
         self._messages = messages
 
+        self.update = async_to_streamed_response_wrapper(
+            messages.update,
+        )
         self.list = async_to_streamed_response_wrapper(
             messages.list,
         )

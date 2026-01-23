@@ -126,7 +126,6 @@ class TestChats:
     def test_method_list_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.list(
             account_ids=[
-                "whatsapp",
                 "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
                 "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
             ],
@@ -356,7 +355,6 @@ class TestAsyncChats:
     async def test_method_list_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.list(
             account_ids=[
-                "whatsapp",
                 "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
                 "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
             ],

@@ -11,6 +11,7 @@ from .chat_list_params import ChatListParams as ChatListParams
 from .chat_create_params import ChatCreateParams as ChatCreateParams
 from .chat_list_response import ChatListResponse as ChatListResponse
 from .chat_search_params import ChatSearchParams as ChatSearchParams
+from .asset_upload_params import AssetUploadParams as AssetUploadParams
 from .chat_archive_params import ChatArchiveParams as ChatArchiveParams
 from .client_focus_params import ClientFocusParams as ClientFocusParams
 from .message_list_params import MessageListParams as MessageListParams
@@ -20,6 +21,9 @@ from .chat_retrieve_params import ChatRetrieveParams as ChatRetrieveParams
 from .client_search_params import ClientSearchParams as ClientSearchParams
 from .account_list_response import AccountListResponse as AccountListResponse
 from .asset_download_params import AssetDownloadParams as AssetDownloadParams
+from .asset_upload_response import AssetUploadResponse as AssetUploadResponse
 from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
+from .message_update_params import MessageUpdateParams as MessageUpdateParams
 from .asset_download_response import AssetDownloadResponse as AssetDownloadResponse
+from .message_update_response import MessageUpdateResponse as MessageUpdateResponse

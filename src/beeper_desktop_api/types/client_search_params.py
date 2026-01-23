@@ -9,4 +9,4 @@ __all__ = ["ClientSearchParams"]
 
 class ClientSearchParams(TypedDict, total=False):
     query: Required[str]
-    """User-typed search text. Literal word matching (NOT semantic)."""
+    """User-typed search text. Literal word matching (non-semantic)."""

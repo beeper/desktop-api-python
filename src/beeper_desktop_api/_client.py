@@ -300,7 +300,7 @@ class BeeperDesktop(SyncAPIClient):
         via search-chats. Uses the same sorting as the chat search in the app.
 
         Args:
-          query: User-typed search text. Literal word matching (NOT semantic).
+          query: User-typed search text. Literal word matching (non-semantic).
 
           extra_headers: Send extra headers
 
@@ -588,7 +588,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         via search-chats. Uses the same sorting as the chat search in the app.
 
         Args:
-          query: User-typed search text. Literal word matching (NOT semantic).
+          query: User-typed search text. Literal word matching (non-semantic).
 
           extra_headers: Send extra headers
 

@@ -9,7 +9,10 @@ import pytest
 
 from tests.utils import assert_matches_type
 from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
-from beeper_desktop_api.types import AssetDownloadResponse
+from beeper_desktop_api.types import (
+    AssetUploadResponse,
+    AssetDownloadResponse,
+)
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -48,6 +51,46 @@ class TestAssets:
 
         assert cast(Any, response.is_closed) is True
 
+    @parametrize
+    def test_method_upload(self, client: BeeperDesktop) -> None:
+        asset = client.assets.upload(
+            content="x",
+        )
+        assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+    @parametrize
+    def test_method_upload_with_all_params(self, client: BeeperDesktop) -> None:
+        asset = client.assets.upload(
+            content="x",
+            file_name="fileName",
+            mime_type="mimeType",
+        )
+        assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+    @parametrize
+    def test_raw_response_upload(self, client: BeeperDesktop) -> None:
+        response = client.assets.with_raw_response.upload(
+            content="x",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        asset = response.parse()
+        assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+    @parametrize
+    def test_streaming_response_upload(self, client: BeeperDesktop) -> None:
+        with client.assets.with_streaming_response.upload(
+            content="x",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            asset = response.parse()
+            assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
 
 class TestAsyncAssets:
     parametrize = pytest.mark.parametrize(
@@ -82,5 +125,45 @@ class TestAsyncAssets:
 
             asset = await response.parse()
             assert_matches_type(AssetDownloadResponse, asset, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_method_upload(self, async_client: AsyncBeeperDesktop) -> None:
+        asset = await async_client.assets.upload(
+            content="x",
+        )
+        assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+    @parametrize
+    async def test_method_upload_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        asset = await async_client.assets.upload(
+            content="x",
+            file_name="fileName",
+            mime_type="mimeType",
+        )
+        assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+    @parametrize
+    async def test_raw_response_upload(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.assets.with_raw_response.upload(
+            content="x",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        asset = await response.parse()
+        assert_matches_type(AssetUploadResponse, asset, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_upload(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.assets.with_streaming_response.upload(
+            content="x",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            asset = await response.parse()
+            assert_matches_type(AssetUploadResponse, asset, path=["response"])
 
         assert cast(Any, response.is_closed) is True

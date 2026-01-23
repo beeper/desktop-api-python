@@ -66,7 +66,7 @@ class MessageSearchParams(TypedDict, total=False):
     """
 
     query: str
-    """Literal word search (NOT semantic).
+    """Literal word search (non-semantic).
 
     Finds messages containing these EXACT words in any order. Use single words users
     actually type, not concepts or phrases. Example: use "dinner" not "dinner

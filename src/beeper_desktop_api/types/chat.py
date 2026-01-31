@@ -32,9 +32,6 @@ class Chat(BaseModel):
     account_id: str = FieldInfo(alias="accountID")
     """Account ID this chat belongs to."""
 
-    network: str
-    """Display-only human-readable network name (e.g., 'WhatsApp', 'Messenger')."""
-
     participants: Participants
     """Chat participants information."""
 

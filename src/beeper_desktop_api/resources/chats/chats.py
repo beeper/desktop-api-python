@@ -9,7 +9,7 @@ from typing_extensions import Literal
 import httpx
 
 from ...types import chat_list_params, chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
-from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from .reminders import (
@@ -32,6 +32,7 @@ from ...types.chat import Chat
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.chat_list_response import ChatListResponse
 from ...types.chat_create_response import ChatCreateResponse
+from ...types.chat_archive_response import ChatArchiveResponse
 
 __all__ = ["ChatsResource", "AsyncChatsResource"]
 
@@ -230,7 +231,7 @@ class ChatsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> ChatArchiveResponse:
         """Archive or unarchive a chat.
 
         Set archived=true to move to archive,
@@ -251,14 +252,13 @@ class ChatsResource(SyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
             f"/v1/chats/{chat_id}/archive",
             body=maybe_transform({"archived": archived}, chat_archive_params.ChatArchiveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=ChatArchiveResponse,
         )
 
     def search(
@@ -553,7 +553,7 @@ class AsyncChatsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> ChatArchiveResponse:
         """Archive or unarchive a chat.
 
         Set archived=true to move to archive,
@@ -574,14 +574,13 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
             f"/v1/chats/{chat_id}/archive",
             body=await async_maybe_transform({"archived": archived}, chat_archive_params.ChatArchiveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=ChatArchiveResponse,
         )
 
     def search(

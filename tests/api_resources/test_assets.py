@@ -53,6 +53,37 @@ class TestAssets:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
+    def test_method_serve(self, client: BeeperDesktop) -> None:
+        asset = client.assets.serve(
+            url="x",
+        )
+        assert asset is None
+
+    @parametrize
+    def test_raw_response_serve(self, client: BeeperDesktop) -> None:
+        response = client.assets.with_raw_response.serve(
+            url="x",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        asset = response.parse()
+        assert asset is None
+
+    @parametrize
+    def test_streaming_response_serve(self, client: BeeperDesktop) -> None:
+        with client.assets.with_streaming_response.serve(
+            url="x",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            asset = response.parse()
+            assert asset is None
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
     def test_method_upload(self, client: BeeperDesktop) -> None:
         asset = client.assets.upload(
             file=b"raw file contents",
@@ -166,6 +197,37 @@ class TestAsyncAssets:
 
             asset = await response.parse()
             assert_matches_type(AssetDownloadResponse, asset, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_method_serve(self, async_client: AsyncBeeperDesktop) -> None:
+        asset = await async_client.assets.serve(
+            url="x",
+        )
+        assert asset is None
+
+    @parametrize
+    async def test_raw_response_serve(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.assets.with_raw_response.serve(
+            url="x",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        asset = await response.parse()
+        assert asset is None
+
+    @parametrize
+    async def test_streaming_response_serve(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.assets.with_streaming_response.serve(
+            url="x",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            asset = await response.parse()
+            assert asset is None
 
         assert cast(Any, response.is_closed) is True
 

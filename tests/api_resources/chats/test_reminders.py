@@ -7,7 +7,9 @@ from typing import Any, cast
 
 import pytest
 
+from tests.utils import assert_matches_type
 from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
+from beeper_desktop_api.types.chats import ReminderCreateResponse, ReminderDeleteResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -21,7 +23,7 @@ class TestReminders:
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             reminder={"remind_at_ms": 0},
         )
-        assert reminder is None
+        assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: BeeperDesktop) -> None:
@@ -32,7 +34,7 @@ class TestReminders:
                 "dismiss_on_incoming_message": True,
             },
         )
-        assert reminder is None
+        assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
     @parametrize
     def test_raw_response_create(self, client: BeeperDesktop) -> None:
@@ -44,7 +46,7 @@ class TestReminders:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         reminder = response.parse()
-        assert reminder is None
+        assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
     @parametrize
     def test_streaming_response_create(self, client: BeeperDesktop) -> None:
@@ -56,7 +58,7 @@ class TestReminders:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             reminder = response.parse()
-            assert reminder is None
+            assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -73,7 +75,7 @@ class TestReminders:
         reminder = client.chats.reminders.delete(
             "!NCdzlIaMjZUmvmvyHU:beeper.com",
         )
-        assert reminder is None
+        assert_matches_type(ReminderDeleteResponse, reminder, path=["response"])
 
     @parametrize
     def test_raw_response_delete(self, client: BeeperDesktop) -> None:
@@ -84,7 +86,7 @@ class TestReminders:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         reminder = response.parse()
-        assert reminder is None
+        assert_matches_type(ReminderDeleteResponse, reminder, path=["response"])
 
     @parametrize
     def test_streaming_response_delete(self, client: BeeperDesktop) -> None:
@@ -95,7 +97,7 @@ class TestReminders:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             reminder = response.parse()
-            assert reminder is None
+            assert_matches_type(ReminderDeleteResponse, reminder, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -118,7 +120,7 @@ class TestAsyncReminders:
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             reminder={"remind_at_ms": 0},
         )
-        assert reminder is None
+        assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
@@ -129,7 +131,7 @@ class TestAsyncReminders:
                 "dismiss_on_incoming_message": True,
             },
         )
-        assert reminder is None
+        assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncBeeperDesktop) -> None:
@@ -141,7 +143,7 @@ class TestAsyncReminders:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         reminder = await response.parse()
-        assert reminder is None
+        assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncBeeperDesktop) -> None:
@@ -153,7 +155,7 @@ class TestAsyncReminders:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             reminder = await response.parse()
-            assert reminder is None
+            assert_matches_type(ReminderCreateResponse, reminder, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -170,7 +172,7 @@ class TestAsyncReminders:
         reminder = await async_client.chats.reminders.delete(
             "!NCdzlIaMjZUmvmvyHU:beeper.com",
         )
-        assert reminder is None
+        assert_matches_type(ReminderDeleteResponse, reminder, path=["response"])
 
     @parametrize
     async def test_raw_response_delete(self, async_client: AsyncBeeperDesktop) -> None:
@@ -181,7 +183,7 @@ class TestAsyncReminders:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         reminder = await response.parse()
-        assert reminder is None
+        assert_matches_type(ReminderDeleteResponse, reminder, path=["response"])
 
     @parametrize
     async def test_streaming_response_delete(self, async_client: AsyncBeeperDesktop) -> None:
@@ -192,7 +194,7 @@ class TestAsyncReminders:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             reminder = await response.parse()
-            assert reminder is None
+            assert_matches_type(ReminderDeleteResponse, reminder, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -13,6 +13,7 @@ from beeper_desktop_api.types import (
     Chat,
     ChatListResponse,
     ChatCreateResponse,
+    ChatArchiveResponse,
 )
 from beeper_desktop_api._utils import parse_datetime
 from beeper_desktop_api.pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorNoLimit, AsyncCursorNoLimit
@@ -159,7 +160,7 @@ class TestChats:
         chat = client.chats.archive(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
         )
-        assert chat is None
+        assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
     @parametrize
     def test_method_archive_with_all_params(self, client: BeeperDesktop) -> None:
@@ -167,7 +168,7 @@ class TestChats:
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             archived=True,
         )
-        assert chat is None
+        assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
     @parametrize
     def test_raw_response_archive(self, client: BeeperDesktop) -> None:
@@ -178,7 +179,7 @@ class TestChats:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         chat = response.parse()
-        assert chat is None
+        assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
     @parametrize
     def test_streaming_response_archive(self, client: BeeperDesktop) -> None:
@@ -189,7 +190,7 @@ class TestChats:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             chat = response.parse()
-            assert chat is None
+            assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -388,7 +389,7 @@ class TestAsyncChats:
         chat = await async_client.chats.archive(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
         )
-        assert chat is None
+        assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
     @parametrize
     async def test_method_archive_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
@@ -396,7 +397,7 @@ class TestAsyncChats:
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             archived=True,
         )
-        assert chat is None
+        assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
     @parametrize
     async def test_raw_response_archive(self, async_client: AsyncBeeperDesktop) -> None:
@@ -407,7 +408,7 @@ class TestAsyncChats:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         chat = await response.parse()
-        assert chat is None
+        assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
     @parametrize
     async def test_streaming_response_archive(self, async_client: AsyncBeeperDesktop) -> None:
@@ -418,7 +419,7 @@ class TestAsyncChats:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             chat = await response.parse()
-            assert chat is None
+            assert_matches_type(ChatArchiveResponse, chat, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

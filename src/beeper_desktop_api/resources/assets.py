@@ -6,8 +6,8 @@ from typing import Mapping, cast
 
 import httpx
 
-from ..types import asset_upload_params, asset_download_params, asset_upload_base64_params
-from .._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
+from ..types import asset_serve_params, asset_upload_params, asset_download_params, asset_upload_base64_params
+from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, FileTypes, omit, not_given
 from .._utils import extract_files, maybe_transform, deepcopy_minimal, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -80,6 +80,46 @@ class AssetsResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=AssetDownloadResponse,
+        )
+
+    def serve(
+        self,
+        *,
+        url: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """Stream a file given an mxc://, localmxc://, or file:// URL.
+
+        Downloads first if
+        not cached. Supports Range requests for seeking in large files.
+
+        Args:
+          url: Asset URL to serve. Accepts mxc://, localmxc://, or file:// URLs.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return self._get(
+            "/v1/assets/serve",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"url": url}, asset_serve_params.AssetServeParams),
+            ),
+            cast_to=NoneType,
         )
 
     def upload(
@@ -245,6 +285,46 @@ class AsyncAssetsResource(AsyncAPIResource):
             cast_to=AssetDownloadResponse,
         )
 
+    async def serve(
+        self,
+        *,
+        url: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> None:
+        """Stream a file given an mxc://, localmxc://, or file:// URL.
+
+        Downloads first if
+        not cached. Supports Range requests for seeking in large files.
+
+        Args:
+          url: Asset URL to serve. Accepts mxc://, localmxc://, or file:// URLs.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
+        return await self._get(
+            "/v1/assets/serve",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"url": url}, asset_serve_params.AssetServeParams),
+            ),
+            cast_to=NoneType,
+        )
+
     async def upload(
         self,
         *,
@@ -358,6 +438,9 @@ class AssetsResourceWithRawResponse:
         self.download = to_raw_response_wrapper(
             assets.download,
         )
+        self.serve = to_raw_response_wrapper(
+            assets.serve,
+        )
         self.upload = to_raw_response_wrapper(
             assets.upload,
         )
@@ -372,6 +455,9 @@ class AsyncAssetsResourceWithRawResponse:
 
         self.download = async_to_raw_response_wrapper(
             assets.download,
+        )
+        self.serve = async_to_raw_response_wrapper(
+            assets.serve,
         )
         self.upload = async_to_raw_response_wrapper(
             assets.upload,
@@ -388,6 +474,9 @@ class AssetsResourceWithStreamingResponse:
         self.download = to_streamed_response_wrapper(
             assets.download,
         )
+        self.serve = to_streamed_response_wrapper(
+            assets.serve,
+        )
         self.upload = to_streamed_response_wrapper(
             assets.upload,
         )
@@ -402,6 +491,9 @@ class AsyncAssetsResourceWithStreamingResponse:
 
         self.download = async_to_streamed_response_wrapper(
             assets.download,
+        )
+        self.serve = async_to_streamed_response_wrapper(
+            assets.serve,
         )
         self.upload = async_to_streamed_response_wrapper(
             assets.upload,

@@ -297,7 +297,7 @@ class BeeperDesktop(SyncAPIClient):
         """
         Returns matching chats, participant name matches in groups, and the first page
         of messages in one call. Paginate messages via search-messages. Paginate chats
-        via search-chats. Uses the same sorting as the chat search in the app.
+        via search-chats.
 
         Args:
           query: User-typed search text. Literal word matching (non-semantic).
@@ -585,7 +585,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         """
         Returns matching chats, participant name matches in groups, and the first page
         of messages in one call. Paginate messages via search-messages. Paginate chats
-        via search-chats. Uses the same sorting as the chat search in the app.
+        via search-chats.
 
         Args:
           query: User-typed search text. Literal word matching (non-semantic).

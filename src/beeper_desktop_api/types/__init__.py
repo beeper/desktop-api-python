@@ -23,7 +23,6 @@ from .client_search_params import ClientSearchParams as ClientSearchParams
 from .account_list_response import AccountListResponse as AccountListResponse
 from .asset_download_params import AssetDownloadParams as AssetDownloadParams
 from .asset_upload_response import AssetUploadResponse as AssetUploadResponse
-from .chat_archive_response import ChatArchiveResponse as ChatArchiveResponse
 from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .message_update_params import MessageUpdateParams as MessageUpdateParams

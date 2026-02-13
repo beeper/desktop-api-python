@@ -55,10 +55,9 @@ class ContactsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ContactSearchResponse:
-        """Search contacts on a specific account using the network's search API.
-
-        Only use
-        for creating new chats.
+        """
+        Search contacts on a specific account using merged account contacts, network
+        search, and exact identifier lookup.
 
         Args:
           account_id: Account ID this resource belongs to.
@@ -122,10 +121,9 @@ class AsyncContactsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ContactSearchResponse:
-        """Search contacts on a specific account using the network's search API.
-
-        Only use
-        for creating new chats.
+        """
+        Search contacts on a specific account using merged account contacts, network
+        search, and exact identifier lookup.
 
         Args:
           account_id: Account ID this resource belongs to.

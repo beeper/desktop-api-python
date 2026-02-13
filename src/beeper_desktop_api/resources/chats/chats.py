@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import Union, Optional
 from datetime import datetime
-from typing_extensions import Literal
+from typing_extensions import Literal, overload
 
 import httpx
 
 from ...types import chat_list_params, chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
-from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
+from ..._utils import required_args, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from .reminders import (
     RemindersResource,
@@ -32,7 +32,6 @@ from ...types.chat import Chat
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.chat_list_response import ChatListResponse
 from ...types.chat_create_response import ChatCreateResponse
-from ...types.chat_archive_response import ChatArchiveResponse
 
 __all__ = ["ChatsResource", "AsyncChatsResource"]
 
@@ -64,6 +63,7 @@ class ChatsResource(SyncAPIResource):
         """
         return ChatsResourceWithStreamingResponse(self)
 
+    @overload
     def create(
         self,
         *,
@@ -71,6 +71,7 @@ class ChatsResource(SyncAPIResource):
         participant_ids: SequenceNotStr[str],
         type: Literal["single", "group"],
         message_text: str | Omit = omit,
+        mode: Literal["create"] | Omit = omit,
         title: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -80,8 +81,8 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a single or group chat on a specific account using participant IDs and
-        optional title.
+        Create a single/group chat (mode='create') or start a direct chat from merged
+        user data (mode='start').
 
         Args:
           account_id: Account to create the chat on.
@@ -93,6 +94,8 @@ class ChatsResource(SyncAPIResource):
 
           message_text: Optional first message content if the platform requires it to create the chat.
 
+          mode: Create mode. Defaults to 'create' when omitted.
+
           title: Optional title for group chats; ignored for single chats on most platforms.
 
           extra_headers: Send extra headers
@@ -103,6 +106,68 @@ class ChatsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        ...
+
+    @overload
+    def create(
+        self,
+        *,
+        account_id: str,
+        mode: Literal["start"],
+        user: chat_create_params.Variant1User,
+        allow_invite: bool | Omit = omit,
+        message_text: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ChatCreateResponse:
+        """
+        Create a single/group chat (mode='create') or start a direct chat from merged
+        user data (mode='start').
+
+        Args:
+          account_id: Account to start the chat on.
+
+          mode: Start mode for resolving/creating a direct chat from merged contact data.
+
+          user: Merged user-like contact payload used to resolve the best identifier.
+
+          allow_invite: Whether invite-based DM creation is allowed when required by the platform.
+
+          message_text: Optional first message content if the platform requires it to create the chat.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @required_args(["account_id", "participant_ids", "type"], ["account_id", "mode", "user"])
+    def create(
+        self,
+        *,
+        account_id: str,
+        participant_ids: SequenceNotStr[str] | Omit = omit,
+        type: Literal["single", "group"] | Omit = omit,
+        message_text: str | Omit = omit,
+        mode: Literal["create"] | Literal["start"] | Omit = omit,
+        title: str | Omit = omit,
+        user: chat_create_params.Variant1User | Omit = omit,
+        allow_invite: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ChatCreateResponse:
         return self._post(
             "/v1/chats",
             body=maybe_transform(
@@ -111,7 +176,10 @@ class ChatsResource(SyncAPIResource):
                     "participant_ids": participant_ids,
                     "type": type,
                     "message_text": message_text,
+                    "mode": mode,
                     "title": title,
+                    "user": user,
+                    "allow_invite": allow_invite,
                 },
                 chat_create_params.ChatCreateParams,
             ),
@@ -231,7 +299,7 @@ class ChatsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ChatArchiveResponse:
+    ) -> None:
         """Archive or unarchive a chat.
 
         Set archived=true to move to archive,
@@ -252,13 +320,14 @@ class ChatsResource(SyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
             f"/v1/chats/{chat_id}/archive",
             body=maybe_transform({"archived": archived}, chat_archive_params.ChatArchiveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ChatArchiveResponse,
+            cast_to=NoneType,
         )
 
     def search(
@@ -386,6 +455,7 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         return AsyncChatsResourceWithStreamingResponse(self)
 
+    @overload
     async def create(
         self,
         *,
@@ -393,6 +463,7 @@ class AsyncChatsResource(AsyncAPIResource):
         participant_ids: SequenceNotStr[str],
         type: Literal["single", "group"],
         message_text: str | Omit = omit,
+        mode: Literal["create"] | Omit = omit,
         title: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -402,8 +473,8 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a single or group chat on a specific account using participant IDs and
-        optional title.
+        Create a single/group chat (mode='create') or start a direct chat from merged
+        user data (mode='start').
 
         Args:
           account_id: Account to create the chat on.
@@ -415,6 +486,8 @@ class AsyncChatsResource(AsyncAPIResource):
 
           message_text: Optional first message content if the platform requires it to create the chat.
 
+          mode: Create mode. Defaults to 'create' when omitted.
+
           title: Optional title for group chats; ignored for single chats on most platforms.
 
           extra_headers: Send extra headers
@@ -425,6 +498,68 @@ class AsyncChatsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
+        ...
+
+    @overload
+    async def create(
+        self,
+        *,
+        account_id: str,
+        mode: Literal["start"],
+        user: chat_create_params.Variant1User,
+        allow_invite: bool | Omit = omit,
+        message_text: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ChatCreateResponse:
+        """
+        Create a single/group chat (mode='create') or start a direct chat from merged
+        user data (mode='start').
+
+        Args:
+          account_id: Account to start the chat on.
+
+          mode: Start mode for resolving/creating a direct chat from merged contact data.
+
+          user: Merged user-like contact payload used to resolve the best identifier.
+
+          allow_invite: Whether invite-based DM creation is allowed when required by the platform.
+
+          message_text: Optional first message content if the platform requires it to create the chat.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @required_args(["account_id", "participant_ids", "type"], ["account_id", "mode", "user"])
+    async def create(
+        self,
+        *,
+        account_id: str,
+        participant_ids: SequenceNotStr[str] | Omit = omit,
+        type: Literal["single", "group"] | Omit = omit,
+        message_text: str | Omit = omit,
+        mode: Literal["create"] | Literal["start"] | Omit = omit,
+        title: str | Omit = omit,
+        user: chat_create_params.Variant1User | Omit = omit,
+        allow_invite: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ChatCreateResponse:
         return await self._post(
             "/v1/chats",
             body=await async_maybe_transform(
@@ -433,7 +568,10 @@ class AsyncChatsResource(AsyncAPIResource):
                     "participant_ids": participant_ids,
                     "type": type,
                     "message_text": message_text,
+                    "mode": mode,
                     "title": title,
+                    "user": user,
+                    "allow_invite": allow_invite,
                 },
                 chat_create_params.ChatCreateParams,
             ),
@@ -553,7 +691,7 @@ class AsyncChatsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ChatArchiveResponse:
+    ) -> None:
         """Archive or unarchive a chat.
 
         Set archived=true to move to archive,
@@ -574,13 +712,14 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
             f"/v1/chats/{chat_id}/archive",
             body=await async_maybe_transform({"archived": archived}, chat_archive_params.ChatArchiveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ChatArchiveResponse,
+            cast_to=NoneType,
         )
 
     def search(

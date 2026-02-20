@@ -26,28 +26,26 @@ class TestChats:
     @parametrize
     def test_method_create(self, client: BeeperDesktop) -> None:
         chat = client.chats.create(
-            chat={"account_id": "accountID"},
+            account_id="accountID",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.create(
-            chat={
-                "account_id": "accountID",
-                "allow_invite": True,
-                "message_text": "messageText",
-                "mode": "create",
-                "participant_ids": ["string"],
-                "title": "title",
-                "type": "single",
-                "user": {
-                    "id": "id",
-                    "email": "email",
-                    "full_name": "fullName",
-                    "phone_number": "phoneNumber",
-                    "username": "username",
-                },
+            account_id="accountID",
+            allow_invite=True,
+            message_text="messageText",
+            mode="create",
+            participant_ids=["string"],
+            title="title",
+            type="single",
+            user={
+                "id": "id",
+                "email": "email",
+                "full_name": "fullName",
+                "phone_number": "phoneNumber",
+                "username": "username",
             },
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
@@ -55,7 +53,7 @@ class TestChats:
     @parametrize
     def test_raw_response_create(self, client: BeeperDesktop) -> None:
         response = client.chats.with_raw_response.create(
-            chat={"account_id": "accountID"},
+            account_id="accountID",
         )
 
         assert response.is_closed is True
@@ -66,7 +64,7 @@ class TestChats:
     @parametrize
     def test_streaming_response_create(self, client: BeeperDesktop) -> None:
         with client.chats.with_streaming_response.create(
-            chat={"account_id": "accountID"},
+            account_id="accountID",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -260,28 +258,26 @@ class TestAsyncChats:
     @parametrize
     async def test_method_create(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.create(
-            chat={"account_id": "accountID"},
+            account_id="accountID",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.create(
-            chat={
-                "account_id": "accountID",
-                "allow_invite": True,
-                "message_text": "messageText",
-                "mode": "create",
-                "participant_ids": ["string"],
-                "title": "title",
-                "type": "single",
-                "user": {
-                    "id": "id",
-                    "email": "email",
-                    "full_name": "fullName",
-                    "phone_number": "phoneNumber",
-                    "username": "username",
-                },
+            account_id="accountID",
+            allow_invite=True,
+            message_text="messageText",
+            mode="create",
+            participant_ids=["string"],
+            title="title",
+            type="single",
+            user={
+                "id": "id",
+                "email": "email",
+                "full_name": "fullName",
+                "phone_number": "phoneNumber",
+                "username": "username",
             },
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
@@ -289,7 +285,7 @@ class TestAsyncChats:
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncBeeperDesktop) -> None:
         response = await async_client.chats.with_raw_response.create(
-            chat={"account_id": "accountID"},
+            account_id="accountID",
         )
 
         assert response.is_closed is True
@@ -300,7 +296,7 @@ class TestAsyncChats:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncBeeperDesktop) -> None:
         async with async_client.chats.with_streaming_response.create(
-            chat={"account_id": "accountID"},
+            account_id="accountID",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

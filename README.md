@@ -219,7 +219,8 @@ from beeper_desktop_api import BeeperDesktop
 client = BeeperDesktop()
 
 chat = client.chats.create(
-    chat={"account_id": "accountID"},
+    account_id="accountID",
+    user={},
 )
 print(chat.user)
 ```

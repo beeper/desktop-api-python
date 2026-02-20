@@ -26,6 +26,7 @@ from .asset_upload_response import AssetUploadResponse as AssetUploadResponse
 from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .message_update_params import MessageUpdateParams as MessageUpdateParams
+from .info_retrieve_response import InfoRetrieveResponse as InfoRetrieveResponse
 from .asset_download_response import AssetDownloadResponse as AssetDownloadResponse
 from .message_update_response import MessageUpdateResponse as MessageUpdateResponse
 from .asset_upload_base64_params import AssetUploadBase64Params as AssetUploadBase64Params

@@ -1,5 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .info import (
+    InfoResource,
+    AsyncInfoResource,
+    InfoResourceWithRawResponse,
+    AsyncInfoResourceWithRawResponse,
+    InfoResourceWithStreamingResponse,
+    AsyncInfoResourceWithStreamingResponse,
+)
 from .chats import (
     ChatsResource,
     AsyncChatsResource,
@@ -58,4 +66,10 @@ __all__ = [
     "AsyncAssetsResourceWithRawResponse",
     "AssetsResourceWithStreamingResponse",
     "AsyncAssetsResourceWithStreamingResponse",
+    "InfoResource",
+    "AsyncInfoResource",
+    "InfoResourceWithRawResponse",
+    "AsyncInfoResourceWithRawResponse",
+    "InfoResourceWithStreamingResponse",
+    "AsyncInfoResourceWithStreamingResponse",
 ]

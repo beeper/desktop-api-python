@@ -50,7 +50,8 @@ from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
 
 if TYPE_CHECKING:
-    from .resources import chats, assets, accounts, messages
+    from .resources import info, chats, assets, accounts, messages
+    from .resources.info import InfoResource, AsyncInfoResource
     from .resources.assets import AssetsResource, AsyncAssetsResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.chats.chats import ChatsResource, AsyncChatsResource
@@ -150,6 +151,12 @@ class BeeperDesktop(SyncAPIClient):
         from .resources.assets import AssetsResource
 
         return AssetsResource(self)
+
+    @cached_property
+    def info(self) -> InfoResource:
+        from .resources.info import InfoResource
+
+        return InfoResource(self)
 
     @cached_property
     def with_raw_response(self) -> BeeperDesktopWithRawResponse:
@@ -440,6 +447,12 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         return AsyncAssetsResource(self)
 
     @cached_property
+    def info(self) -> AsyncInfoResource:
+        from .resources.info import AsyncInfoResource
+
+        return AsyncInfoResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBeeperDesktopWithRawResponse:
         return AsyncBeeperDesktopWithRawResponse(self)
 
@@ -685,6 +698,12 @@ class BeeperDesktopWithRawResponse:
 
         return AssetsResourceWithRawResponse(self._client.assets)
 
+    @cached_property
+    def info(self) -> info.InfoResourceWithRawResponse:
+        from .resources.info import InfoResourceWithRawResponse
+
+        return InfoResourceWithRawResponse(self._client.info)
+
 
 class AsyncBeeperDesktopWithRawResponse:
     _client: AsyncBeeperDesktop
@@ -726,6 +745,12 @@ class AsyncBeeperDesktopWithRawResponse:
         from .resources.assets import AsyncAssetsResourceWithRawResponse
 
         return AsyncAssetsResourceWithRawResponse(self._client.assets)
+
+    @cached_property
+    def info(self) -> info.AsyncInfoResourceWithRawResponse:
+        from .resources.info import AsyncInfoResourceWithRawResponse
+
+        return AsyncInfoResourceWithRawResponse(self._client.info)
 
 
 class BeeperDesktopWithStreamedResponse:
@@ -769,6 +794,12 @@ class BeeperDesktopWithStreamedResponse:
 
         return AssetsResourceWithStreamingResponse(self._client.assets)
 
+    @cached_property
+    def info(self) -> info.InfoResourceWithStreamingResponse:
+        from .resources.info import InfoResourceWithStreamingResponse
+
+        return InfoResourceWithStreamingResponse(self._client.info)
+
 
 class AsyncBeeperDesktopWithStreamedResponse:
     _client: AsyncBeeperDesktop
@@ -810,6 +841,12 @@ class AsyncBeeperDesktopWithStreamedResponse:
         from .resources.assets import AsyncAssetsResourceWithStreamingResponse
 
         return AsyncAssetsResourceWithStreamingResponse(self._client.assets)
+
+    @cached_property
+    def info(self) -> info.AsyncInfoResourceWithStreamingResponse:
+        from .resources.info import AsyncInfoResourceWithStreamingResponse
+
+        return AsyncInfoResourceWithStreamingResponse(self._client.info)
 
 
 Client = BeeperDesktop

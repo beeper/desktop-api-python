@@ -2,5 +2,6 @@
 
 from __future__ import annotations
 
+from .contact_list_params import ContactListParams as ContactListParams
 from .contact_search_params import ContactSearchParams as ContactSearchParams
 from .contact_search_response import ContactSearchResponse as ContactSearchResponse

@@ -9,6 +9,8 @@ import pytest
 
 from tests.utils import assert_matches_type
 from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
+from beeper_desktop_api.pagination import SyncCursorSearch, AsyncCursorSearch
+from beeper_desktop_api.types.shared import User
 from beeper_desktop_api.types.accounts import ContactSearchResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -16,6 +18,55 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
 class TestContacts:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    @parametrize
+    def test_method_list(self, client: BeeperDesktop) -> None:
+        contact = client.accounts.contacts.list(
+            account_id="accountID",
+        )
+        assert_matches_type(SyncCursorSearch[User], contact, path=["response"])
+
+    @parametrize
+    def test_method_list_with_all_params(self, client: BeeperDesktop) -> None:
+        contact = client.accounts.contacts.list(
+            account_id="accountID",
+            cursor="1725489123456|c29tZUltc2dQYWdl",
+            direction="before",
+            limit=1,
+            query="x",
+        )
+        assert_matches_type(SyncCursorSearch[User], contact, path=["response"])
+
+    @parametrize
+    def test_raw_response_list(self, client: BeeperDesktop) -> None:
+        response = client.accounts.contacts.with_raw_response.list(
+            account_id="accountID",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        contact = response.parse()
+        assert_matches_type(SyncCursorSearch[User], contact, path=["response"])
+
+    @parametrize
+    def test_streaming_response_list(self, client: BeeperDesktop) -> None:
+        with client.accounts.contacts.with_streaming_response.list(
+            account_id="accountID",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            contact = response.parse()
+            assert_matches_type(SyncCursorSearch[User], contact, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_list(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `account_id` but received ''"):
+            client.accounts.contacts.with_raw_response.list(
+                account_id="",
+            )
 
     @parametrize
     def test_method_search(self, client: BeeperDesktop) -> None:
@@ -64,6 +115,55 @@ class TestAsyncContacts:
     parametrize = pytest.mark.parametrize(
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
+
+    @parametrize
+    async def test_method_list(self, async_client: AsyncBeeperDesktop) -> None:
+        contact = await async_client.accounts.contacts.list(
+            account_id="accountID",
+        )
+        assert_matches_type(AsyncCursorSearch[User], contact, path=["response"])
+
+    @parametrize
+    async def test_method_list_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        contact = await async_client.accounts.contacts.list(
+            account_id="accountID",
+            cursor="1725489123456|c29tZUltc2dQYWdl",
+            direction="before",
+            limit=1,
+            query="x",
+        )
+        assert_matches_type(AsyncCursorSearch[User], contact, path=["response"])
+
+    @parametrize
+    async def test_raw_response_list(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.accounts.contacts.with_raw_response.list(
+            account_id="accountID",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        contact = await response.parse()
+        assert_matches_type(AsyncCursorSearch[User], contact, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_list(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.accounts.contacts.with_streaming_response.list(
+            account_id="accountID",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            contact = await response.parse()
+            assert_matches_type(AsyncCursorSearch[User], contact, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_list(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `account_id` but received ''"):
+            await async_client.accounts.contacts.with_raw_response.list(
+                account_id="",
+            )
 
     @parametrize
     async def test_method_search(self, async_client: AsyncBeeperDesktop) -> None:

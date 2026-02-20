@@ -14,8 +14,5 @@ class Account(BaseModel):
     account_id: str = FieldInfo(alias="accountID")
     """Chat account added to Beeper. Use this to route account-scoped actions."""
 
-    network: str
-    """Display-only human-readable network name (e.g., 'WhatsApp', 'Messenger')."""
-
     user: User
     """User the account belongs to."""

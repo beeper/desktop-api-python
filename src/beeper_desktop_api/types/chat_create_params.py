@@ -7,36 +7,10 @@ from typing_extensions import Literal, Required, Annotated, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["ChatCreateParams", "Chat", "ChatUser"]
+__all__ = ["ChatCreateParams", "User"]
 
 
 class ChatCreateParams(TypedDict, total=False):
-    chat: Required[Chat]
-
-
-class ChatUser(TypedDict, total=False):
-    """Required when mode='start'.
-
-    Merged user-like contact payload used to resolve the best identifier.
-    """
-
-    id: str
-    """Known user ID when available."""
-
-    email: str
-    """Email candidate."""
-
-    full_name: Annotated[str, PropertyInfo(alias="fullName")]
-    """Display name hint used for ranking only."""
-
-    phone_number: Annotated[str, PropertyInfo(alias="phoneNumber")]
-    """Phone number candidate (E.164 preferred)."""
-
-    username: str
-    """Username/handle candidate."""
-
-
-class Chat(TypedDict, total=False):
     account_id: Required[Annotated[str, PropertyInfo(alias="accountID")]]
     """Account to create or start the chat on."""
 
@@ -68,8 +42,30 @@ class Chat(TypedDict, total=False):
     participants and optional title.
     """
 
-    user: ChatUser
+    user: User
     """Required when mode='start'.
 
     Merged user-like contact payload used to resolve the best identifier.
     """
+
+
+class User(TypedDict, total=False):
+    """Required when mode='start'.
+
+    Merged user-like contact payload used to resolve the best identifier.
+    """
+
+    id: str
+    """Known user ID when available."""
+
+    email: str
+    """Email candidate."""
+
+    full_name: Annotated[str, PropertyInfo(alias="fullName")]
+    """Display name hint used for ranking only."""
+
+    phone_number: Annotated[str, PropertyInfo(alias="phoneNumber")]
+    """Phone number candidate (E.164 preferred)."""
+
+    username: str
+    """Username/handle candidate."""

@@ -23,9 +23,12 @@ The REST API documentation can be found on [developers.beeper.com](https://devel
 ## Installation
 
 ```sh
-# install from PyPI
-pip install beeper_desktop_api
+# install from the production repo
+pip install git+ssh://git@github.com/beeper/desktop-api-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install beeper_desktop_api`
 
 ## Usage
 
@@ -87,8 +90,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install beeper_desktop_api[aiohttp]
+# install from the production repo
+pip install 'beeper_desktop_api[aiohttp] @ git+ssh://git@github.com/beeper/desktop-api-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -215,10 +218,10 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-client.chats.reminders.create(
-    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-    reminder={"remind_at_ms": 0},
+chat = client.chats.create(
+    chat={"account_id": "accountID"},
 )
+print(chat.user)
 ```
 
 ## File uploads

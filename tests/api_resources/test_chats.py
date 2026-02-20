@@ -24,87 +24,27 @@ class TestChats:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
-    def test_method_create_overload_1(self, client: BeeperDesktop) -> None:
-        chat = client.chats.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-        )
+    def test_method_create(self, client: BeeperDesktop) -> None:
+        chat = client.chats.create()
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
-    def test_method_create_with_all_params_overload_1(self, client: BeeperDesktop) -> None:
+    def test_method_create_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-            message_text="messageText",
-            mode="create",
-            title="title",
-        )
-        assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-    @parametrize
-    def test_raw_response_create_overload_1(self, client: BeeperDesktop) -> None:
-        response = client.chats.with_raw_response.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        chat = response.parse()
-        assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-    @parametrize
-    def test_streaming_response_create_overload_1(self, client: BeeperDesktop) -> None:
-        with client.chats.with_streaming_response.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            chat = response.parse()
-            assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_create_overload_2(self, client: BeeperDesktop) -> None:
-        chat = client.chats.create(
-            account_id="accountID",
-            mode="start",
-            user={},
-        )
-        assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-    @parametrize
-    def test_method_create_with_all_params_overload_2(self, client: BeeperDesktop) -> None:
-        chat = client.chats.create(
-            account_id="accountID",
-            mode="start",
-            user={
-                "id": "id",
-                "email": "email",
-                "full_name": "fullName",
-                "phone_number": "phoneNumber",
-                "username": "username",
+            chat={
+                "account_id": "accountID",
+                "participant_ids": ["string"],
+                "type": "single",
+                "message_text": "messageText",
+                "mode": "create",
+                "title": "title",
             },
-            allow_invite=True,
-            message_text="messageText",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
-    def test_raw_response_create_overload_2(self, client: BeeperDesktop) -> None:
-        response = client.chats.with_raw_response.create(
-            account_id="accountID",
-            mode="start",
-            user={},
-        )
+    def test_raw_response_create(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.create()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -112,12 +52,8 @@ class TestChats:
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
-    def test_streaming_response_create_overload_2(self, client: BeeperDesktop) -> None:
-        with client.chats.with_streaming_response.create(
-            account_id="accountID",
-            mode="start",
-            user={},
-        ) as response:
+    def test_streaming_response_create(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -308,87 +244,27 @@ class TestAsyncChats:
     )
 
     @parametrize
-    async def test_method_create_overload_1(self, async_client: AsyncBeeperDesktop) -> None:
-        chat = await async_client.chats.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-        )
+    async def test_method_create(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.create()
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
-    async def test_method_create_with_all_params_overload_1(self, async_client: AsyncBeeperDesktop) -> None:
+    async def test_method_create_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-            message_text="messageText",
-            mode="create",
-            title="title",
-        )
-        assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-    @parametrize
-    async def test_raw_response_create_overload_1(self, async_client: AsyncBeeperDesktop) -> None:
-        response = await async_client.chats.with_raw_response.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        chat = await response.parse()
-        assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_create_overload_1(self, async_client: AsyncBeeperDesktop) -> None:
-        async with async_client.chats.with_streaming_response.create(
-            account_id="accountID",
-            participant_ids=["string"],
-            type="single",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            chat = await response.parse()
-            assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_create_overload_2(self, async_client: AsyncBeeperDesktop) -> None:
-        chat = await async_client.chats.create(
-            account_id="accountID",
-            mode="start",
-            user={},
-        )
-        assert_matches_type(ChatCreateResponse, chat, path=["response"])
-
-    @parametrize
-    async def test_method_create_with_all_params_overload_2(self, async_client: AsyncBeeperDesktop) -> None:
-        chat = await async_client.chats.create(
-            account_id="accountID",
-            mode="start",
-            user={
-                "id": "id",
-                "email": "email",
-                "full_name": "fullName",
-                "phone_number": "phoneNumber",
-                "username": "username",
+            chat={
+                "account_id": "accountID",
+                "participant_ids": ["string"],
+                "type": "single",
+                "message_text": "messageText",
+                "mode": "create",
+                "title": "title",
             },
-            allow_invite=True,
-            message_text="messageText",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
-    async def test_raw_response_create_overload_2(self, async_client: AsyncBeeperDesktop) -> None:
-        response = await async_client.chats.with_raw_response.create(
-            account_id="accountID",
-            mode="start",
-            user={},
-        )
+    async def test_raw_response_create(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.create()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -396,12 +272,8 @@ class TestAsyncChats:
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
     @parametrize
-    async def test_streaming_response_create_overload_2(self, async_client: AsyncBeeperDesktop) -> None:
-        async with async_client.chats.with_streaming_response.create(
-            account_id="accountID",
-            mode="start",
-            user={},
-        ) as response:
+    async def test_streaming_response_create(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.create() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 

@@ -8,6 +8,14 @@ from .chats import (
     ChatsResourceWithStreamingResponse,
     AsyncChatsResourceWithStreamingResponse,
 )
+from .messages import (
+    MessagesResource,
+    AsyncMessagesResource,
+    MessagesResourceWithRawResponse,
+    AsyncMessagesResourceWithRawResponse,
+    MessagesResourceWithStreamingResponse,
+    AsyncMessagesResourceWithStreamingResponse,
+)
 from .reminders import (
     RemindersResource,
     AsyncRemindersResource,
@@ -24,6 +32,12 @@ __all__ = [
     "AsyncRemindersResourceWithRawResponse",
     "RemindersResourceWithStreamingResponse",
     "AsyncRemindersResourceWithStreamingResponse",
+    "MessagesResource",
+    "AsyncMessagesResource",
+    "MessagesResourceWithRawResponse",
+    "AsyncMessagesResourceWithRawResponse",
+    "MessagesResourceWithStreamingResponse",
+    "AsyncMessagesResourceWithStreamingResponse",
     "ChatsResource",
     "AsyncChatsResource",
     "ChatsResourceWithRawResponse",

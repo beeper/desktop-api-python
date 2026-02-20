@@ -8,10 +8,14 @@ from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["ChatCreateParams", "Variant0", "Variant1", "Variant1User"]
+__all__ = ["ChatCreateParams", "Chat", "ChatUnionMember0", "ChatUnionMember1", "ChatUnionMember1User"]
 
 
-class Variant0(TypedDict, total=False):
+class ChatCreateParams(TypedDict, total=False):
+    chat: Chat
+
+
+class ChatUnionMember0(TypedDict, total=False):
     account_id: Required[Annotated[str, PropertyInfo(alias="accountID")]]
     """Account to create the chat on."""
 
@@ -34,24 +38,7 @@ class Variant0(TypedDict, total=False):
     """Optional title for group chats; ignored for single chats on most platforms."""
 
 
-class Variant1(TypedDict, total=False):
-    account_id: Required[Annotated[str, PropertyInfo(alias="accountID")]]
-    """Account to start the chat on."""
-
-    mode: Required[Literal["start"]]
-    """Start mode for resolving/creating a direct chat from merged contact data."""
-
-    user: Required[Variant1User]
-    """Merged user-like contact payload used to resolve the best identifier."""
-
-    allow_invite: Annotated[bool, PropertyInfo(alias="allowInvite")]
-    """Whether invite-based DM creation is allowed when required by the platform."""
-
-    message_text: Annotated[str, PropertyInfo(alias="messageText")]
-    """Optional first message content if the platform requires it to create the chat."""
-
-
-class Variant1User(TypedDict, total=False):
+class ChatUnionMember1User(TypedDict, total=False):
     """Merged user-like contact payload used to resolve the best identifier."""
 
     id: str
@@ -70,4 +57,21 @@ class Variant1User(TypedDict, total=False):
     """Username/handle candidate."""
 
 
-ChatCreateParams: TypeAlias = Union[Variant0, Variant1]
+class ChatUnionMember1(TypedDict, total=False):
+    account_id: Required[Annotated[str, PropertyInfo(alias="accountID")]]
+    """Account to start the chat on."""
+
+    mode: Required[Literal["start"]]
+    """Start mode for resolving/creating a direct chat from merged contact data."""
+
+    user: Required[ChatUnionMember1User]
+    """Merged user-like contact payload used to resolve the best identifier."""
+
+    allow_invite: Annotated[bool, PropertyInfo(alias="allowInvite")]
+    """Whether invite-based DM creation is allowed when required by the platform."""
+
+    message_text: Annotated[str, PropertyInfo(alias="messageText")]
+    """Optional first message content if the platform requires it to create the chat."""
+
+
+Chat: TypeAlias = Union[ChatUnionMember0, ChatUnionMember1]

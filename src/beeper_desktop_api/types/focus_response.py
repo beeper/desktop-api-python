@@ -6,5 +6,7 @@ __all__ = ["FocusResponse"]
 
 
 class FocusResponse(BaseModel):
+    """Response indicating successful app focus action."""
+
     success: bool
     """Whether the app was successfully opened/focused."""

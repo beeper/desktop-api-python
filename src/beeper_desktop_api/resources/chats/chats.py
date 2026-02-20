@@ -30,6 +30,14 @@ from ..._response import (
 from ...pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorNoLimit, AsyncCursorNoLimit
 from ...types.chat import Chat
 from ..._base_client import AsyncPaginator, make_request_options
+from .messages.messages import (
+    MessagesResource,
+    AsyncMessagesResource,
+    MessagesResourceWithRawResponse,
+    AsyncMessagesResourceWithRawResponse,
+    MessagesResourceWithStreamingResponse,
+    AsyncMessagesResourceWithStreamingResponse,
+)
 from ...types.chat_list_response import ChatListResponse
 from ...types.chat_create_response import ChatCreateResponse
 
@@ -43,6 +51,11 @@ class ChatsResource(SyncAPIResource):
     def reminders(self) -> RemindersResource:
         """Manage reminders for chats"""
         return RemindersResource(self._client)
+
+    @cached_property
+    def messages(self) -> MessagesResource:
+        """Manage chat messages"""
+        return MessagesResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> ChatsResourceWithRawResponse:
@@ -66,11 +79,7 @@ class ChatsResource(SyncAPIResource):
     def create(
         self,
         *,
-        account_id: str,
-        participant_ids: SequenceNotStr[str],
-        type: Literal["single", "group"],
-        message_text: str | Omit = omit,
-        title: str | Omit = omit,
+        chat: chat_create_params.Chat | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -79,21 +88,10 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a single or group chat on a specific account using participant IDs and
-        optional title.
+        Create a single/group chat (mode='create') or start a direct chat from merged
+        user data (mode='start').
 
         Args:
-          account_id: Account to create the chat on.
-
-          participant_ids: User IDs to include in the new chat.
-
-          type: Chat type to create: 'single' requires exactly one participantID; 'group'
-              supports multiple participants and optional title.
-
-          message_text: Optional first message content if the platform requires it to create the chat.
-
-          title: Optional title for group chats; ignored for single chats on most platforms.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -104,16 +102,7 @@ class ChatsResource(SyncAPIResource):
         """
         return self._post(
             "/v1/chats",
-            body=maybe_transform(
-                {
-                    "account_id": account_id,
-                    "participant_ids": participant_ids,
-                    "type": type,
-                    "message_text": message_text,
-                    "title": title,
-                },
-                chat_create_params.ChatCreateParams,
-            ),
+            body=maybe_transform(chat, chat_create_params.ChatCreateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -368,6 +357,11 @@ class AsyncChatsResource(AsyncAPIResource):
         return AsyncRemindersResource(self._client)
 
     @cached_property
+    def messages(self) -> AsyncMessagesResource:
+        """Manage chat messages"""
+        return AsyncMessagesResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> AsyncChatsResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -389,11 +383,7 @@ class AsyncChatsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        account_id: str,
-        participant_ids: SequenceNotStr[str],
-        type: Literal["single", "group"],
-        message_text: str | Omit = omit,
-        title: str | Omit = omit,
+        chat: chat_create_params.Chat | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -402,21 +392,10 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a single or group chat on a specific account using participant IDs and
-        optional title.
+        Create a single/group chat (mode='create') or start a direct chat from merged
+        user data (mode='start').
 
         Args:
-          account_id: Account to create the chat on.
-
-          participant_ids: User IDs to include in the new chat.
-
-          type: Chat type to create: 'single' requires exactly one participantID; 'group'
-              supports multiple participants and optional title.
-
-          message_text: Optional first message content if the platform requires it to create the chat.
-
-          title: Optional title for group chats; ignored for single chats on most platforms.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -427,16 +406,7 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         return await self._post(
             "/v1/chats",
-            body=await async_maybe_transform(
-                {
-                    "account_id": account_id,
-                    "participant_ids": participant_ids,
-                    "type": type,
-                    "message_text": message_text,
-                    "title": title,
-                },
-                chat_create_params.ChatCreateParams,
-            ),
+            body=await async_maybe_transform(chat, chat_create_params.ChatCreateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -707,6 +677,11 @@ class ChatsResourceWithRawResponse:
         """Manage reminders for chats"""
         return RemindersResourceWithRawResponse(self._chats.reminders)
 
+    @cached_property
+    def messages(self) -> MessagesResourceWithRawResponse:
+        """Manage chat messages"""
+        return MessagesResourceWithRawResponse(self._chats.messages)
+
 
 class AsyncChatsResourceWithRawResponse:
     def __init__(self, chats: AsyncChatsResource) -> None:
@@ -732,6 +707,11 @@ class AsyncChatsResourceWithRawResponse:
     def reminders(self) -> AsyncRemindersResourceWithRawResponse:
         """Manage reminders for chats"""
         return AsyncRemindersResourceWithRawResponse(self._chats.reminders)
+
+    @cached_property
+    def messages(self) -> AsyncMessagesResourceWithRawResponse:
+        """Manage chat messages"""
+        return AsyncMessagesResourceWithRawResponse(self._chats.messages)
 
 
 class ChatsResourceWithStreamingResponse:
@@ -759,6 +739,11 @@ class ChatsResourceWithStreamingResponse:
         """Manage reminders for chats"""
         return RemindersResourceWithStreamingResponse(self._chats.reminders)
 
+    @cached_property
+    def messages(self) -> MessagesResourceWithStreamingResponse:
+        """Manage chat messages"""
+        return MessagesResourceWithStreamingResponse(self._chats.messages)
+
 
 class AsyncChatsResourceWithStreamingResponse:
     def __init__(self, chats: AsyncChatsResource) -> None:
@@ -784,3 +769,8 @@ class AsyncChatsResourceWithStreamingResponse:
     def reminders(self) -> AsyncRemindersResourceWithStreamingResponse:
         """Manage reminders for chats"""
         return AsyncRemindersResourceWithStreamingResponse(self._chats.reminders)
+
+    @cached_property
+    def messages(self) -> AsyncMessagesResourceWithStreamingResponse:
+        """Manage chat messages"""
+        return AsyncMessagesResourceWithStreamingResponse(self._chats.messages)

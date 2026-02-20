@@ -11,6 +11,8 @@ __all__ = ["Attachment", "Size"]
 
 
 class Size(BaseModel):
+    """Pixel dimensions of the attachment: width/height in px."""
+
     height: Optional[float] = None
 
     width: Optional[float] = None
@@ -19,6 +21,12 @@ class Size(BaseModel):
 class Attachment(BaseModel):
     type: Literal["unknown", "img", "video", "audio"]
     """Attachment type."""
+
+    id: Optional[str] = None
+    """Attachment identifier (typically an mxc:// URL).
+
+    Use with /v1/assets/download to get a local file path.
+    """
 
     duration: Optional[float] = None
     """Duration in seconds (audio/video)."""

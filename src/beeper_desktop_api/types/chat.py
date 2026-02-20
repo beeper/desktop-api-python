@@ -13,6 +13,8 @@ __all__ = ["Chat", "Participants"]
 
 
 class Participants(BaseModel):
+    """Chat participants information."""
+
     has_more: bool = FieldInfo(alias="hasMore")
     """True if there are more participants than included in items."""
 
@@ -29,9 +31,6 @@ class Chat(BaseModel):
 
     account_id: str = FieldInfo(alias="accountID")
     """Account ID this chat belongs to."""
-
-    network: str
-    """Display-only human-readable network name (e.g., 'WhatsApp', 'Messenger')."""
 
     participants: Participants
     """Chat participants information."""

@@ -2,6 +2,7 @@
 
 from typing import List, Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
@@ -40,6 +41,9 @@ class Message(BaseModel):
     is_unread: Optional[bool] = FieldInfo(alias="isUnread", default=None)
     """True if the message is unread for the authenticated user. May be omitted."""
 
+    linked_message_id: Optional[str] = FieldInfo(alias="linkedMessageID", default=None)
+    """ID of the message this is a reply to, if any."""
+
     reactions: Optional[List[Reaction]] = None
     """Reactions to the message, if any."""
 
@@ -52,4 +56,13 @@ class Message(BaseModel):
     """Plain-text body if present.
 
     May include a JSON fallback with text entities for rich messages.
+    """
+
+    type: Optional[
+        Literal["TEXT", "NOTICE", "IMAGE", "VIDEO", "VOICE", "AUDIO", "FILE", "STICKER", "LOCATION", "REACTION"]
+    ] = None
+    """Message content type.
+
+    Useful for distinguishing reactions, media messages, and state events from
+    regular text messages.
     """

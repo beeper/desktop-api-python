@@ -2,44 +2,58 @@
 
 from __future__ import annotations
 
-from typing import Union
-from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["ChatCreateParams", "Chat", "ChatUnionMember0", "ChatUnionMember1", "ChatUnionMember1User"]
+__all__ = ["ChatCreateParams", "User"]
 
 
 class ChatCreateParams(TypedDict, total=False):
-    chat: Chat
-
-
-class ChatUnionMember0(TypedDict, total=False):
     account_id: Required[Annotated[str, PropertyInfo(alias="accountID")]]
-    """Account to create the chat on."""
+    """Account to create or start the chat on."""
 
-    participant_ids: Required[Annotated[SequenceNotStr[str], PropertyInfo(alias="participantIDs")]]
-    """User IDs to include in the new chat."""
+    allow_invite: Annotated[bool, PropertyInfo(alias="allowInvite")]
+    """Whether invite-based DM creation is allowed when required by the platform.
 
-    type: Required[Literal["single", "group"]]
-    """
-    Chat type to create: 'single' requires exactly one participantID; 'group'
-    supports multiple participants and optional title.
+    Used for mode='start'.
     """
 
     message_text: Annotated[str, PropertyInfo(alias="messageText")]
     """Optional first message content if the platform requires it to create the chat."""
 
-    mode: Literal["create"]
-    """Create mode. Defaults to 'create' when omitted."""
+    mode: Literal["create", "start"]
+    """Operation mode. Defaults to 'create' when omitted."""
+
+    participant_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="participantIDs")]
+    """Required when mode='create'. User IDs to include in the new chat."""
 
     title: str
-    """Optional title for group chats; ignored for single chats on most platforms."""
+    """
+    Optional title for group chats when mode='create'; ignored for single chats on
+    most platforms.
+    """
+
+    type: Literal["single", "group"]
+    """Required when mode='create'.
+
+    'single' requires exactly one participantID; 'group' supports multiple
+    participants and optional title.
+    """
+
+    user: User
+    """Required when mode='start'.
+
+    Merged user-like contact payload used to resolve the best identifier.
+    """
 
 
-class ChatUnionMember1User(TypedDict, total=False):
-    """Merged user-like contact payload used to resolve the best identifier."""
+class User(TypedDict, total=False):
+    """Required when mode='start'.
+
+    Merged user-like contact payload used to resolve the best identifier.
+    """
 
     id: str
     """Known user ID when available."""
@@ -55,23 +69,3 @@ class ChatUnionMember1User(TypedDict, total=False):
 
     username: str
     """Username/handle candidate."""
-
-
-class ChatUnionMember1(TypedDict, total=False):
-    account_id: Required[Annotated[str, PropertyInfo(alias="accountID")]]
-    """Account to start the chat on."""
-
-    mode: Required[Literal["start"]]
-    """Start mode for resolving/creating a direct chat from merged contact data."""
-
-    user: Required[ChatUnionMember1User]
-    """Merged user-like contact payload used to resolve the best identifier."""
-
-    allow_invite: Annotated[bool, PropertyInfo(alias="allowInvite")]
-    """Whether invite-based DM creation is allowed when required by the platform."""
-
-    message_text: Annotated[str, PropertyInfo(alias="messageText")]
-    """Optional first message content if the platform requires it to create the chat."""
-
-
-Chat: TypeAlias = Union[ChatUnionMember0, ChatUnionMember1]

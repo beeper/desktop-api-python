@@ -218,10 +218,11 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-client.chats.reminders.create(
-    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-    reminder={"remind_at_ms": 0},
+chat = client.chats.create(
+    account_id="accountID",
+    user={},
 )
+print(chat.user)
 ```
 
 ## File uploads

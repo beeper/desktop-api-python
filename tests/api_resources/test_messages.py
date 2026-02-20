@@ -146,7 +146,7 @@ class TestMessages:
             limit=20,
             media_types=["any"],
             query="dinner",
-            sender="me",
+            sender="sender",
         )
         assert_matches_type(SyncCursorSearch[Message], message, path=["response"])
 
@@ -357,7 +357,7 @@ class TestAsyncMessages:
             limit=20,
             media_types=["any"],
             query="dinner",
-            sender="me",
+            sender="sender",
         )
         assert_matches_type(AsyncCursorSearch[Message], message, path=["response"])
 

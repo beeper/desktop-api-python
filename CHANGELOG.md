@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.3.0 (2026-02-20)
+
+Full Changelog: [v4.2.0...v4.3.0](https://github.com/beeper/desktop-api-python/compare/v4.2.0...v4.3.0)
+
+### Features
+
+* **api:** api update ([4f6c268](https://github.com/beeper/desktop-api-python/commit/4f6c2685f00a7fd4f1db0b34faa6e354a0f7e220))
+* **api:** api update ([c77412c](https://github.com/beeper/desktop-api-python/commit/c77412c3d4daa460f8901f715a9f59dc1bfa3970))
+* **api:** manual updates ([223108d](https://github.com/beeper/desktop-api-python/commit/223108ddc2f84269df96dd8abf6787d8e45c02e6))
+
+
+### Chores
+
+* update mock server docs ([70593f0](https://github.com/beeper/desktop-api-python/commit/70593f0416d4ed7251957c9fcdb5805e570b2577))
+* update SDK settings ([3741b42](https://github.com/beeper/desktop-api-python/commit/3741b42c7ab0c75897bb5cd753b1ce3b323686d2))
+
 ## 4.2.0 (2026-02-20)
 
 Full Changelog: [v4.1.296...v4.2.0](https://github.com/beeper/desktop-api-python/compare/v4.1.296...v4.2.0)

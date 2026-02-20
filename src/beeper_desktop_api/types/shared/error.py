@@ -5,10 +5,10 @@ from typing_extensions import TypeAlias
 
 from ..._models import BaseModel
 
-__all__ = ["Error", "Details", "DetailsIssues", "DetailsIssuesIssue"]
+__all__ = ["Error", "Details", "DetailsValidationDetails", "DetailsValidationDetailsIssue"]
 
 
-class DetailsIssuesIssue(BaseModel):
+class DetailsValidationDetailsIssue(BaseModel):
     code: str
     """Validation issue code"""
 
@@ -19,14 +19,14 @@ class DetailsIssuesIssue(BaseModel):
     """Path pointing to the invalid field within the payload"""
 
 
-class DetailsIssues(BaseModel):
+class DetailsValidationDetails(BaseModel):
     """Validation error details"""
 
-    issues: List[DetailsIssuesIssue]
+    issues: List[DetailsValidationDetailsIssue]
     """List of validation issues"""
 
 
-Details: TypeAlias = Union[DetailsIssues, Dict[str, Optional[object]], Optional[object]]
+Details: TypeAlias = Union[DetailsValidationDetails, Dict[str, Optional[object]], Optional[object]]
 
 
 class Error(BaseModel):

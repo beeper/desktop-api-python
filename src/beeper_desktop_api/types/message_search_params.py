@@ -74,7 +74,7 @@ class MessageSearchParams(TypedDict, total=False):
     only by other parameters.
     """
 
-    sender: Union[Literal["me", "others"], str]
+    sender: str
     """
     Filter by sender: 'me' (messages sent by the authenticated user), 'others'
     (messages sent by others), or a specific user ID string (user.id).

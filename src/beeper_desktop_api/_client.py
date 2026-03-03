@@ -154,6 +154,7 @@ class BeeperDesktop(SyncAPIClient):
 
     @cached_property
     def info(self) -> InfoResource:
+        """Control the Beeper Desktop application"""
         from .resources.info import InfoResource
 
         return InfoResource(self)
@@ -448,6 +449,7 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 
     @cached_property
     def info(self) -> AsyncInfoResource:
+        """Control the Beeper Desktop application"""
         from .resources.info import AsyncInfoResource
 
         return AsyncInfoResource(self)
@@ -700,6 +702,7 @@ class BeeperDesktopWithRawResponse:
 
     @cached_property
     def info(self) -> info.InfoResourceWithRawResponse:
+        """Control the Beeper Desktop application"""
         from .resources.info import InfoResourceWithRawResponse
 
         return InfoResourceWithRawResponse(self._client.info)
@@ -748,6 +751,7 @@ class AsyncBeeperDesktopWithRawResponse:
 
     @cached_property
     def info(self) -> info.AsyncInfoResourceWithRawResponse:
+        """Control the Beeper Desktop application"""
         from .resources.info import AsyncInfoResourceWithRawResponse
 
         return AsyncInfoResourceWithRawResponse(self._client.info)
@@ -796,6 +800,7 @@ class BeeperDesktopWithStreamedResponse:
 
     @cached_property
     def info(self) -> info.InfoResourceWithStreamingResponse:
+        """Control the Beeper Desktop application"""
         from .resources.info import InfoResourceWithStreamingResponse
 
         return InfoResourceWithStreamingResponse(self._client.info)
@@ -844,6 +849,7 @@ class AsyncBeeperDesktopWithStreamedResponse:
 
     @cached_property
     def info(self) -> info.AsyncInfoResourceWithStreamingResponse:
+        """Control the Beeper Desktop application"""
         from .resources.info import AsyncInfoResourceWithStreamingResponse
 
         return AsyncInfoResourceWithStreamingResponse(self._client.info)

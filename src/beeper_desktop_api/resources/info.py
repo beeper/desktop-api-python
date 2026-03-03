@@ -20,6 +20,8 @@ __all__ = ["InfoResource", "AsyncInfoResource"]
 
 
 class InfoResource(SyncAPIResource):
+    """Control the Beeper Desktop application"""
+
     @cached_property
     def with_raw_response(self) -> InfoResourceWithRawResponse:
         """
@@ -63,6 +65,8 @@ class InfoResource(SyncAPIResource):
 
 
 class AsyncInfoResource(AsyncAPIResource):
+    """Control the Beeper Desktop application"""
+
     @cached_property
     def with_raw_response(self) -> AsyncInfoResourceWithRawResponse:
         """

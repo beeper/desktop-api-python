@@ -86,14 +86,14 @@ class TestAssets:
     @parametrize
     def test_method_upload(self, client: BeeperDesktop) -> None:
         asset = client.assets.upload(
-            file=b"raw file contents",
+            file=b"Example data",
         )
         assert_matches_type(AssetUploadResponse, asset, path=["response"])
 
     @parametrize
     def test_method_upload_with_all_params(self, client: BeeperDesktop) -> None:
         asset = client.assets.upload(
-            file=b"raw file contents",
+            file=b"Example data",
             file_name="fileName",
             mime_type="mimeType",
         )
@@ -102,7 +102,7 @@ class TestAssets:
     @parametrize
     def test_raw_response_upload(self, client: BeeperDesktop) -> None:
         response = client.assets.with_raw_response.upload(
-            file=b"raw file contents",
+            file=b"Example data",
         )
 
         assert response.is_closed is True
@@ -113,7 +113,7 @@ class TestAssets:
     @parametrize
     def test_streaming_response_upload(self, client: BeeperDesktop) -> None:
         with client.assets.with_streaming_response.upload(
-            file=b"raw file contents",
+            file=b"Example data",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -234,14 +234,14 @@ class TestAsyncAssets:
     @parametrize
     async def test_method_upload(self, async_client: AsyncBeeperDesktop) -> None:
         asset = await async_client.assets.upload(
-            file=b"raw file contents",
+            file=b"Example data",
         )
         assert_matches_type(AssetUploadResponse, asset, path=["response"])
 
     @parametrize
     async def test_method_upload_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         asset = await async_client.assets.upload(
-            file=b"raw file contents",
+            file=b"Example data",
             file_name="fileName",
             mime_type="mimeType",
         )
@@ -250,7 +250,7 @@ class TestAsyncAssets:
     @parametrize
     async def test_raw_response_upload(self, async_client: AsyncBeeperDesktop) -> None:
         response = await async_client.assets.with_raw_response.upload(
-            file=b"raw file contents",
+            file=b"Example data",
         )
 
         assert response.is_closed is True
@@ -261,7 +261,7 @@ class TestAsyncAssets:
     @parametrize
     async def test_streaming_response_upload(self, async_client: AsyncBeeperDesktop) -> None:
         async with async_client.assets.with_streaming_response.upload(
-            file=b"raw file contents",
+            file=b"Example data",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

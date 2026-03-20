@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ...._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ...._utils import maybe_transform, async_maybe_transform
+from ...._utils import path_template, maybe_transform, async_maybe_transform
 from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
 from ...._response import (
@@ -78,7 +78,9 @@ class ReactionsResource(SyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return self._delete(
-            f"/v1/chats/{chat_id}/messages/{message_id}/reactions",
+            path_template(
+                "/v1/chats/{chat_id}/messages/{message_id}/reactions", chat_id=chat_id, message_id=message_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -126,7 +128,9 @@ class ReactionsResource(SyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return self._post(
-            f"/v1/chats/{chat_id}/messages/{message_id}/reactions",
+            path_template(
+                "/v1/chats/{chat_id}/messages/{message_id}/reactions", chat_id=chat_id, message_id=message_id
+            ),
             body=maybe_transform(
                 {
                     "reaction_key": reaction_key,
@@ -197,7 +201,9 @@ class AsyncReactionsResource(AsyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return await self._delete(
-            f"/v1/chats/{chat_id}/messages/{message_id}/reactions",
+            path_template(
+                "/v1/chats/{chat_id}/messages/{message_id}/reactions", chat_id=chat_id, message_id=message_id
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -247,7 +253,9 @@ class AsyncReactionsResource(AsyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return await self._post(
-            f"/v1/chats/{chat_id}/messages/{message_id}/reactions",
+            path_template(
+                "/v1/chats/{chat_id}/messages/{message_id}/reactions", chat_id=chat_id, message_id=message_id
+            ),
             body=await async_maybe_transform(
                 {
                     "reaction_key": reaction_key,

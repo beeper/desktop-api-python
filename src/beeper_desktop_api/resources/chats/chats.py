@@ -10,7 +10,7 @@ import httpx
 
 from ...types import chat_list_params, chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
-from ..._utils import maybe_transform, async_maybe_transform
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from .reminders import (
     RemindersResource,
@@ -180,7 +180,7 @@ class ChatsResource(SyncAPIResource):
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get(
-            f"/v1/chats/{chat_id}",
+            path_template("/v1/chats/{chat_id}", chat_id=chat_id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -281,7 +281,7 @@ class ChatsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
-            f"/v1/chats/{chat_id}/archive",
+            path_template("/v1/chats/{chat_id}/archive", chat_id=chat_id),
             body=maybe_transform({"archived": archived}, chat_archive_params.ChatArchiveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -523,7 +523,7 @@ class AsyncChatsResource(AsyncAPIResource):
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return await self._get(
-            f"/v1/chats/{chat_id}",
+            path_template("/v1/chats/{chat_id}", chat_id=chat_id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -624,7 +624,7 @@ class AsyncChatsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
-            f"/v1/chats/{chat_id}/archive",
+            path_template("/v1/chats/{chat_id}/archive", chat_id=chat_id),
             body=await async_maybe_transform({"archived": archived}, chat_archive_params.ChatArchiveParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout

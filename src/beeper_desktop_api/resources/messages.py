@@ -10,7 +10,7 @@ import httpx
 
 from ..types import message_list_params, message_send_params, message_search_params, message_update_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -86,7 +86,7 @@ class MessagesResource(SyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return self._put(
-            f"/v1/chats/{chat_id}/messages/{message_id}",
+            path_template("/v1/chats/{chat_id}/messages/{message_id}", chat_id=chat_id, message_id=message_id),
             body=maybe_transform({"text": text}, message_update_params.MessageUpdateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -130,7 +130,7 @@ class MessagesResource(SyncAPIResource):
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get_api_list(
-            f"/v1/chats/{chat_id}/messages",
+            path_template("/v1/chats/{chat_id}/messages", chat_id=chat_id),
             page=SyncCursorSortKey[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -288,7 +288,7 @@ class MessagesResource(SyncAPIResource):
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._post(
-            f"/v1/chats/{chat_id}/messages",
+            path_template("/v1/chats/{chat_id}/messages", chat_id=chat_id),
             body=maybe_transform(
                 {
                     "attachment": attachment,
@@ -362,7 +362,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
         return await self._put(
-            f"/v1/chats/{chat_id}/messages/{message_id}",
+            path_template("/v1/chats/{chat_id}/messages/{message_id}", chat_id=chat_id, message_id=message_id),
             body=await async_maybe_transform({"text": text}, message_update_params.MessageUpdateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -406,7 +406,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get_api_list(
-            f"/v1/chats/{chat_id}/messages",
+            path_template("/v1/chats/{chat_id}/messages", chat_id=chat_id),
             page=AsyncCursorSortKey[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -564,7 +564,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         if not chat_id:
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return await self._post(
-            f"/v1/chats/{chat_id}/messages",
+            path_template("/v1/chats/{chat_id}/messages", chat_id=chat_id),
             body=await async_maybe_transform(
                 {
                     "attachment": attachment,

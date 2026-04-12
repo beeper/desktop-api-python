@@ -7,8 +7,6 @@ The Beeper Desktop Python library provides convenient access to the Beeper Deskt
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
-It is generated with [Stainless](https://www.stainless.com/).
-
 ## MCP Server
 
 Use the Beeper Desktop MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
@@ -25,18 +23,24 @@ The REST API documentation can be found on [developers.beeper.com](https://devel
 ## Installation
 
 ```sh
-# install from PyPI
-pip install beeper_desktop_api
+# install from the production repo
+pip install git+ssh://git@github.com/beeper/desktop-api-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install beeper_desktop_api`
 
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from beeper_desktop_api import BeeperDesktop
 
-client = BeeperDesktop()
+client = BeeperDesktop(
+    access_token=os.environ.get("BEEPER_ACCESS_TOKEN"),  # This is the default and can be omitted
+)
 
 page = client.chats.search(
     include_muted=True,
@@ -56,10 +60,13 @@ so that your Access Token is not stored in source control.
 Simply import `AsyncBeeperDesktop` instead of `BeeperDesktop` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from beeper_desktop_api import AsyncBeeperDesktop
 
-client = AsyncBeeperDesktop()
+client = AsyncBeeperDesktop(
+    access_token=os.environ.get("BEEPER_ACCESS_TOKEN"),  # This is the default and can be omitted
+)
 
 
 async def main() -> None:
@@ -83,13 +90,14 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install beeper_desktop_api[aiohttp]
+# install from the production repo
+pip install 'beeper_desktop_api[aiohttp] @ git+ssh://git@github.com/beeper/desktop-api-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
+import os
 import asyncio
 from beeper_desktop_api import DefaultAioHttpClient
 from beeper_desktop_api import AsyncBeeperDesktop
@@ -97,6 +105,9 @@ from beeper_desktop_api import AsyncBeeperDesktop
 
 async def main() -> None:
     async with AsyncBeeperDesktop(
+        access_token=os.environ.get(
+            "BEEPER_ACCESS_TOKEN"
+        ),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
         page = await client.chats.search(
@@ -207,11 +218,10 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-chat = client.chats.create(
-    account_id="accountID",
-    user={},
+client.chats.reminders.create(
+    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+    reminder={"remind_at_ms": 0},
 )
-print(chat.user)
 ```
 
 ## File uploads

@@ -79,14 +79,7 @@ class ChatsResource(SyncAPIResource):
     def create(
         self,
         *,
-        account_id: str,
-        allow_invite: bool | Omit = omit,
-        message_text: str | Omit = omit,
-        mode: Literal["create", "start"] | Omit = omit,
-        participant_ids: SequenceNotStr[str] | Omit = omit,
-        title: str | Omit = omit,
-        type: Literal["single", "group"] | Omit = omit,
-        user: chat_create_params.User | Omit = omit,
+        params: chat_create_params.Params | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -99,26 +92,6 @@ class ChatsResource(SyncAPIResource):
         user data (mode='start').
 
         Args:
-          account_id: Account to create or start the chat on.
-
-          allow_invite: Whether invite-based DM creation is allowed when required by the platform. Used
-              for mode='start'.
-
-          message_text: Optional first message content if the platform requires it to create the chat.
-
-          mode: Operation mode. Defaults to 'create' when omitted.
-
-          participant_ids: Required when mode='create'. User IDs to include in the new chat.
-
-          title: Optional title for group chats when mode='create'; ignored for single chats on
-              most platforms.
-
-          type: Required when mode='create'. 'single' requires exactly one participantID;
-              'group' supports multiple participants and optional title.
-
-          user: Required when mode='start'. Merged user-like contact payload used to resolve the
-              best identifier.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -129,19 +102,7 @@ class ChatsResource(SyncAPIResource):
         """
         return self._post(
             "/v1/chats",
-            body=maybe_transform(
-                {
-                    "account_id": account_id,
-                    "allow_invite": allow_invite,
-                    "message_text": message_text,
-                    "mode": mode,
-                    "participant_ids": participant_ids,
-                    "title": title,
-                    "type": type,
-                    "user": user,
-                },
-                chat_create_params.ChatCreateParams,
-            ),
+            body=maybe_transform(params, chat_create_params.ChatCreateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -422,14 +383,7 @@ class AsyncChatsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        account_id: str,
-        allow_invite: bool | Omit = omit,
-        message_text: str | Omit = omit,
-        mode: Literal["create", "start"] | Omit = omit,
-        participant_ids: SequenceNotStr[str] | Omit = omit,
-        title: str | Omit = omit,
-        type: Literal["single", "group"] | Omit = omit,
-        user: chat_create_params.User | Omit = omit,
+        params: chat_create_params.Params | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -442,26 +396,6 @@ class AsyncChatsResource(AsyncAPIResource):
         user data (mode='start').
 
         Args:
-          account_id: Account to create or start the chat on.
-
-          allow_invite: Whether invite-based DM creation is allowed when required by the platform. Used
-              for mode='start'.
-
-          message_text: Optional first message content if the platform requires it to create the chat.
-
-          mode: Operation mode. Defaults to 'create' when omitted.
-
-          participant_ids: Required when mode='create'. User IDs to include in the new chat.
-
-          title: Optional title for group chats when mode='create'; ignored for single chats on
-              most platforms.
-
-          type: Required when mode='create'. 'single' requires exactly one participantID;
-              'group' supports multiple participants and optional title.
-
-          user: Required when mode='start'. Merged user-like contact payload used to resolve the
-              best identifier.
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -472,19 +406,7 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         return await self._post(
             "/v1/chats",
-            body=await async_maybe_transform(
-                {
-                    "account_id": account_id,
-                    "allow_invite": allow_invite,
-                    "message_text": message_text,
-                    "mode": mode,
-                    "participant_ids": participant_ids,
-                    "title": title,
-                    "type": type,
-                    "user": user,
-                },
-                chat_create_params.ChatCreateParams,
-            ),
+            body=await async_maybe_transform(params, chat_create_params.ChatCreateParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),

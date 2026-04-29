@@ -5,7 +5,9 @@ from __future__ import annotations
 import os
 from typing import Any, cast
 
+import httpx
 import pytest
+from respx import MockRouter
 
 from tests.utils import assert_matches_type
 from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
@@ -13,6 +15,12 @@ from beeper_desktop_api.types import (
     AssetUploadResponse,
     AssetDownloadResponse,
     AssetUploadBase64Response,
+)
+from beeper_desktop_api._response import (
+    BinaryAPIResponse,
+    AsyncBinaryAPIResponse,
+    StreamedBinaryAPIResponse,
+    AsyncStreamedBinaryAPIResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -53,35 +61,46 @@ class TestAssets:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_method_serve(self, client: BeeperDesktop) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    def test_method_serve(self, client: BeeperDesktop, respx_mock: MockRouter) -> None:
+        respx_mock.get("/v1/assets/serve").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
         asset = client.assets.serve(
             url="x",
         )
-        assert asset is None
+        assert asset.is_closed
+        assert asset.json() == {"foo": "bar"}
+        assert cast(Any, asset.is_closed) is True
+        assert isinstance(asset, BinaryAPIResponse)
 
     @parametrize
-    def test_raw_response_serve(self, client: BeeperDesktop) -> None:
-        response = client.assets.with_raw_response.serve(
+    @pytest.mark.respx(base_url=base_url)
+    def test_raw_response_serve(self, client: BeeperDesktop, respx_mock: MockRouter) -> None:
+        respx_mock.get("/v1/assets/serve").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+
+        asset = client.assets.with_raw_response.serve(
             url="x",
         )
 
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        asset = response.parse()
-        assert asset is None
+        assert asset.is_closed is True
+        assert asset.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert asset.json() == {"foo": "bar"}
+        assert isinstance(asset, BinaryAPIResponse)
 
     @parametrize
-    def test_streaming_response_serve(self, client: BeeperDesktop) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    def test_streaming_response_serve(self, client: BeeperDesktop, respx_mock: MockRouter) -> None:
+        respx_mock.get("/v1/assets/serve").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
         with client.assets.with_streaming_response.serve(
             url="x",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        ) as asset:
+            assert not asset.is_closed
+            assert asset.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            asset = response.parse()
-            assert asset is None
+            assert asset.json() == {"foo": "bar"}
+            assert cast(Any, asset.is_closed) is True
+            assert isinstance(asset, StreamedBinaryAPIResponse)
 
-        assert cast(Any, response.is_closed) is True
+        assert cast(Any, asset.is_closed) is True
 
     @parametrize
     def test_method_upload(self, client: BeeperDesktop) -> None:
@@ -201,35 +220,46 @@ class TestAsyncAssets:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_method_serve(self, async_client: AsyncBeeperDesktop) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    async def test_method_serve(self, async_client: AsyncBeeperDesktop, respx_mock: MockRouter) -> None:
+        respx_mock.get("/v1/assets/serve").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
         asset = await async_client.assets.serve(
             url="x",
         )
-        assert asset is None
+        assert asset.is_closed
+        assert await asset.json() == {"foo": "bar"}
+        assert cast(Any, asset.is_closed) is True
+        assert isinstance(asset, AsyncBinaryAPIResponse)
 
     @parametrize
-    async def test_raw_response_serve(self, async_client: AsyncBeeperDesktop) -> None:
-        response = await async_client.assets.with_raw_response.serve(
+    @pytest.mark.respx(base_url=base_url)
+    async def test_raw_response_serve(self, async_client: AsyncBeeperDesktop, respx_mock: MockRouter) -> None:
+        respx_mock.get("/v1/assets/serve").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
+
+        asset = await async_client.assets.with_raw_response.serve(
             url="x",
         )
 
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        asset = await response.parse()
-        assert asset is None
+        assert asset.is_closed is True
+        assert asset.http_request.headers.get("X-Stainless-Lang") == "python"
+        assert await asset.json() == {"foo": "bar"}
+        assert isinstance(asset, AsyncBinaryAPIResponse)
 
     @parametrize
-    async def test_streaming_response_serve(self, async_client: AsyncBeeperDesktop) -> None:
+    @pytest.mark.respx(base_url=base_url)
+    async def test_streaming_response_serve(self, async_client: AsyncBeeperDesktop, respx_mock: MockRouter) -> None:
+        respx_mock.get("/v1/assets/serve").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
         async with async_client.assets.with_streaming_response.serve(
             url="x",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        ) as asset:
+            assert not asset.is_closed
+            assert asset.http_request.headers.get("X-Stainless-Lang") == "python"
 
-            asset = await response.parse()
-            assert asset is None
+            assert await asset.json() == {"foo": "bar"}
+            assert cast(Any, asset.is_closed) is True
+            assert isinstance(asset, AsyncStreamedBinaryAPIResponse)
 
-        assert cast(Any, response.is_closed) is True
+        assert cast(Any, asset.is_closed) is True
 
     @parametrize
     async def test_method_upload(self, async_client: AsyncBeeperDesktop) -> None:

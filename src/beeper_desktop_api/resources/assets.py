@@ -8,23 +8,15 @@ import httpx
 
 from ..types import asset_serve_params, asset_upload_params, asset_download_params, asset_upload_base64_params
 from .._files import deepcopy_with_paths
-from .._types import Body, Omit, Query, Headers, NotGiven, FileTypes, omit, not_given
+from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, FileTypes, omit, not_given
 from .._utils import extract_files, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
-    BinaryAPIResponse,
-    AsyncBinaryAPIResponse,
-    StreamedBinaryAPIResponse,
-    AsyncStreamedBinaryAPIResponse,
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
-    to_custom_raw_response_wrapper,
     async_to_streamed_response_wrapper,
-    to_custom_streamed_response_wrapper,
-    async_to_custom_raw_response_wrapper,
-    async_to_custom_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
 from ..types.asset_upload_response import AssetUploadResponse
@@ -101,7 +93,7 @@ class AssetsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BinaryAPIResponse:
+    ) -> None:
         """Stream a file given an mxc://, localmxc://, or file:// URL.
 
         Downloads first if
@@ -118,7 +110,7 @@ class AssetsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/octet-stream", **(extra_headers or {})}
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._get(
             "/v1/assets/serve",
             options=make_request_options(
@@ -128,7 +120,7 @@ class AssetsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform({"url": url}, asset_serve_params.AssetServeParams),
             ),
-            cast_to=BinaryAPIResponse,
+            cast_to=NoneType,
         )
 
     def upload(
@@ -305,7 +297,7 @@ class AsyncAssetsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncBinaryAPIResponse:
+    ) -> None:
         """Stream a file given an mxc://, localmxc://, or file:// URL.
 
         Downloads first if
@@ -322,7 +314,7 @@ class AsyncAssetsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/octet-stream", **(extra_headers or {})}
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._get(
             "/v1/assets/serve",
             options=make_request_options(
@@ -332,7 +324,7 @@ class AsyncAssetsResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform({"url": url}, asset_serve_params.AssetServeParams),
             ),
-            cast_to=AsyncBinaryAPIResponse,
+            cast_to=NoneType,
         )
 
     async def upload(
@@ -449,9 +441,8 @@ class AssetsResourceWithRawResponse:
         self.download = to_raw_response_wrapper(
             assets.download,
         )
-        self.serve = to_custom_raw_response_wrapper(
+        self.serve = to_raw_response_wrapper(
             assets.serve,
-            BinaryAPIResponse,
         )
         self.upload = to_raw_response_wrapper(
             assets.upload,
@@ -468,9 +459,8 @@ class AsyncAssetsResourceWithRawResponse:
         self.download = async_to_raw_response_wrapper(
             assets.download,
         )
-        self.serve = async_to_custom_raw_response_wrapper(
+        self.serve = async_to_raw_response_wrapper(
             assets.serve,
-            AsyncBinaryAPIResponse,
         )
         self.upload = async_to_raw_response_wrapper(
             assets.upload,
@@ -487,9 +477,8 @@ class AssetsResourceWithStreamingResponse:
         self.download = to_streamed_response_wrapper(
             assets.download,
         )
-        self.serve = to_custom_streamed_response_wrapper(
+        self.serve = to_streamed_response_wrapper(
             assets.serve,
-            StreamedBinaryAPIResponse,
         )
         self.upload = to_streamed_response_wrapper(
             assets.upload,
@@ -506,9 +495,8 @@ class AsyncAssetsResourceWithStreamingResponse:
         self.download = async_to_streamed_response_wrapper(
             assets.download,
         )
-        self.serve = async_to_custom_streamed_response_wrapper(
+        self.serve = async_to_streamed_response_wrapper(
             assets.serve,
-            AsyncStreamedBinaryAPIResponse,
         )
         self.upload = async_to_streamed_response_wrapper(
             assets.upload,

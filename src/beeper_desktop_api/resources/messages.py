@@ -19,7 +19,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorSortKey, AsyncCursorSortKey
+from ..pagination import SyncCursorSearch, AsyncCursorSearch, SyncCursorNoLimit, AsyncCursorNoLimit
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.shared.message import Message
 from ..types.message_send_response import MessageSendResponse
@@ -106,7 +106,7 @@ class MessagesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncCursorSortKey[Message]:
+    ) -> SyncCursorNoLimit[Message]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -131,7 +131,7 @@ class MessagesResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get_api_list(
             path_template("/v1/chats/{chat_id}/messages", chat_id=chat_id),
-            page=SyncCursorSortKey[Message],
+            page=SyncCursorNoLimit[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -172,7 +172,7 @@ class MessagesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncCursorSearch[Message]:
         """
-        Search messages across chats using Beeper's message index
+        Search messages across chats.
 
         Args:
           account_ids: Limit search to specific account IDs.
@@ -382,7 +382,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Message, AsyncCursorSortKey[Message]]:
+    ) -> AsyncPaginator[Message, AsyncCursorNoLimit[Message]]:
         """List all messages in a chat with cursor-based pagination.
 
         Sorted by timestamp.
@@ -407,7 +407,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._get_api_list(
             path_template("/v1/chats/{chat_id}/messages", chat_id=chat_id),
-            page=AsyncCursorSortKey[Message],
+            page=AsyncCursorNoLimit[Message],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -448,7 +448,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Message, AsyncCursorSearch[Message]]:
         """
-        Search messages across chats using Beeper's message index
+        Search messages across chats.
 
         Args:
           account_ids: Limit search to specific account IDs.

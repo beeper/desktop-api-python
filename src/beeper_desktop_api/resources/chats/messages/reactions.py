@@ -58,7 +58,7 @@ class ReactionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ReactionDeleteResponse:
         """
-        Remove the authenticated user's reaction from an existing message.
+        Remove the reaction added by the authenticated user from an existing message.
 
         Args:
           chat_id: Unique identifier of the chat.
@@ -181,7 +181,7 @@ class AsyncReactionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ReactionDeleteResponse:
         """
-        Remove the authenticated user's reaction from an existing message.
+        Remove the reaction added by the authenticated user from an existing message.
 
         Args:
           chat_id: Unique identifier of the chat.

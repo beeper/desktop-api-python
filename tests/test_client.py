@@ -729,7 +729,7 @@ class TestBeeperDesktop:
         client.close()
 
     def test_base_url_env(self) -> None:
-        with update_env(BEEPER_DESKTOP_BASE_URL="http://localhost:5000/from/env"):
+        with update_env(BEEPER_BASE_URL="http://localhost:5000/from/env"):
             client = BeeperDesktop(access_token=access_token, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
@@ -1680,7 +1680,7 @@ class TestAsyncBeeperDesktop:
         await client.close()
 
     async def test_base_url_env(self) -> None:
-        with update_env(BEEPER_DESKTOP_BASE_URL="http://localhost:5000/from/env"):
+        with update_env(BEEPER_BASE_URL="http://localhost:5000/from/env"):
             client = AsyncBeeperDesktop(access_token=access_token, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 

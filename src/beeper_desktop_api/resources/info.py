@@ -58,7 +58,11 @@ class InfoResource(SyncAPIResource):
         return self._get(
             "/v1/info",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                security={},
             ),
             cast_to=InfoRetrieveResponse,
         )
@@ -103,7 +107,11 @@ class AsyncInfoResource(AsyncAPIResource):
         return await self._get(
             "/v1/info",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                security={},
             ),
             cast_to=InfoRetrieveResponse,
         )

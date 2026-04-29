@@ -79,7 +79,14 @@ class ChatsResource(SyncAPIResource):
     def create(
         self,
         *,
-        params: chat_create_params.Params | Omit = omit,
+        account_id: str,
+        allow_invite: bool | Omit = omit,
+        message_text: str | Omit = omit,
+        mode: Literal["start", "create"] | Omit = omit,
+        participant_ids: SequenceNotStr[str] | Omit = omit,
+        title: str | Omit = omit,
+        type: Literal["single", "group"] | Omit = omit,
+        user: chat_create_params.User | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -88,10 +95,31 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a single/group chat (mode='create') or start a direct chat from merged
-        user data (mode='start').
+        Create a direct or group chat with mode="create", or use mode="start" to resolve
+        a contact and open a direct chat.
 
         Args:
+          account_id: Account to create or start the chat on.
+
+          allow_invite: Only used for mode='start'. Whether invite-based DM creation is allowed when
+              required by the platform.
+
+          message_text: Optional first message content if the platform requires it to create the chat.
+
+          mode: Operation mode. Use 'start' to resolve a user/contact and start a direct chat.
+              Omit or set 'create' to create a chat directly.
+
+          participant_ids: Required for create mode. Provide exactly one user ID for 'single' chats and one
+              or more for 'group' chats.
+
+          title: Optional title for group chats; ignored for single chats on most networks.
+
+          type: Required for create mode. 'single' creates a direct message chat; 'group'
+              creates a group chat.
+
+          user: Required for mode='start'. Merged user-like contact payload used to resolve the
+              best identifier.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -102,7 +130,19 @@ class ChatsResource(SyncAPIResource):
         """
         return self._post(
             "/v1/chats",
-            body=maybe_transform(params, chat_create_params.ChatCreateParams),
+            body=maybe_transform(
+                {
+                    "account_id": account_id,
+                    "allow_invite": allow_invite,
+                    "message_text": message_text,
+                    "mode": mode,
+                    "participant_ids": participant_ids,
+                    "title": title,
+                    "type": type,
+                    "user": user,
+                },
+                chat_create_params.ChatCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -273,8 +313,7 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncCursorSearch[Chat]:
         """
-        Search chats by title/network or participants using Beeper Desktop's renderer
-        algorithm.
+        Search chats by title, network, or participant names.
 
         Args:
           account_ids: Provide an array of account IDs to filter chats from specific messaging accounts
@@ -383,7 +422,14 @@ class AsyncChatsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        params: chat_create_params.Params | Omit = omit,
+        account_id: str,
+        allow_invite: bool | Omit = omit,
+        message_text: str | Omit = omit,
+        mode: Literal["start", "create"] | Omit = omit,
+        participant_ids: SequenceNotStr[str] | Omit = omit,
+        title: str | Omit = omit,
+        type: Literal["single", "group"] | Omit = omit,
+        user: chat_create_params.User | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -392,10 +438,31 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a single/group chat (mode='create') or start a direct chat from merged
-        user data (mode='start').
+        Create a direct or group chat with mode="create", or use mode="start" to resolve
+        a contact and open a direct chat.
 
         Args:
+          account_id: Account to create or start the chat on.
+
+          allow_invite: Only used for mode='start'. Whether invite-based DM creation is allowed when
+              required by the platform.
+
+          message_text: Optional first message content if the platform requires it to create the chat.
+
+          mode: Operation mode. Use 'start' to resolve a user/contact and start a direct chat.
+              Omit or set 'create' to create a chat directly.
+
+          participant_ids: Required for create mode. Provide exactly one user ID for 'single' chats and one
+              or more for 'group' chats.
+
+          title: Optional title for group chats; ignored for single chats on most networks.
+
+          type: Required for create mode. 'single' creates a direct message chat; 'group'
+              creates a group chat.
+
+          user: Required for mode='start'. Merged user-like contact payload used to resolve the
+              best identifier.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -406,7 +473,19 @@ class AsyncChatsResource(AsyncAPIResource):
         """
         return await self._post(
             "/v1/chats",
-            body=await async_maybe_transform(params, chat_create_params.ChatCreateParams),
+            body=await async_maybe_transform(
+                {
+                    "account_id": account_id,
+                    "allow_invite": allow_invite,
+                    "message_text": message_text,
+                    "mode": mode,
+                    "participant_ids": participant_ids,
+                    "title": title,
+                    "type": type,
+                    "user": user,
+                },
+                chat_create_params.ChatCreateParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -577,8 +656,7 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Chat, AsyncCursorSearch[Chat]]:
         """
-        Search chats by title/network or participants using Beeper Desktop's renderer
-        algorithm.
+        Search chats by title, network, or participant names.
 
         Args:
           account_ids: Provide an array of account IDs to filter chats from specific messaging accounts

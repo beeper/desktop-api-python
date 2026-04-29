@@ -32,6 +32,7 @@ from ._utils import (
     async_maybe_transform,
 )
 from ._compat import cached_property
+from ._models import SecurityOptions
 from ._version import __version__
 from ._response import (
     to_raw_response_wrapper,
@@ -110,11 +111,11 @@ class BeeperDesktop(SyncAPIClient):
         self.access_token = access_token
 
         if base_url is None:
-            base_url = os.environ.get("BEEPER_DESKTOP_BASE_URL")
+            base_url = os.environ.get("BEEPER_BASE_URL")
         if base_url is None:
             base_url = f"http://localhost:23373"
 
-        custom_headers_env = os.environ.get("BEEPER_DESKTOP_CUSTOM_HEADERS")
+        custom_headers_env = os.environ.get("BEEPER_CUSTOM_HEADERS")
         if custom_headers_env is not None:
             parsed: dict[str, str] = {}
             for line in custom_headers_env.split("\n"):
@@ -182,9 +183,14 @@ class BeeperDesktop(SyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="repeat")
 
-    @property
     @override
-    def auth_headers(self) -> dict[str, str]:
+    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
+        return {
+            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
+        }
+
+    @property
+    def _bearer_auth(self) -> dict[str, str]:
         access_token = self.access_token
         return {"Authorization": f"Bearer {access_token}"}
 
@@ -414,11 +420,11 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         self.access_token = access_token
 
         if base_url is None:
-            base_url = os.environ.get("BEEPER_DESKTOP_BASE_URL")
+            base_url = os.environ.get("BEEPER_BASE_URL")
         if base_url is None:
             base_url = f"http://localhost:23373"
 
-        custom_headers_env = os.environ.get("BEEPER_DESKTOP_CUSTOM_HEADERS")
+        custom_headers_env = os.environ.get("BEEPER_CUSTOM_HEADERS")
         if custom_headers_env is not None:
             parsed: dict[str, str] = {}
             for line in custom_headers_env.split("\n"):
@@ -486,9 +492,14 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="repeat")
 
-    @property
     @override
-    def auth_headers(self) -> dict[str, str]:
+    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
+        return {
+            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
+        }
+
+    @property
+    def _bearer_auth(self) -> dict[str, str]:
         access_token = self.access_token
         return {"Authorization": f"Bearer {access_token}"}
 

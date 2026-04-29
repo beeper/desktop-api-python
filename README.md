@@ -218,10 +218,11 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-client.chats.reminders.create(
-    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-    reminder={"remind_at_ms": 0},
+chat = client.chats.create(
+    account_id="accountID",
+    user={},
 )
+print(chat.user)
 ```
 
 ## File uploads
@@ -336,10 +337,10 @@ Note that requests that time out are [retried twice by default](#retries).
 
 We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
 
-You can enable logging by setting the environment variable `BEEPER_DESKTOP_LOG` to `info`.
+You can enable logging by setting the environment variable `BEEPER_LOG` to `info`.
 
 ```shell
-$ export BEEPER_DESKTOP_LOG=info
+$ export BEEPER_LOG=info
 ```
 
 Or to `debug` for more verbose logging.
@@ -438,7 +439,7 @@ import httpx
 from beeper_desktop_api import BeeperDesktop, DefaultHttpxClient
 
 client = BeeperDesktop(
-    # Or use the `BEEPER_DESKTOP_BASE_URL` env var
+    # Or use the `BEEPER_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxy="http://my.test.proxy.example.com",

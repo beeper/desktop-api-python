@@ -218,11 +218,11 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-chat = client.chats.create(
+response = client.chats.start(
     account_id="accountID",
     user={},
 )
-print(chat.user)
+print(response.user)
 ```
 
 ## File uploads

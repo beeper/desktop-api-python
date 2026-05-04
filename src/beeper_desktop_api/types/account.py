@@ -12,16 +12,16 @@ __all__ = ["Account", "Bridge"]
 
 
 class Bridge(BaseModel):
-    """Bridge metadata for the account. Available in Beeper Desktop v4.2.789+."""
+    """Bridge metadata for the account. Available in Beeper Desktop v4.2.799+."""
 
     id: str
-    """Bridge instance identifier. Available in Beeper Desktop v4.2.789+."""
+    """Bridge instance identifier. Available in Beeper Desktop v4.2.799+."""
 
     provider: Literal["cloud", "self-hosted", "local", "platform-sdk"]
-    """Bridge provider for the account. Available in Beeper Desktop v4.2.789+."""
+    """Bridge provider for the account. Available in Beeper Desktop v4.2.799+."""
 
     type: str
-    """Bridge type. Available in Beeper Desktop v4.2.789+."""
+    """Bridge type. Available in Beeper Desktop v4.2.799+."""
 
 
 class Account(BaseModel):
@@ -31,7 +31,7 @@ class Account(BaseModel):
     """Chat account added to Beeper. Use this to route account-scoped actions."""
 
     bridge: Bridge
-    """Bridge metadata for the account. Available in Beeper Desktop v4.2.789+."""
+    """Bridge metadata for the account. Available in Beeper Desktop v4.2.799+."""
 
     user: User
     """User the account belongs to."""

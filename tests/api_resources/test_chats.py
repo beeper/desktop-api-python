@@ -12,6 +12,7 @@ from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
 from beeper_desktop_api.types import (
     Chat,
     ChatListResponse,
+    ChatStartResponse,
     ChatCreateResponse,
 )
 from beeper_desktop_api._utils import parse_datetime
@@ -27,6 +28,8 @@ class TestChats:
     def test_method_create(self, client: BeeperDesktop) -> None:
         chat = client.chats.create(
             account_id="accountID",
+            participant_ids=["string"],
+            type="single",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
@@ -34,19 +37,10 @@ class TestChats:
     def test_method_create_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.create(
             account_id="accountID",
-            allow_invite=True,
-            message_text="messageText",
-            mode="start",
             participant_ids=["string"],
-            title="title",
             type="single",
-            user={
-                "id": "id",
-                "email": "email",
-                "full_name": "fullName",
-                "phone_number": "phoneNumber",
-                "username": "username",
-            },
+            message_text="messageText",
+            title="title",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
@@ -54,6 +48,8 @@ class TestChats:
     def test_raw_response_create(self, client: BeeperDesktop) -> None:
         response = client.chats.with_raw_response.create(
             account_id="accountID",
+            participant_ids=["string"],
+            type="single",
         )
 
         assert response.is_closed is True
@@ -65,6 +61,8 @@ class TestChats:
     def test_streaming_response_create(self, client: BeeperDesktop) -> None:
         with client.chats.with_streaming_response.create(
             account_id="accountID",
+            participant_ids=["string"],
+            type="single",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -249,6 +247,68 @@ class TestChats:
 
         assert cast(Any, response.is_closed) is True
 
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    def test_method_start(self, client: BeeperDesktop) -> None:
+        chat = client.chats.start(
+            account_id="accountID",
+            user={},
+        )
+        assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    def test_method_start_with_all_params(self, client: BeeperDesktop) -> None:
+        chat = client.chats.start(
+            account_id="accountID",
+            user={
+                "id": "id",
+                "email": "email",
+                "full_name": "fullName",
+                "phone_number": "phoneNumber",
+                "username": "username",
+            },
+            allow_invite=True,
+            message_text="messageText",
+        )
+        assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    def test_raw_response_start(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.start(
+            account_id="accountID",
+            user={},
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = response.parse()
+        assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    def test_streaming_response_start(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.start(
+            account_id="accountID",
+            user={},
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = response.parse()
+            assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
 
 class TestAsyncChats:
     parametrize = pytest.mark.parametrize(
@@ -259,6 +319,8 @@ class TestAsyncChats:
     async def test_method_create(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.create(
             account_id="accountID",
+            participant_ids=["string"],
+            type="single",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
@@ -266,19 +328,10 @@ class TestAsyncChats:
     async def test_method_create_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.create(
             account_id="accountID",
-            allow_invite=True,
-            message_text="messageText",
-            mode="start",
             participant_ids=["string"],
-            title="title",
             type="single",
-            user={
-                "id": "id",
-                "email": "email",
-                "full_name": "fullName",
-                "phone_number": "phoneNumber",
-                "username": "username",
-            },
+            message_text="messageText",
+            title="title",
         )
         assert_matches_type(ChatCreateResponse, chat, path=["response"])
 
@@ -286,6 +339,8 @@ class TestAsyncChats:
     async def test_raw_response_create(self, async_client: AsyncBeeperDesktop) -> None:
         response = await async_client.chats.with_raw_response.create(
             account_id="accountID",
+            participant_ids=["string"],
+            type="single",
         )
 
         assert response.is_closed is True
@@ -297,6 +352,8 @@ class TestAsyncChats:
     async def test_streaming_response_create(self, async_client: AsyncBeeperDesktop) -> None:
         async with async_client.chats.with_streaming_response.create(
             account_id="accountID",
+            participant_ids=["string"],
+            type="single",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -478,5 +535,67 @@ class TestAsyncChats:
 
             chat = await response.parse()
             assert_matches_type(AsyncCursorSearch[Chat], chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    async def test_method_start(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.start(
+            account_id="accountID",
+            user={},
+        )
+        assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    async def test_method_start_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.start(
+            account_id="accountID",
+            user={
+                "id": "id",
+                "email": "email",
+                "full_name": "fullName",
+                "phone_number": "phoneNumber",
+                "username": "username",
+            },
+            allow_invite=True,
+            message_text="messageText",
+        )
+        assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    async def test_raw_response_start(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.start(
+            account_id="accountID",
+            user={},
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = await response.parse()
+        assert_matches_type(ChatStartResponse, chat, path=["response"])
+
+    @pytest.mark.skip(
+        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
+    )
+    @parametrize
+    async def test_streaming_response_start(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.start(
+            account_id="accountID",
+            user={},
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = await response.parse()
+            assert_matches_type(ChatStartResponse, chat, path=["response"])
 
         assert cast(Any, response.is_closed) is True

@@ -8,7 +8,14 @@ from typing_extensions import Literal
 
 import httpx
 
-from ...types import chat_list_params, chat_create_params, chat_search_params, chat_archive_params, chat_retrieve_params
+from ...types import (
+    chat_list_params,
+    chat_start_params,
+    chat_create_params,
+    chat_search_params,
+    chat_archive_params,
+    chat_retrieve_params,
+)
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
@@ -39,6 +46,7 @@ from .messages.messages import (
     AsyncMessagesResourceWithStreamingResponse,
 )
 from ...types.chat_list_response import ChatListResponse
+from ...types.chat_start_response import ChatStartResponse
 from ...types.chat_create_response import ChatCreateResponse
 
 __all__ = ["ChatsResource", "AsyncChatsResource"]
@@ -80,13 +88,10 @@ class ChatsResource(SyncAPIResource):
         self,
         *,
         account_id: str,
-        allow_invite: bool | Omit = omit,
+        participant_ids: SequenceNotStr[str],
+        type: Literal["single", "group"],
         message_text: str | Omit = omit,
-        mode: Literal["start", "create"] | Omit = omit,
-        participant_ids: SequenceNotStr[str] | Omit = omit,
         title: str | Omit = omit,
-        type: Literal["single", "group"] | Omit = omit,
-        user: chat_create_params.User | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -95,30 +100,19 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a direct or group chat with mode="create", or use mode="start" to resolve
-        a contact and open a direct chat.
+        Create a direct or group chat from participant IDs.
 
         Args:
           account_id: Account to create or start the chat on.
 
-          allow_invite: Only used for mode='start'. Whether invite-based DM creation is allowed when
-              required by the platform.
+          participant_ids: User IDs to include in the new chat.
+
+          type: 'single' requires exactly one participantID; 'group' supports multiple
+              participants and optional title.
 
           message_text: Optional first message content if the platform requires it to create the chat.
 
-          mode: Operation mode. Use 'start' to resolve a user/contact and start a direct chat.
-              Omit or set 'create' to create a chat directly.
-
-          participant_ids: Required for create mode. Provide exactly one user ID for 'single' chats and one
-              or more for 'group' chats.
-
           title: Optional title for group chats; ignored for single chats on most networks.
-
-          type: Required for create mode. 'single' creates a direct message chat; 'group'
-              creates a group chat.
-
-          user: Required for mode='start'. Merged user-like contact payload used to resolve the
-              best identifier.
 
           extra_headers: Send extra headers
 
@@ -133,13 +127,10 @@ class ChatsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "account_id": account_id,
-                    "allow_invite": allow_invite,
-                    "message_text": message_text,
-                    "mode": mode,
                     "participant_ids": participant_ids,
-                    "title": title,
                     "type": type,
-                    "user": user,
+                    "message_text": message_text,
+                    "title": title,
                 },
                 chat_create_params.ChatCreateParams,
             ),
@@ -386,6 +377,59 @@ class ChatsResource(SyncAPIResource):
             model=Chat,
         )
 
+    def start(
+        self,
+        *,
+        account_id: str,
+        user: chat_start_params.User,
+        allow_invite: bool | Omit = omit,
+        message_text: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ChatStartResponse:
+        """Resolve a user/contact and open a direct chat.
+
+        Reuses an existing direct chat
+        when one is found. Available in Beeper Desktop v4.2.799+.
+
+        Args:
+          account_id: Account to create or start the chat on.
+
+          user: Merged user-like contact payload used to resolve the best identifier.
+
+          allow_invite: Whether invite-based DM creation is allowed when required by the platform.
+
+          message_text: Optional first message content if the platform requires it to create the chat.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/v1/chats.start",
+            body=maybe_transform(
+                {
+                    "account_id": account_id,
+                    "user": user,
+                    "allow_invite": allow_invite,
+                    "message_text": message_text,
+                },
+                chat_start_params.ChatStartParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ChatStartResponse,
+        )
+
 
 class AsyncChatsResource(AsyncAPIResource):
     """Manage chats"""
@@ -423,13 +467,10 @@ class AsyncChatsResource(AsyncAPIResource):
         self,
         *,
         account_id: str,
-        allow_invite: bool | Omit = omit,
+        participant_ids: SequenceNotStr[str],
+        type: Literal["single", "group"],
         message_text: str | Omit = omit,
-        mode: Literal["start", "create"] | Omit = omit,
-        participant_ids: SequenceNotStr[str] | Omit = omit,
         title: str | Omit = omit,
-        type: Literal["single", "group"] | Omit = omit,
-        user: chat_create_params.User | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -438,30 +479,19 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
         """
-        Create a direct or group chat with mode="create", or use mode="start" to resolve
-        a contact and open a direct chat.
+        Create a direct or group chat from participant IDs.
 
         Args:
           account_id: Account to create or start the chat on.
 
-          allow_invite: Only used for mode='start'. Whether invite-based DM creation is allowed when
-              required by the platform.
+          participant_ids: User IDs to include in the new chat.
+
+          type: 'single' requires exactly one participantID; 'group' supports multiple
+              participants and optional title.
 
           message_text: Optional first message content if the platform requires it to create the chat.
 
-          mode: Operation mode. Use 'start' to resolve a user/contact and start a direct chat.
-              Omit or set 'create' to create a chat directly.
-
-          participant_ids: Required for create mode. Provide exactly one user ID for 'single' chats and one
-              or more for 'group' chats.
-
           title: Optional title for group chats; ignored for single chats on most networks.
-
-          type: Required for create mode. 'single' creates a direct message chat; 'group'
-              creates a group chat.
-
-          user: Required for mode='start'. Merged user-like contact payload used to resolve the
-              best identifier.
 
           extra_headers: Send extra headers
 
@@ -476,13 +506,10 @@ class AsyncChatsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "account_id": account_id,
-                    "allow_invite": allow_invite,
-                    "message_text": message_text,
-                    "mode": mode,
                     "participant_ids": participant_ids,
-                    "title": title,
                     "type": type,
-                    "user": user,
+                    "message_text": message_text,
+                    "title": title,
                 },
                 chat_create_params.ChatCreateParams,
             ),
@@ -729,6 +756,59 @@ class AsyncChatsResource(AsyncAPIResource):
             model=Chat,
         )
 
+    async def start(
+        self,
+        *,
+        account_id: str,
+        user: chat_start_params.User,
+        allow_invite: bool | Omit = omit,
+        message_text: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> ChatStartResponse:
+        """Resolve a user/contact and open a direct chat.
+
+        Reuses an existing direct chat
+        when one is found. Available in Beeper Desktop v4.2.799+.
+
+        Args:
+          account_id: Account to create or start the chat on.
+
+          user: Merged user-like contact payload used to resolve the best identifier.
+
+          allow_invite: Whether invite-based DM creation is allowed when required by the platform.
+
+          message_text: Optional first message content if the platform requires it to create the chat.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/v1/chats.start",
+            body=await async_maybe_transform(
+                {
+                    "account_id": account_id,
+                    "user": user,
+                    "allow_invite": allow_invite,
+                    "message_text": message_text,
+                },
+                chat_start_params.ChatStartParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=ChatStartResponse,
+        )
+
 
 class ChatsResourceWithRawResponse:
     def __init__(self, chats: ChatsResource) -> None:
@@ -748,6 +828,9 @@ class ChatsResourceWithRawResponse:
         )
         self.search = to_raw_response_wrapper(
             chats.search,
+        )
+        self.start = to_raw_response_wrapper(
+            chats.start,
         )
 
     @cached_property
@@ -780,6 +863,9 @@ class AsyncChatsResourceWithRawResponse:
         self.search = async_to_raw_response_wrapper(
             chats.search,
         )
+        self.start = async_to_raw_response_wrapper(
+            chats.start,
+        )
 
     @cached_property
     def reminders(self) -> AsyncRemindersResourceWithRawResponse:
@@ -811,6 +897,9 @@ class ChatsResourceWithStreamingResponse:
         self.search = to_streamed_response_wrapper(
             chats.search,
         )
+        self.start = to_streamed_response_wrapper(
+            chats.start,
+        )
 
     @cached_property
     def reminders(self) -> RemindersResourceWithStreamingResponse:
@@ -841,6 +930,9 @@ class AsyncChatsResourceWithStreamingResponse:
         )
         self.search = async_to_streamed_response_wrapper(
             chats.search,
+        )
+        self.start = async_to_streamed_response_wrapper(
+            chats.start,
         )
 
     @cached_property

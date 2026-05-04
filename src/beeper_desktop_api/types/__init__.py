@@ -8,12 +8,14 @@ from .account import Account as Account
 from .focus_response import FocusResponse as FocusResponse
 from .search_response import SearchResponse as SearchResponse
 from .chat_list_params import ChatListParams as ChatListParams
+from .chat_start_params import ChatStartParams as ChatStartParams
 from .asset_serve_params import AssetServeParams as AssetServeParams
 from .chat_create_params import ChatCreateParams as ChatCreateParams
 from .chat_list_response import ChatListResponse as ChatListResponse
 from .chat_search_params import ChatSearchParams as ChatSearchParams
 from .asset_upload_params import AssetUploadParams as AssetUploadParams
 from .chat_archive_params import ChatArchiveParams as ChatArchiveParams
+from .chat_start_response import ChatStartResponse as ChatStartResponse
 from .client_focus_params import ClientFocusParams as ClientFocusParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams

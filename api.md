@@ -47,7 +47,7 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import Chat, ChatCreateResponse, ChatListResponse
+from beeper_desktop_api.types import Chat, ChatCreateResponse, ChatListResponse, ChatStartResponse
 ```
 
 Methods:
@@ -57,6 +57,7 @@ Methods:
 - <code title="get /v1/chats">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">list</a>(\*\*<a href="src/beeper_desktop_api/types/chat_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chat_list_response.py">SyncCursorNoLimit[ChatListResponse]</a></code>
 - <code title="post /v1/chats/{chatID}/archive">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">archive</a>(chat_id, \*\*<a href="src/beeper_desktop_api/types/chat_archive_params.py">params</a>) -> None</code>
 - <code title="get /v1/chats/search">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">search</a>(\*\*<a href="src/beeper_desktop_api/types/chat_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chat.py">SyncCursorSearch[Chat]</a></code>
+- <code title="post /v1/chats.start">client.chats.<a href="./src/beeper_desktop_api/resources/chats/chats.py">start</a>(\*\*<a href="src/beeper_desktop_api/types/chat_start_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chat_start_response.py">ChatStartResponse</a></code>
 
 ## Reminders
 

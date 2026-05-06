@@ -11,9 +11,10 @@ __all__ = ["Reaction"]
 
 class Reaction(BaseModel):
     id: str
-    """
-    Reaction ID, typically ${participantID}${reactionKey} if multiple reactions
-    allowed, or just participantID otherwise.
+    """Reaction ID.
+
+    When a participant can react more than once, the ID is the participant ID
+    concatenated with the reaction key; otherwise it equals the participant ID.
     """
 
     participant_id: str = FieldInfo(alias="participantID")

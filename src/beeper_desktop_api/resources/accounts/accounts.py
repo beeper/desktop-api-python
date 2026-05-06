@@ -65,8 +65,8 @@ class AccountsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AccountListResponse:
         """
-        Lists chat accounts across networks (WhatsApp, Telegram, Twitter/X, etc.)
-        actively connected to this Beeper Desktop instance
+        List Chat Accounts connected to this Beeper Desktop instance, including bridge
+        metadata and network identity.
         """
         return self._get(
             "/v1/accounts",
@@ -115,8 +115,8 @@ class AsyncAccountsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AccountListResponse:
         """
-        Lists chat accounts across networks (WhatsApp, Telegram, Twitter/X, etc.)
-        actively connected to this Beeper Desktop instance
+        List Chat Accounts connected to this Beeper Desktop instance, including bridge
+        metadata and network identity.
         """
         return await self._get(
             "/v1/accounts",

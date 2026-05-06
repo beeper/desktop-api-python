@@ -24,9 +24,57 @@ class TestMessages:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
     @parametrize
+    def test_method_retrieve(self, client: BeeperDesktop) -> None:
+        message = client.messages.retrieve(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Message, message, path=["response"])
+
+    @parametrize
+    def test_raw_response_retrieve(self, client: BeeperDesktop) -> None:
+        response = client.messages.with_raw_response.retrieve(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        message = response.parse()
+        assert_matches_type(Message, message, path=["response"])
+
+    @parametrize
+    def test_streaming_response_retrieve(self, client: BeeperDesktop) -> None:
+        with client.messages.with_streaming_response.retrieve(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            message = response.parse()
+            assert_matches_type(Message, message, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_retrieve(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.messages.with_raw_response.retrieve(
+                message_id="1343993",
+                chat_id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            client.messages.with_raw_response.retrieve(
+                message_id="",
+                chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            )
+
+    @parametrize
     def test_method_update(self, client: BeeperDesktop) -> None:
         message = client.messages.update(
-            message_id="messageID",
+            message_id="1343993",
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             text="x",
         )
@@ -35,7 +83,7 @@ class TestMessages:
     @parametrize
     def test_raw_response_update(self, client: BeeperDesktop) -> None:
         response = client.messages.with_raw_response.update(
-            message_id="messageID",
+            message_id="1343993",
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             text="x",
         )
@@ -48,7 +96,7 @@ class TestMessages:
     @parametrize
     def test_streaming_response_update(self, client: BeeperDesktop) -> None:
         with client.messages.with_streaming_response.update(
-            message_id="messageID",
+            message_id="1343993",
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             text="x",
         ) as response:
@@ -64,7 +112,7 @@ class TestMessages:
     def test_path_params_update(self, client: BeeperDesktop) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
             client.messages.with_raw_response.update(
-                message_id="messageID",
+                message_id="1343993",
                 chat_id="",
                 text="x",
             )
@@ -124,6 +172,63 @@ class TestMessages:
             )
 
     @parametrize
+    def test_method_delete(self, client: BeeperDesktop) -> None:
+        message = client.messages.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert message is None
+
+    @parametrize
+    def test_method_delete_with_all_params(self, client: BeeperDesktop) -> None:
+        message = client.messages.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            for_everyone=True,
+        )
+        assert message is None
+
+    @parametrize
+    def test_raw_response_delete(self, client: BeeperDesktop) -> None:
+        response = client.messages.with_raw_response.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        message = response.parse()
+        assert message is None
+
+    @parametrize
+    def test_streaming_response_delete(self, client: BeeperDesktop) -> None:
+        with client.messages.with_streaming_response.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            message = response.parse()
+            assert message is None
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_delete(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.messages.with_raw_response.delete(
+                message_id="1343993",
+                chat_id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            client.messages.with_raw_response.delete(
+                message_id="",
+                chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            )
+
+    @parametrize
     def test_method_search(self, client: BeeperDesktop) -> None:
         message = client.messages.search()
         assert_matches_type(SyncCursorSearch[Message], message, path=["response"])
@@ -131,10 +236,7 @@ class TestMessages:
     @parametrize
     def test_method_search_with_all_params(self, client: BeeperDesktop) -> None:
         message = client.messages.search(
-            account_ids=[
-                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
-                "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
-            ],
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             chat_ids=["!NCdzlIaMjZUmvmvyHU:beeper.com", "1231073"],
             chat_type="group",
             cursor="1725489123456|c29tZUltc2dQYWdl",
@@ -190,7 +292,7 @@ class TestMessages:
                     "height": 0,
                     "width": 0,
                 },
-                "type": "gif",
+                "type": "image",
             },
             reply_to_message_id="replyToMessageID",
             text="text",
@@ -235,9 +337,57 @@ class TestAsyncMessages:
     )
 
     @parametrize
+    async def test_method_retrieve(self, async_client: AsyncBeeperDesktop) -> None:
+        message = await async_client.messages.retrieve(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Message, message, path=["response"])
+
+    @parametrize
+    async def test_raw_response_retrieve(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.messages.with_raw_response.retrieve(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        message = await response.parse()
+        assert_matches_type(Message, message, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_retrieve(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.messages.with_streaming_response.retrieve(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            message = await response.parse()
+            assert_matches_type(Message, message, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_retrieve(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.messages.with_raw_response.retrieve(
+                message_id="1343993",
+                chat_id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            await async_client.messages.with_raw_response.retrieve(
+                message_id="",
+                chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            )
+
+    @parametrize
     async def test_method_update(self, async_client: AsyncBeeperDesktop) -> None:
         message = await async_client.messages.update(
-            message_id="messageID",
+            message_id="1343993",
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             text="x",
         )
@@ -246,7 +396,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_raw_response_update(self, async_client: AsyncBeeperDesktop) -> None:
         response = await async_client.messages.with_raw_response.update(
-            message_id="messageID",
+            message_id="1343993",
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             text="x",
         )
@@ -259,7 +409,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_streaming_response_update(self, async_client: AsyncBeeperDesktop) -> None:
         async with async_client.messages.with_streaming_response.update(
-            message_id="messageID",
+            message_id="1343993",
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             text="x",
         ) as response:
@@ -275,7 +425,7 @@ class TestAsyncMessages:
     async def test_path_params_update(self, async_client: AsyncBeeperDesktop) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
             await async_client.messages.with_raw_response.update(
-                message_id="messageID",
+                message_id="1343993",
                 chat_id="",
                 text="x",
             )
@@ -335,6 +485,63 @@ class TestAsyncMessages:
             )
 
     @parametrize
+    async def test_method_delete(self, async_client: AsyncBeeperDesktop) -> None:
+        message = await async_client.messages.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert message is None
+
+    @parametrize
+    async def test_method_delete_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        message = await async_client.messages.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            for_everyone=True,
+        )
+        assert message is None
+
+    @parametrize
+    async def test_raw_response_delete(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.messages.with_raw_response.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        message = await response.parse()
+        assert message is None
+
+    @parametrize
+    async def test_streaming_response_delete(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.messages.with_streaming_response.delete(
+            message_id="1343993",
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            message = await response.parse()
+            assert message is None
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_delete(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.messages.with_raw_response.delete(
+                message_id="1343993",
+                chat_id="",
+            )
+
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `message_id` but received ''"):
+            await async_client.messages.with_raw_response.delete(
+                message_id="",
+                chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            )
+
+    @parametrize
     async def test_method_search(self, async_client: AsyncBeeperDesktop) -> None:
         message = await async_client.messages.search()
         assert_matches_type(AsyncCursorSearch[Message], message, path=["response"])
@@ -342,10 +549,7 @@ class TestAsyncMessages:
     @parametrize
     async def test_method_search_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         message = await async_client.messages.search(
-            account_ids=[
-                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
-                "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
-            ],
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             chat_ids=["!NCdzlIaMjZUmvmvyHU:beeper.com", "1231073"],
             chat_type="group",
             cursor="1725489123456|c29tZUltc2dQYWdl",
@@ -401,7 +605,7 @@ class TestAsyncMessages:
                     "height": 0,
                     "width": 0,
                 },
-                "type": "gif",
+                "type": "image",
             },
             reply_to_message_id="replyToMessageID",
             text="text",

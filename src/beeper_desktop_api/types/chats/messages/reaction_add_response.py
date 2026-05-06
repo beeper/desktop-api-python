@@ -11,16 +11,23 @@ __all__ = ["ReactionAddResponse"]
 
 class ReactionAddResponse(BaseModel):
     chat_id: str = FieldInfo(alias="chatID")
-    """Unique identifier of the chat."""
+    """Chat ID.
+
+    Input routes also accept the local chat ID from this Beeper Desktop installation
+    when available.
+    """
 
     message_id: str = FieldInfo(alias="messageID")
     """Message ID."""
 
     reaction_key: str = FieldInfo(alias="reactionKey")
-    """Reaction key that was added"""
+    """Reaction key that was added."""
 
     success: Literal[True]
-    """Whether the reaction was successfully added"""
+    """Always true.
+
+    Indicates the reaction was queued; failures return an error response.
+    """
 
     transaction_id: str = FieldInfo(alias="transactionID")
-    """Transaction ID used for the reaction event"""
+    """Transaction ID used for send tracking."""

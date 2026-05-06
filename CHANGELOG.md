@@ -1,5 +1,66 @@
 # Changelog
 
+## 5.0.0 (2026-05-06)
+
+Full Changelog: [v4.3.0...v5.0.0](https://github.com/beeper/desktop-api-python/compare/v4.3.0...v5.0.0)
+
+### Features
+
+* **api:** add network, bridge fields to accounts ([af70fc9](https://github.com/beeper/desktop-api-python/commit/af70fc9fab45036721b4be634bb4444964c70d1e))
+* **api:** api update ([a5afb8f](https://github.com/beeper/desktop-api-python/commit/a5afb8f6a0037bc3727eca0a7ca0c46ca371c6f0))
+* **api:** api update ([a1af475](https://github.com/beeper/desktop-api-python/commit/a1af475c4f4c51e2aed27ea8c793364444ed8055))
+* **api:** api update ([770a8e2](https://github.com/beeper/desktop-api-python/commit/770a8e2a6fc4d96dae58b3b787d55072faf63e34))
+* **api:** manual updates ([c84dca5](https://github.com/beeper/desktop-api-python/commit/c84dca576d56b83e314ab798749607e70aea7223))
+* **internal:** implement indices array format for query and form serialization ([de85c3a](https://github.com/beeper/desktop-api-python/commit/de85c3aef481f44350bab667ed81e155573ace81))
+* support setting headers via env ([6841539](https://github.com/beeper/desktop-api-python/commit/6841539c8619a507ec5e717d08a81837e83d76c2))
+
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([9e86464](https://github.com/beeper/desktop-api-python/commit/9e86464960e28472bc3a4f137c5d2c025f2acc16))
+* **deps:** bump minimum typing-extensions version ([922d90a](https://github.com/beeper/desktop-api-python/commit/922d90aeb6d75306490a359d26ebbf71a6e340b8))
+* ensure file data are only sent as 1 parameter ([69f6d11](https://github.com/beeper/desktop-api-python/commit/69f6d11ecb0959d1a5eb90c41c76542a1ea5826f))
+* **pydantic:** do not pass `by_alias` unless set ([8b9fe85](https://github.com/beeper/desktop-api-python/commit/8b9fe85df1911bc10a65b5c965e5465c4041e065))
+* sanitize endpoint path params ([900c955](https://github.com/beeper/desktop-api-python/commit/900c955edf1d5f8cf7aa9c7d8a7859e5b61ae379))
+* use correct field name format for multipart file arrays ([d086e7f](https://github.com/beeper/desktop-api-python/commit/d086e7f0ff86653ace4d1f21c5daf1d6605b3369))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([7addb88](https://github.com/beeper/desktop-api-python/commit/7addb88adf0574857ce646e8a9f15e8eb035a48a))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([1fe013e](https://github.com/beeper/desktop-api-python/commit/1fe013eacfb814508b88eefa3b2ee3bf51618edc))
+* **ci:** skip uploading artifacts on stainless-internal branches ([3f5692e](https://github.com/beeper/desktop-api-python/commit/3f5692eb199bd02db1359e8131c8774eee7fabcf))
+* configure new SDK language ([8b9d76c](https://github.com/beeper/desktop-api-python/commit/8b9d76c76fe4e3ae99d85429f20d9b782bea2520))
+* configure new SDK language ([a54d51a](https://github.com/beeper/desktop-api-python/commit/a54d51a23c31d38e124dc263f748f6ada2f2409c))
+* **internal:** add request options to SSE classes ([fcf96d3](https://github.com/beeper/desktop-api-python/commit/fcf96d3c4f3bdbec2cd1b88745cdbbc48e864be2))
+* **internal:** codegen related update ([a6b8aac](https://github.com/beeper/desktop-api-python/commit/a6b8aac8430c698cd1a73bab2cd257c9cf553df6))
+* **internal:** make `test_proxy_environment_variables` more resilient ([2420dd3](https://github.com/beeper/desktop-api-python/commit/2420dd3d3de95350f142acaf7fb923fd292af59e))
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([1ad2ddf](https://github.com/beeper/desktop-api-python/commit/1ad2ddfe678d2a495d69e45d7a1a8f0856af4211))
+* **internal:** more robust bootstrap script ([ed8c2c4](https://github.com/beeper/desktop-api-python/commit/ed8c2c499c99ac2f1a4e83054ae0000cb9e12c47))
+* **internal:** reformat pyproject.toml ([f11e2a6](https://github.com/beeper/desktop-api-python/commit/f11e2a6c2e25d78bd95e0a81ce52e814dc2a9e79))
+* **internal:** tweak CI branches ([311a998](https://github.com/beeper/desktop-api-python/commit/311a998617de99c1defaa4c54f1b8a308d1bfaf3))
+* **internal:** update gitignore ([3dfb379](https://github.com/beeper/desktop-api-python/commit/3dfb3799f6ebbde6400db092864361e3b6a6e07f))
+* **test:** do not count install time for mock server timeout ([352dc26](https://github.com/beeper/desktop-api-python/commit/352dc26df496dac34b88c8d410a3d5761fad7cde))
+* **tests:** bump steady to v0.19.4 ([68f14af](https://github.com/beeper/desktop-api-python/commit/68f14afb85f168eb61a91398165b1d8222fbeea4))
+* **tests:** bump steady to v0.19.5 ([9229d32](https://github.com/beeper/desktop-api-python/commit/9229d32b59f8494f49677dbf508d2fedd21cd8b4))
+* **tests:** bump steady to v0.19.6 ([166b069](https://github.com/beeper/desktop-api-python/commit/166b069fbd3034b27d16baf50ef96c61a46996d9))
+* **tests:** bump steady to v0.19.7 ([31a8e58](https://github.com/beeper/desktop-api-python/commit/31a8e58a09bd798b9930c195da2be239d50a2e77))
+* **tests:** bump steady to v0.20.1 ([d2cf119](https://github.com/beeper/desktop-api-python/commit/d2cf119042313a4b82f4a395a43c175874ceca1e))
+* **tests:** bump steady to v0.20.2 ([0def55c](https://github.com/beeper/desktop-api-python/commit/0def55c17787849b27d1e8c21cb6cd129069e220))
+* **tests:** bump steady to v0.22.1 ([29127f7](https://github.com/beeper/desktop-api-python/commit/29127f7697a10191b913f86e8664321963b55003))
+* update placeholder string ([f9883db](https://github.com/beeper/desktop-api-python/commit/f9883db325ccb453c60affa4218f2b257c4d41d8))
+* update SDK settings ([b954521](https://github.com/beeper/desktop-api-python/commit/b954521c09743ea77dc1fe3f49e62cadb9cb6b1f))
+* update SDK settings ([5df69bf](https://github.com/beeper/desktop-api-python/commit/5df69bf22554340ee0fd0c694fb755c80907ee22))
+
+
+### Refactors
+
+* **tests:** switch from prism to steady ([ef99778](https://github.com/beeper/desktop-api-python/commit/ef99778f642f49a26aad1d65c59df9f9cfa766e9))
+
 ## 4.3.0 (2026-02-20)
 
 Full Changelog: [v4.2.0...v4.3.0](https://github.com/beeper/desktop-api-python/compare/v4.2.0...v4.3.0)

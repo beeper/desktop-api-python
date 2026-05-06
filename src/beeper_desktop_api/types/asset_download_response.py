@@ -14,4 +14,4 @@ class AssetDownloadResponse(BaseModel):
     """Error message if the download failed."""
 
     src_url: Optional[str] = FieldInfo(alias="srcURL", default=None)
-    """Local file URL to the downloaded asset."""
+    """Local file URL to the downloaded file."""

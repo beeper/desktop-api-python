@@ -9,4 +9,4 @@ __all__ = ["AssetDownloadParams"]
 
 class AssetDownloadParams(TypedDict, total=False):
     url: Required[str]
-    """Matrix content URL (mxc:// or localmxc://) for the asset to download."""
+    """Matrix content URL (mxc:// or localmxc://) for the file to download."""

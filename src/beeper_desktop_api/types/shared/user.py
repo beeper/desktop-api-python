@@ -30,8 +30,9 @@ class User(BaseModel):
     img_url: Optional[str] = FieldInfo(alias="imgURL", default=None)
     """Avatar image URL if available.
 
-    May be temporary or local-only to this device; download promptly if durable
-    access is needed.
+    This may be a remote URL, Matrix media URL, data URL, or local filesystem URL
+    depending on source and endpoint. May be temporary or local-only to this device;
+    download promptly if durable access is needed.
     """
 
     is_self: Optional[bool] = FieldInfo(alias="isSelf", default=None)

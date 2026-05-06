@@ -11,10 +11,14 @@ __all__ = ["ReactionAddParams"]
 
 class ReactionAddParams(TypedDict, total=False):
     chat_id: Required[Annotated[str, PropertyInfo(alias="chatID")]]
-    """Unique identifier of the chat."""
+    """Chat ID.
+
+    Input routes also accept the local chat ID from this Beeper Desktop installation
+    when available.
+    """
 
     reaction_key: Required[Annotated[str, PropertyInfo(alias="reactionKey")]]
     """Reaction key to add (emoji, shortcode, or custom emoji key)"""
 
     transaction_id: Annotated[str, PropertyInfo(alias="transactionID")]
-    """Optional transaction ID for deduplication and local echo tracking"""
+    """Optional transaction ID for deduplication and send tracking"""

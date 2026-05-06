@@ -165,7 +165,10 @@ class BeeperDesktop(SyncAPIClient):
 
     @cached_property
     def info(self) -> InfoResource:
-        """Control the Beeper Desktop application"""
+        """Server discovery and capability metadata.
+
+        Use /v1/info before authentication setup.
+        """
         from .resources.info import InfoResource
 
         return InfoResource(self)
@@ -270,15 +273,15 @@ class BeeperDesktop(SyncAPIClient):
     ) -> FocusResponse:
         """
         Focus Beeper Desktop and optionally navigate to a specific chat, message, or
-        pre-fill draft text and attachment.
+        pre-fill plain text and an image path.
 
         Args:
           chat_id: Optional Beeper chat ID (or local chat ID) to focus after opening the app. If
               omitted, only opens/focuses the app.
 
-          draft_attachment_path: Optional draft attachment path to populate in the message input field.
+          draft_attachment_path: Optional image path to populate in the message input field.
 
-          draft_text: Optional draft text to populate in the message input field.
+          draft_text: Optional plain text to populate in the message input field.
 
           message_id: Optional message ID. Jumps to that message in the chat when opening.
 
@@ -474,7 +477,10 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 
     @cached_property
     def info(self) -> AsyncInfoResource:
-        """Control the Beeper Desktop application"""
+        """Server discovery and capability metadata.
+
+        Use /v1/info before authentication setup.
+        """
         from .resources.info import AsyncInfoResource
 
         return AsyncInfoResource(self)
@@ -579,15 +585,15 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     ) -> FocusResponse:
         """
         Focus Beeper Desktop and optionally navigate to a specific chat, message, or
-        pre-fill draft text and attachment.
+        pre-fill plain text and an image path.
 
         Args:
           chat_id: Optional Beeper chat ID (or local chat ID) to focus after opening the app. If
               omitted, only opens/focuses the app.
 
-          draft_attachment_path: Optional draft attachment path to populate in the message input field.
+          draft_attachment_path: Optional image path to populate in the message input field.
 
-          draft_text: Optional draft text to populate in the message input field.
+          draft_text: Optional plain text to populate in the message input field.
 
           message_id: Optional message ID. Jumps to that message in the chat when opening.
 
@@ -732,7 +738,10 @@ class BeeperDesktopWithRawResponse:
 
     @cached_property
     def info(self) -> info.InfoResourceWithRawResponse:
-        """Control the Beeper Desktop application"""
+        """Server discovery and capability metadata.
+
+        Use /v1/info before authentication setup.
+        """
         from .resources.info import InfoResourceWithRawResponse
 
         return InfoResourceWithRawResponse(self._client.info)
@@ -781,7 +790,10 @@ class AsyncBeeperDesktopWithRawResponse:
 
     @cached_property
     def info(self) -> info.AsyncInfoResourceWithRawResponse:
-        """Control the Beeper Desktop application"""
+        """Server discovery and capability metadata.
+
+        Use /v1/info before authentication setup.
+        """
         from .resources.info import AsyncInfoResourceWithRawResponse
 
         return AsyncInfoResourceWithRawResponse(self._client.info)
@@ -830,7 +842,10 @@ class BeeperDesktopWithStreamedResponse:
 
     @cached_property
     def info(self) -> info.InfoResourceWithStreamingResponse:
-        """Control the Beeper Desktop application"""
+        """Server discovery and capability metadata.
+
+        Use /v1/info before authentication setup.
+        """
         from .resources.info import InfoResourceWithStreamingResponse
 
         return InfoResourceWithStreamingResponse(self._client.info)
@@ -879,7 +894,10 @@ class AsyncBeeperDesktopWithStreamedResponse:
 
     @cached_property
     def info(self) -> info.AsyncInfoResourceWithStreamingResponse:
-        """Control the Beeper Desktop application"""
+        """Server discovery and capability metadata.
+
+        Use /v1/info before authentication setup.
+        """
         from .resources.info import AsyncInfoResourceWithStreamingResponse
 
         return AsyncInfoResourceWithStreamingResponse(self._client.info)

@@ -17,7 +17,11 @@ class MessageSendParams(TypedDict, total=False):
     """Provide a message ID to send this as a reply to an existing message"""
 
     text: str
-    """Text content of the message you want to send. You may use markdown."""
+    """Draft text.
+
+    Plain text and Markdown are converted to Matrix HTML with the same rules used by
+    send and edit.
+    """
 
 
 class AttachmentSize(TypedDict, total=False):
@@ -46,8 +50,8 @@ class Attachment(TypedDict, total=False):
     size: AttachmentSize
     """Dimensions (optional override of cached value)"""
 
-    type: Literal["gif", "voiceNote", "sticker"]
-    """Special attachment type (gif, voiceNote, sticker).
+    type: Literal["image", "video", "audio", "file", "gif", "voice-note", "sticker"]
+    """Attachment type hint (image, video, audio, file, gif, voice-note, sticker).
 
     If omitted, auto-detected from mimeType
     """

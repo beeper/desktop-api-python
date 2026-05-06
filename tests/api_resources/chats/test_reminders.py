@@ -8,6 +8,7 @@ from typing import Any, cast
 import pytest
 
 from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop
+from beeper_desktop_api._utils import parse_datetime
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,7 +20,7 @@ class TestReminders:
     def test_method_create(self, client: BeeperDesktop) -> None:
         reminder = client.chats.reminders.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            reminder={"remind_at_ms": 0},
+            reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
         )
         assert reminder is None
 
@@ -28,7 +29,7 @@ class TestReminders:
         reminder = client.chats.reminders.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             reminder={
-                "remind_at_ms": 0,
+                "remind_at": parse_datetime("2025-08-31T23:30:12.520Z"),
                 "dismiss_on_incoming_message": True,
             },
         )
@@ -38,7 +39,7 @@ class TestReminders:
     def test_raw_response_create(self, client: BeeperDesktop) -> None:
         response = client.chats.reminders.with_raw_response.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            reminder={"remind_at_ms": 0},
+            reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
         )
 
         assert response.is_closed is True
@@ -50,7 +51,7 @@ class TestReminders:
     def test_streaming_response_create(self, client: BeeperDesktop) -> None:
         with client.chats.reminders.with_streaming_response.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            reminder={"remind_at_ms": 0},
+            reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -65,7 +66,7 @@ class TestReminders:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
             client.chats.reminders.with_raw_response.create(
                 chat_id="",
-                reminder={"remind_at_ms": 0},
+                reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
             )
 
     @parametrize
@@ -116,7 +117,7 @@ class TestAsyncReminders:
     async def test_method_create(self, async_client: AsyncBeeperDesktop) -> None:
         reminder = await async_client.chats.reminders.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            reminder={"remind_at_ms": 0},
+            reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
         )
         assert reminder is None
 
@@ -125,7 +126,7 @@ class TestAsyncReminders:
         reminder = await async_client.chats.reminders.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
             reminder={
-                "remind_at_ms": 0,
+                "remind_at": parse_datetime("2025-08-31T23:30:12.520Z"),
                 "dismiss_on_incoming_message": True,
             },
         )
@@ -135,7 +136,7 @@ class TestAsyncReminders:
     async def test_raw_response_create(self, async_client: AsyncBeeperDesktop) -> None:
         response = await async_client.chats.reminders.with_raw_response.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            reminder={"remind_at_ms": 0},
+            reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
         )
 
         assert response.is_closed is True
@@ -147,7 +148,7 @@ class TestAsyncReminders:
     async def test_streaming_response_create(self, async_client: AsyncBeeperDesktop) -> None:
         async with async_client.chats.reminders.with_streaming_response.create(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            reminder={"remind_at_ms": 0},
+            reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -162,7 +163,7 @@ class TestAsyncReminders:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
             await async_client.chats.reminders.with_raw_response.create(
                 chat_id="",
-                reminder={"remind_at_ms": 0},
+                reminder={"remind_at": parse_datetime("2025-08-31T23:30:12.520Z")},
             )
 
     @parametrize

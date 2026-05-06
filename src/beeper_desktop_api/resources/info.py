@@ -20,7 +20,10 @@ __all__ = ["InfoResource", "AsyncInfoResource"]
 
 
 class InfoResource(SyncAPIResource):
-    """Control the Beeper Desktop application"""
+    """Server discovery and capability metadata.
+
+    Use /v1/info before authentication setup.
+    """
 
     @cached_property
     def with_raw_response(self) -> InfoResourceWithRawResponse:
@@ -52,8 +55,8 @@ class InfoResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> InfoRetrieveResponse:
         """
-        Returns app, platform, server, and endpoint discovery metadata for this Beeper
-        Desktop instance.
+        Returns app, platform, server, endpoint discovery, OAuth, and WebSocket metadata
+        for this Beeper Desktop instance.
         """
         return self._get(
             "/v1/info",
@@ -69,7 +72,10 @@ class InfoResource(SyncAPIResource):
 
 
 class AsyncInfoResource(AsyncAPIResource):
-    """Control the Beeper Desktop application"""
+    """Server discovery and capability metadata.
+
+    Use /v1/info before authentication setup.
+    """
 
     @cached_property
     def with_raw_response(self) -> AsyncInfoResourceWithRawResponse:
@@ -101,8 +107,8 @@ class AsyncInfoResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> InfoRetrieveResponse:
         """
-        Returns app, platform, server, and endpoint discovery metadata for this Beeper
-        Desktop instance.
+        Returns app, platform, server, endpoint discovery, OAuth, and WebSocket metadata
+        for this Beeper Desktop instance.
         """
         return await self._get(
             "/v1/info",

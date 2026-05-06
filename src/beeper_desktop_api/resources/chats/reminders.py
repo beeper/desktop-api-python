@@ -54,11 +54,13 @@ class RemindersResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Set a reminder for a chat at a specific time
+        """Set a reminder for a chat at a specific time
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID.
+
+        Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
           reminder: Reminder configuration
 
@@ -93,11 +95,13 @@ class RemindersResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Clear an existing reminder from a chat
+        """Clear an existing reminder from a chat
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID.
+
+        Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
           extra_headers: Send extra headers
 
@@ -153,11 +157,13 @@ class AsyncRemindersResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Set a reminder for a chat at a specific time
+        """Set a reminder for a chat at a specific time
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID.
+
+        Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
           reminder: Reminder configuration
 
@@ -192,11 +198,13 @@ class AsyncRemindersResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Clear an existing reminder from a chat
+        """Clear an existing reminder from a chat
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID.
+
+        Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
           extra_headers: Send extra headers
 

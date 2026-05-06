@@ -29,10 +29,10 @@ class AssetUploadBase64Response(BaseModel):
     """Detected or provided MIME type"""
 
     src_url: Optional[str] = FieldInfo(alias="srcURL", default=None)
-    """Local file URL (file://) for the uploaded asset"""
+    """Local file URL (file://) for the uploaded file"""
 
     upload_id: Optional[str] = FieldInfo(alias="uploadID", default=None)
-    """Unique upload ID for this asset"""
+    """Unique upload ID for this temporary file"""
 
     width: Optional[float] = None
     """Width in pixels (images/videos)"""

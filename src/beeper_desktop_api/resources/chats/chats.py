@@ -13,8 +13,11 @@ from ...types import (
     chat_start_params,
     chat_create_params,
     chat_search_params,
+    chat_update_params,
     chat_archive_params,
     chat_retrieve_params,
+    chat_mark_read_params,
+    chat_mark_unread_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
@@ -99,8 +102,9 @@ class ChatsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
-        """
-        Create a direct or group chat from participant IDs.
+        """Create a direct or group chat from participant IDs.
+
+        Returns the created chat.
 
         Args:
           account_id: Account to create or start the chat on.
@@ -156,10 +160,12 @@ class ChatsResource(SyncAPIResource):
         Retrieve chat details including metadata, participants, and latest message
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
-          max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0–500.
-              Defaults to all (-1).
+          max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0-500.
+              Defaults to 100. List and search endpoints return up to 20 participants per
+              chat.
 
           extra_headers: Send extra headers
 
@@ -181,6 +187,90 @@ class ChatsResource(SyncAPIResource):
                 query=maybe_transform(
                     {"max_participant_count": max_participant_count}, chat_retrieve_params.ChatRetrieveParams
                 ),
+            ),
+            cast_to=Chat,
+        )
+
+    def update(
+        self,
+        chat_id: str,
+        *,
+        description: Optional[str] | Omit = omit,
+        draft: Optional[chat_update_params.Draft] | Omit = omit,
+        img_url: Optional[str] | Omit = omit,
+        is_archived: bool | Omit = omit,
+        is_low_priority: bool | Omit = omit,
+        is_muted: bool | Omit = omit,
+        is_pinned: bool | Omit = omit,
+        message_expiry_seconds: Optional[int] | Omit = omit,
+        title: Optional[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """Update supported chat fields.
+
+        Non-empty draft objects are accepted only when the
+        current draft is empty. Send draft=null to clear the draft before setting new
+        draft text or attachments.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          description: Group chat description/topic. Support depends on the chat account and chat
+              permissions.
+
+          draft: Draft object to set or clear. Non-empty drafts are only accepted when the
+              current draft is empty. Send draft=null to clear text and attachments together
+              before setting a new draft.
+
+          img_url: Local filesystem path to a group chat avatar image. Support depends on the chat
+              account and chat permissions.
+
+          is_archived: Archive or unarchive the chat.
+
+          is_low_priority: Mark or unmark the chat as low priority when supported by the account.
+
+          is_muted: Mute or unmute the chat.
+
+          is_pinned: Pin or unpin the chat when supported by the account.
+
+          message_expiry_seconds: Disappearing-message timer in seconds, or null to clear when supported.
+
+          title: Custom chat title. Support depends on the chat account and chat permissions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._patch(
+            path_template("/v1/chats/{chat_id}", chat_id=chat_id),
+            body=maybe_transform(
+                {
+                    "description": description,
+                    "draft": draft,
+                    "img_url": img_url,
+                    "is_archived": is_archived,
+                    "is_low_priority": is_low_priority,
+                    "is_muted": is_muted,
+                    "is_pinned": is_pinned,
+                    "message_expiry_seconds": message_expiry_seconds,
+                    "title": title,
+                },
+                chat_update_params.ChatUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=Chat,
         )
@@ -257,7 +347,8 @@ class ChatsResource(SyncAPIResource):
         archived=false to move back to inbox
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
           archived: True to archive, false to unarchive
 
@@ -279,6 +370,123 @@ class ChatsResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NoneType,
+        )
+
+    def mark_read(
+        self,
+        chat_id: str,
+        *,
+        message_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """
+        Mark a chat as read, optionally through a specific message ID.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          message_id: Optional message ID to mark read through.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._post(
+            path_template("/v1/chats/{chat_id}/read", chat_id=chat_id),
+            body=maybe_transform({"message_id": message_id}, chat_mark_read_params.ChatMarkReadParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Chat,
+        )
+
+    def mark_unread(
+        self,
+        chat_id: str,
+        *,
+        message_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """
+        Mark a chat as unread, optionally from a specific message ID.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          message_id: Optional message ID to mark unread from.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._post(
+            path_template("/v1/chats/{chat_id}/unread", chat_id=chat_id),
+            body=maybe_transform({"message_id": message_id}, chat_mark_unread_params.ChatMarkUnreadParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Chat,
+        )
+
+    def notify_anyway(
+        self,
+        chat_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """
+        Force a delivery notification when supported by the underlying network.
+        Currently intended for iMessage on macOS; unsupported networks return an error.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return self._post(
+            path_template("/v1/chats/{chat_id}/notify-anyway", chat_id=chat_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Chat,
         )
 
     def search(
@@ -393,8 +601,8 @@ class ChatsResource(SyncAPIResource):
     ) -> ChatStartResponse:
         """Resolve a user/contact and open a direct chat.
 
-        Reuses an existing direct chat
-        when one is found. Available in Beeper Desktop v4.2.799+.
+        Reuses and returns an existing
+        direct chat when one is found. Available in Beeper Desktop v4.2.808+.
 
         Args:
           account_id: Account to create or start the chat on.
@@ -414,7 +622,7 @@ class ChatsResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._post(
-            "/v1/chats.start",
+            "/v1/chats/start",
             body=maybe_transform(
                 {
                     "account_id": account_id,
@@ -478,8 +686,9 @@ class AsyncChatsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ChatCreateResponse:
-        """
-        Create a direct or group chat from participant IDs.
+        """Create a direct or group chat from participant IDs.
+
+        Returns the created chat.
 
         Args:
           account_id: Account to create or start the chat on.
@@ -535,10 +744,12 @@ class AsyncChatsResource(AsyncAPIResource):
         Retrieve chat details including metadata, participants, and latest message
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
-          max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0–500.
-              Defaults to all (-1).
+          max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0-500.
+              Defaults to 100. List and search endpoints return up to 20 participants per
+              chat.
 
           extra_headers: Send extra headers
 
@@ -560,6 +771,90 @@ class AsyncChatsResource(AsyncAPIResource):
                 query=await async_maybe_transform(
                     {"max_participant_count": max_participant_count}, chat_retrieve_params.ChatRetrieveParams
                 ),
+            ),
+            cast_to=Chat,
+        )
+
+    async def update(
+        self,
+        chat_id: str,
+        *,
+        description: Optional[str] | Omit = omit,
+        draft: Optional[chat_update_params.Draft] | Omit = omit,
+        img_url: Optional[str] | Omit = omit,
+        is_archived: bool | Omit = omit,
+        is_low_priority: bool | Omit = omit,
+        is_muted: bool | Omit = omit,
+        is_pinned: bool | Omit = omit,
+        message_expiry_seconds: Optional[int] | Omit = omit,
+        title: Optional[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """Update supported chat fields.
+
+        Non-empty draft objects are accepted only when the
+        current draft is empty. Send draft=null to clear the draft before setting new
+        draft text or attachments.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          description: Group chat description/topic. Support depends on the chat account and chat
+              permissions.
+
+          draft: Draft object to set or clear. Non-empty drafts are only accepted when the
+              current draft is empty. Send draft=null to clear text and attachments together
+              before setting a new draft.
+
+          img_url: Local filesystem path to a group chat avatar image. Support depends on the chat
+              account and chat permissions.
+
+          is_archived: Archive or unarchive the chat.
+
+          is_low_priority: Mark or unmark the chat as low priority when supported by the account.
+
+          is_muted: Mute or unmute the chat.
+
+          is_pinned: Pin or unpin the chat when supported by the account.
+
+          message_expiry_seconds: Disappearing-message timer in seconds, or null to clear when supported.
+
+          title: Custom chat title. Support depends on the chat account and chat permissions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return await self._patch(
+            path_template("/v1/chats/{chat_id}", chat_id=chat_id),
+            body=await async_maybe_transform(
+                {
+                    "description": description,
+                    "draft": draft,
+                    "img_url": img_url,
+                    "is_archived": is_archived,
+                    "is_low_priority": is_low_priority,
+                    "is_muted": is_muted,
+                    "is_pinned": is_pinned,
+                    "message_expiry_seconds": message_expiry_seconds,
+                    "title": title,
+                },
+                chat_update_params.ChatUpdateParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=Chat,
         )
@@ -636,7 +931,8 @@ class AsyncChatsResource(AsyncAPIResource):
         archived=false to move back to inbox
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
           archived: True to archive, false to unarchive
 
@@ -658,6 +954,123 @@ class AsyncChatsResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NoneType,
+        )
+
+    async def mark_read(
+        self,
+        chat_id: str,
+        *,
+        message_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """
+        Mark a chat as read, optionally through a specific message ID.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          message_id: Optional message ID to mark read through.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return await self._post(
+            path_template("/v1/chats/{chat_id}/read", chat_id=chat_id),
+            body=await async_maybe_transform({"message_id": message_id}, chat_mark_read_params.ChatMarkReadParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Chat,
+        )
+
+    async def mark_unread(
+        self,
+        chat_id: str,
+        *,
+        message_id: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """
+        Mark a chat as unread, optionally from a specific message ID.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          message_id: Optional message ID to mark unread from.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return await self._post(
+            path_template("/v1/chats/{chat_id}/unread", chat_id=chat_id),
+            body=await async_maybe_transform({"message_id": message_id}, chat_mark_unread_params.ChatMarkUnreadParams),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Chat,
+        )
+
+    async def notify_anyway(
+        self,
+        chat_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> Chat:
+        """
+        Force a delivery notification when supported by the underlying network.
+        Currently intended for iMessage on macOS; unsupported networks return an error.
+
+        Args:
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not chat_id:
+            raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
+        return await self._post(
+            path_template("/v1/chats/{chat_id}/notify-anyway", chat_id=chat_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=Chat,
         )
 
     def search(
@@ -772,8 +1185,8 @@ class AsyncChatsResource(AsyncAPIResource):
     ) -> ChatStartResponse:
         """Resolve a user/contact and open a direct chat.
 
-        Reuses an existing direct chat
-        when one is found. Available in Beeper Desktop v4.2.799+.
+        Reuses and returns an existing
+        direct chat when one is found. Available in Beeper Desktop v4.2.808+.
 
         Args:
           account_id: Account to create or start the chat on.
@@ -793,7 +1206,7 @@ class AsyncChatsResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._post(
-            "/v1/chats.start",
+            "/v1/chats/start",
             body=await async_maybe_transform(
                 {
                     "account_id": account_id,
@@ -820,11 +1233,23 @@ class ChatsResourceWithRawResponse:
         self.retrieve = to_raw_response_wrapper(
             chats.retrieve,
         )
+        self.update = to_raw_response_wrapper(
+            chats.update,
+        )
         self.list = to_raw_response_wrapper(
             chats.list,
         )
         self.archive = to_raw_response_wrapper(
             chats.archive,
+        )
+        self.mark_read = to_raw_response_wrapper(
+            chats.mark_read,
+        )
+        self.mark_unread = to_raw_response_wrapper(
+            chats.mark_unread,
+        )
+        self.notify_anyway = to_raw_response_wrapper(
+            chats.notify_anyway,
         )
         self.search = to_raw_response_wrapper(
             chats.search,
@@ -854,11 +1279,23 @@ class AsyncChatsResourceWithRawResponse:
         self.retrieve = async_to_raw_response_wrapper(
             chats.retrieve,
         )
+        self.update = async_to_raw_response_wrapper(
+            chats.update,
+        )
         self.list = async_to_raw_response_wrapper(
             chats.list,
         )
         self.archive = async_to_raw_response_wrapper(
             chats.archive,
+        )
+        self.mark_read = async_to_raw_response_wrapper(
+            chats.mark_read,
+        )
+        self.mark_unread = async_to_raw_response_wrapper(
+            chats.mark_unread,
+        )
+        self.notify_anyway = async_to_raw_response_wrapper(
+            chats.notify_anyway,
         )
         self.search = async_to_raw_response_wrapper(
             chats.search,
@@ -888,11 +1325,23 @@ class ChatsResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             chats.retrieve,
         )
+        self.update = to_streamed_response_wrapper(
+            chats.update,
+        )
         self.list = to_streamed_response_wrapper(
             chats.list,
         )
         self.archive = to_streamed_response_wrapper(
             chats.archive,
+        )
+        self.mark_read = to_streamed_response_wrapper(
+            chats.mark_read,
+        )
+        self.mark_unread = to_streamed_response_wrapper(
+            chats.mark_unread,
+        )
+        self.notify_anyway = to_streamed_response_wrapper(
+            chats.notify_anyway,
         )
         self.search = to_streamed_response_wrapper(
             chats.search,
@@ -922,11 +1371,23 @@ class AsyncChatsResourceWithStreamingResponse:
         self.retrieve = async_to_streamed_response_wrapper(
             chats.retrieve,
         )
+        self.update = async_to_streamed_response_wrapper(
+            chats.update,
+        )
         self.list = async_to_streamed_response_wrapper(
             chats.list,
         )
         self.archive = async_to_streamed_response_wrapper(
             chats.archive,
+        )
+        self.mark_read = async_to_streamed_response_wrapper(
+            chats.mark_read,
+        )
+        self.mark_unread = async_to_streamed_response_wrapper(
+            chats.mark_unread,
+        )
+        self.notify_anyway = async_to_streamed_response_wrapper(
+            chats.notify_anyway,
         )
         self.search = async_to_streamed_response_wrapper(
             chats.search,

@@ -9,5 +9,7 @@ __all__ = ["ChatListResponse"]
 
 
 class ChatListResponse(Chat):
+    """Chat with optional last message preview."""
+
     preview: Optional[Message] = None
     """Last message preview for this chat, if available."""

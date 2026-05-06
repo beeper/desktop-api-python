@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["MessageUpdateParams"]
+__all__ = ["MessageDeleteParams"]
 
 
-class MessageUpdateParams(TypedDict, total=False):
+class MessageDeleteParams(TypedDict, total=False):
     chat_id: Required[Annotated[str, PropertyInfo(alias="chatID")]]
     """Chat ID.
 
@@ -17,5 +18,8 @@ class MessageUpdateParams(TypedDict, total=False):
     when available.
     """
 
-    text: Required[str]
-    """New text content for the message"""
+    for_everyone: Annotated[Optional[bool], PropertyInfo(alias="forEveryone")]
+    """
+    True to request deletion for everyone when the network supports it; false to
+    delete only for the authenticated user when supported.
+    """

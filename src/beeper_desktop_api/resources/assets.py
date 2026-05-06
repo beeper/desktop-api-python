@@ -68,11 +68,11 @@ class AssetsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AssetDownloadResponse:
         """
-        Download a Matrix asset using its mxc:// or localmxc:// URL to the device
-        running Beeper Desktop and return the local file URL.
+        Download a Matrix file using its mxc:// or localmxc:// URL to the device running
+        Beeper Desktop and return the local file URL.
 
         Args:
-          url: Matrix content URL (mxc:// or localmxc://) for the asset to download.
+          url: Matrix content URL (mxc:// or localmxc://) for the file to download.
 
           extra_headers: Send extra headers
 
@@ -108,7 +108,7 @@ class AssetsResource(SyncAPIResource):
         not cached. Supports Range requests for seeking in large files.
 
         Args:
-          url: Asset URL to serve. Accepts mxc://, localmxc://, or file:// URLs.
+          url: File URL to serve. Accepts mxc://, localmxc://, or file:// URLs.
 
           extra_headers: Send extra headers
 
@@ -147,7 +147,8 @@ class AssetsResource(SyncAPIResource):
         """Upload a file to a temporary location using multipart/form-data.
 
         Returns an
-        uploadID that can be referenced when sending messages with attachments.
+        uploadID that can be referenced when sending a message or materializing a draft
+        attachment.
 
         Args:
           file: The file to upload (max 500 MB).
@@ -203,8 +204,8 @@ class AssetsResource(SyncAPIResource):
         """Upload a file using a JSON body with base64-encoded content.
 
         Returns an uploadID
-        that can be referenced when sending messages with attachments. Alternative to
-        the multipart upload endpoint.
+        that can be referenced when sending a message or materializing a draft
+        attachment. Alternative to the multipart upload endpoint.
 
         Args:
           content: Base64-encoded file content (max ~500MB decoded)
@@ -272,11 +273,11 @@ class AsyncAssetsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AssetDownloadResponse:
         """
-        Download a Matrix asset using its mxc:// or localmxc:// URL to the device
-        running Beeper Desktop and return the local file URL.
+        Download a Matrix file using its mxc:// or localmxc:// URL to the device running
+        Beeper Desktop and return the local file URL.
 
         Args:
-          url: Matrix content URL (mxc:// or localmxc://) for the asset to download.
+          url: Matrix content URL (mxc:// or localmxc://) for the file to download.
 
           extra_headers: Send extra headers
 
@@ -312,7 +313,7 @@ class AsyncAssetsResource(AsyncAPIResource):
         not cached. Supports Range requests for seeking in large files.
 
         Args:
-          url: Asset URL to serve. Accepts mxc://, localmxc://, or file:// URLs.
+          url: File URL to serve. Accepts mxc://, localmxc://, or file:// URLs.
 
           extra_headers: Send extra headers
 
@@ -351,7 +352,8 @@ class AsyncAssetsResource(AsyncAPIResource):
         """Upload a file to a temporary location using multipart/form-data.
 
         Returns an
-        uploadID that can be referenced when sending messages with attachments.
+        uploadID that can be referenced when sending a message or materializing a draft
+        attachment.
 
         Args:
           file: The file to upload (max 500 MB).
@@ -407,8 +409,8 @@ class AsyncAssetsResource(AsyncAPIResource):
         """Upload a file using a JSON body with base64-encoded content.
 
         Returns an uploadID
-        that can be referenced when sending messages with attachments. Alternative to
-        the multipart upload endpoint.
+        that can be referenced when sending a message or materializing a draft
+        attachment. Alternative to the multipart upload endpoint.
 
         Args:
           content: Base64-encoded file content (max ~500MB decoded)

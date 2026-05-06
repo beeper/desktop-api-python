@@ -5,18 +5,17 @@ from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
-from .._models import BaseModel
+from .chat import Chat
 
 __all__ = ["ChatCreateResponse"]
 
 
-class ChatCreateResponse(BaseModel):
+class ChatCreateResponse(Chat):
     chat_id: str = FieldInfo(alias="chatID")
-    """Newly created chat ID."""
+    """DEPRECATED - use id instead. Compatibility alias for older clients."""
 
     status: Optional[Literal["existing", "created"]] = None
-    """Only returned in start mode.
+    """DEPRECATED - legacy start-chat status for older clients.
 
-    'existing' means an existing chat was reused; 'created' means a new chat was
-    created.
+    New clients should inspect the returned Chat instead.
     """

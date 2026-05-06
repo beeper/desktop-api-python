@@ -7,7 +7,7 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["Attachment", "Size"]
+__all__ = ["Attachment", "Size", "Transcription"]
 
 
 class Size(BaseModel):
@@ -18,6 +18,19 @@ class Size(BaseModel):
     width: Optional[float] = None
 
 
+class Transcription(BaseModel):
+    """Attachment transcription if available."""
+
+    engine: str
+    """Transcription engine."""
+
+    transcription: str
+    """Transcribed text."""
+
+    language: Optional[str] = None
+    """Detected or selected language."""
+
+
 class Attachment(BaseModel):
     type: Literal["unknown", "img", "video", "audio"]
     """Attachment type."""
@@ -25,7 +38,7 @@ class Attachment(BaseModel):
     id: Optional[str] = None
     """Attachment identifier (typically an mxc:// URL).
 
-    Use with /v1/assets/download to get a local file path.
+    Use the download file endpoint to get a local file path.
     """
 
     duration: Optional[float] = None
@@ -60,8 +73,11 @@ class Attachment(BaseModel):
     """Pixel dimensions of the attachment: width/height in px."""
 
     src_url: Optional[str] = FieldInfo(alias="srcURL", default=None)
-    """Public URL or local file path to fetch the asset.
+    """Public URL or local file path to fetch the file.
 
     May be temporary or local-only to this device; download promptly if durable
     access is needed.
     """
+
+    transcription: Optional[Transcription] = None
+    """Attachment transcription if available."""

@@ -9,4 +9,4 @@ __all__ = ["AssetServeParams"]
 
 class AssetServeParams(TypedDict, total=False):
     url: Required[str]
-    """Asset URL to serve. Accepts mxc://, localmxc://, or file:// URLs."""
+    """File URL to serve. Accepts mxc://, localmxc://, or file:// URLs."""

@@ -43,6 +43,7 @@ client = BeeperDesktop(
 )
 
 page = client.chats.search(
+    account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
     include_muted=True,
     limit=3,
     type="single",
@@ -71,6 +72,7 @@ client = AsyncBeeperDesktop(
 
 async def main() -> None:
     page = await client.chats.search(
+        account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
         include_muted=True,
         limit=3,
         type="single",
@@ -111,6 +113,7 @@ async def main() -> None:
         http_client=DefaultAioHttpClient(),
     ) as client:
         page = await client.chats.search(
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             include_muted=True,
             limit=3,
             type="single",
@@ -144,9 +147,9 @@ client = BeeperDesktop()
 all_messages = []
 # Automatically fetches more pages as needed.
 for message in client.messages.search(
-    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    account_ids=["discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
     limit=10,
-    query="deployment",
+    query="oauth",
 ):
     # Do something with message here
     all_messages.append(message)
@@ -166,9 +169,9 @@ async def main() -> None:
     all_messages = []
     # Iterate through items across all pages, issuing requests as needed.
     async for message in client.messages.search(
-        account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+        account_ids=["discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
         limit=10,
-        query="deployment",
+        query="oauth",
     ):
         all_messages.append(message)
     print(all_messages)
@@ -181,9 +184,9 @@ Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get
 
 ```python
 first_page = await client.messages.search(
-    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    account_ids=["discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
     limit=10,
-    query="deployment",
+    query="oauth",
 )
 if first_page.has_next_page():
     print(f"will fetch next page using these details: {first_page.next_page_info()}")
@@ -197,9 +200,9 @@ Or just work directly with the returned data:
 
 ```python
 first_page = await client.messages.search(
-    account_ids=["local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI"],
+    account_ids=["discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
     limit=10,
-    query="deployment",
+    query="oauth",
 )
 
 print(f"next page cursor: {first_page.oldest_cursor}")  # => "next page cursor: ..."
@@ -218,11 +221,11 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-response = client.chats.start(
-    account_id="accountID",
-    user={},
+chat = client.chats.update(
+    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+    draft={"text": "text"},
 )
-print(response.user)
+print(chat.draft)
 ```
 
 ## File uploads

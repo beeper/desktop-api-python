@@ -17,10 +17,10 @@ class ClientFocusParams(TypedDict, total=False):
     """
 
     draft_attachment_path: Annotated[str, PropertyInfo(alias="draftAttachmentPath")]
-    """Optional draft attachment path to populate in the message input field."""
+    """Optional image path to populate in the message input field."""
 
     draft_text: Annotated[str, PropertyInfo(alias="draftText")]
-    """Optional draft text to populate in the message input field."""
+    """Optional plain text to populate in the message input field."""
 
     message_id: Annotated[str, PropertyInfo(alias="messageID")]
     """Optional message ID. Jumps to that message in the chat when opening."""

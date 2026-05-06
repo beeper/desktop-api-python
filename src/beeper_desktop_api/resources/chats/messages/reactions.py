@@ -15,7 +15,7 @@ from ...._response import (
     async_to_streamed_response_wrapper,
 )
 from ...._base_client import make_request_options
-from ....types.chats.messages import reaction_add_params, reaction_delete_params
+from ....types.chats.messages import reaction_add_params
 from ....types.chats.messages.reaction_add_response import ReactionAddResponse
 from ....types.chats.messages.reaction_delete_response import ReactionDeleteResponse
 
@@ -46,10 +46,10 @@ class ReactionsResource(SyncAPIResource):
 
     def delete(
         self,
-        message_id: str,
+        reaction_key: str,
         *,
         chat_id: str,
-        reaction_key: str,
+        message_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -61,9 +61,12 @@ class ReactionsResource(SyncAPIResource):
         Remove the reaction added by the authenticated user from an existing message.
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
-          reaction_key: Reaction key to remove
+          message_id: Message ID.
+
+          reaction_key: Reaction key to remove (emoji, shortcode, or custom emoji key)
 
           extra_headers: Send extra headers
 
@@ -77,16 +80,17 @@ class ReactionsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        if not reaction_key:
+            raise ValueError(f"Expected a non-empty value for `reaction_key` but received {reaction_key!r}")
         return self._delete(
             path_template(
-                "/v1/chats/{chat_id}/messages/{message_id}/reactions", chat_id=chat_id, message_id=message_id
+                "/v1/chats/{chat_id}/messages/{message_id}/reactions/{reaction_key}",
+                chat_id=chat_id,
+                message_id=message_id,
+                reaction_key=reaction_key,
             ),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform({"reaction_key": reaction_key}, reaction_delete_params.ReactionDeleteParams),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=ReactionDeleteResponse,
         )
@@ -105,15 +109,19 @@ class ReactionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ReactionAddResponse:
-        """
-        Add a reaction to an existing message.
+        """Add a reaction to an existing message.
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID.
+
+        Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          message_id: Message ID.
 
           reaction_key: Reaction key to add (emoji, shortcode, or custom emoji key)
 
-          transaction_id: Optional transaction ID for deduplication and local echo tracking
+          transaction_id: Optional transaction ID for deduplication and send tracking
 
           extra_headers: Send extra headers
 
@@ -169,10 +177,10 @@ class AsyncReactionsResource(AsyncAPIResource):
 
     async def delete(
         self,
-        message_id: str,
+        reaction_key: str,
         *,
         chat_id: str,
-        reaction_key: str,
+        message_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -184,9 +192,12 @@ class AsyncReactionsResource(AsyncAPIResource):
         Remove the reaction added by the authenticated user from an existing message.
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
 
-          reaction_key: Reaction key to remove
+          message_id: Message ID.
+
+          reaction_key: Reaction key to remove (emoji, shortcode, or custom emoji key)
 
           extra_headers: Send extra headers
 
@@ -200,18 +211,17 @@ class AsyncReactionsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         if not message_id:
             raise ValueError(f"Expected a non-empty value for `message_id` but received {message_id!r}")
+        if not reaction_key:
+            raise ValueError(f"Expected a non-empty value for `reaction_key` but received {reaction_key!r}")
         return await self._delete(
             path_template(
-                "/v1/chats/{chat_id}/messages/{message_id}/reactions", chat_id=chat_id, message_id=message_id
+                "/v1/chats/{chat_id}/messages/{message_id}/reactions/{reaction_key}",
+                chat_id=chat_id,
+                message_id=message_id,
+                reaction_key=reaction_key,
             ),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {"reaction_key": reaction_key}, reaction_delete_params.ReactionDeleteParams
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=ReactionDeleteResponse,
         )
@@ -230,15 +240,19 @@ class AsyncReactionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ReactionAddResponse:
-        """
-        Add a reaction to an existing message.
+        """Add a reaction to an existing message.
 
         Args:
-          chat_id: Unique identifier of the chat.
+          chat_id: Chat ID.
+
+        Input routes also accept the local chat ID from this Beeper Desktop
+              installation when available.
+
+          message_id: Message ID.
 
           reaction_key: Reaction key to add (emoji, shortcode, or custom emoji key)
 
-          transaction_id: Optional transaction ID for deduplication and local echo tracking
+          transaction_id: Optional transaction ID for deduplication and send tracking
 
           extra_headers: Send extra headers
 

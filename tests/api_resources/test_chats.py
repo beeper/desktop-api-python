@@ -83,7 +83,7 @@ class TestChats:
     def test_method_retrieve_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.retrieve(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            max_participant_count=50,
+            max_participant_count=100,
         )
         assert_matches_type(Chat, chat, path=["response"])
 
@@ -119,6 +119,76 @@ class TestChats:
             )
 
     @parametrize
+    def test_method_update(self, client: BeeperDesktop) -> None:
+        chat = client.chats.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_method_update_with_all_params(self, client: BeeperDesktop) -> None:
+        chat = client.chats.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            description="description",
+            draft={
+                "text": "text",
+                "attachments": {
+                    "foo": {
+                        "upload_id": "uploadID",
+                        "id": "id",
+                        "duration": 0,
+                        "file_name": "fileName",
+                        "mime_type": "mimeType",
+                        "size": {
+                            "height": 0,
+                            "width": 0,
+                        },
+                        "type": "image",
+                    }
+                },
+            },
+            img_url="imgURL",
+            is_archived=True,
+            is_low_priority=True,
+            is_muted=True,
+            is_pinned=True,
+            message_expiry_seconds=0,
+            title="title",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_raw_response_update(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_streaming_response_update(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_update(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.chats.with_raw_response.update(
+                chat_id="",
+            )
+
+    @parametrize
     def test_method_list(self, client: BeeperDesktop) -> None:
         chat = client.chats.list()
         assert_matches_type(SyncCursorNoLimit[ChatListResponse], chat, path=["response"])
@@ -126,10 +196,7 @@ class TestChats:
     @parametrize
     def test_method_list_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.list(
-            account_ids=[
-                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
-                "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
-            ],
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
         )
@@ -202,6 +269,136 @@ class TestChats:
             )
 
     @parametrize
+    def test_method_mark_read(self, client: BeeperDesktop) -> None:
+        chat = client.chats.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_method_mark_read_with_all_params(self, client: BeeperDesktop) -> None:
+        chat = client.chats.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            message_id="1343993",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_raw_response_mark_read(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_streaming_response_mark_read(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_mark_read(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.chats.with_raw_response.mark_read(
+                chat_id="",
+            )
+
+    @parametrize
+    def test_method_mark_unread(self, client: BeeperDesktop) -> None:
+        chat = client.chats.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_method_mark_unread_with_all_params(self, client: BeeperDesktop) -> None:
+        chat = client.chats.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            message_id="1343993",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_raw_response_mark_unread(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_streaming_response_mark_unread(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_mark_unread(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.chats.with_raw_response.mark_unread(
+                chat_id="",
+            )
+
+    @parametrize
+    def test_method_notify_anyway(self, client: BeeperDesktop) -> None:
+        chat = client.chats.notify_anyway(
+            "!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_raw_response_notify_anyway(self, client: BeeperDesktop) -> None:
+        response = client.chats.with_raw_response.notify_anyway(
+            "!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    def test_streaming_response_notify_anyway(self, client: BeeperDesktop) -> None:
+        with client.chats.with_streaming_response.notify_anyway(
+            "!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_path_params_notify_anyway(self, client: BeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            client.chats.with_raw_response.notify_anyway(
+                "",
+            )
+
+    @parametrize
     def test_method_search(self, client: BeeperDesktop) -> None:
         chat = client.chats.search()
         assert_matches_type(SyncCursorSearch[Chat], chat, path=["response"])
@@ -209,10 +406,7 @@ class TestChats:
     @parametrize
     def test_method_search_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.search(
-            account_ids=[
-                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
-                "local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI",
-            ],
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
             inbox="primary",
@@ -247,9 +441,6 @@ class TestChats:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     def test_method_start(self, client: BeeperDesktop) -> None:
         chat = client.chats.start(
@@ -258,9 +449,6 @@ class TestChats:
         )
         assert_matches_type(ChatStartResponse, chat, path=["response"])
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     def test_method_start_with_all_params(self, client: BeeperDesktop) -> None:
         chat = client.chats.start(
@@ -277,9 +465,6 @@ class TestChats:
         )
         assert_matches_type(ChatStartResponse, chat, path=["response"])
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     def test_raw_response_start(self, client: BeeperDesktop) -> None:
         response = client.chats.with_raw_response.start(
@@ -292,9 +477,6 @@ class TestChats:
         chat = response.parse()
         assert_matches_type(ChatStartResponse, chat, path=["response"])
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     def test_streaming_response_start(self, client: BeeperDesktop) -> None:
         with client.chats.with_streaming_response.start(
@@ -374,7 +556,7 @@ class TestAsyncChats:
     async def test_method_retrieve_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.retrieve(
             chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-            max_participant_count=50,
+            max_participant_count=100,
         )
         assert_matches_type(Chat, chat, path=["response"])
 
@@ -410,6 +592,76 @@ class TestAsyncChats:
             )
 
     @parametrize
+    async def test_method_update(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_method_update_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            description="description",
+            draft={
+                "text": "text",
+                "attachments": {
+                    "foo": {
+                        "upload_id": "uploadID",
+                        "id": "id",
+                        "duration": 0,
+                        "file_name": "fileName",
+                        "mime_type": "mimeType",
+                        "size": {
+                            "height": 0,
+                            "width": 0,
+                        },
+                        "type": "image",
+                    }
+                },
+            },
+            img_url="imgURL",
+            is_archived=True,
+            is_low_priority=True,
+            is_muted=True,
+            is_pinned=True,
+            message_expiry_seconds=0,
+            title="title",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_raw_response_update(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = await response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_update(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.update(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = await response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_update(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.chats.with_raw_response.update(
+                chat_id="",
+            )
+
+    @parametrize
     async def test_method_list(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.list()
         assert_matches_type(AsyncCursorNoLimit[ChatListResponse], chat, path=["response"])
@@ -417,10 +669,7 @@ class TestAsyncChats:
     @parametrize
     async def test_method_list_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.list(
-            account_ids=[
-                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
-                "local-instagram_ba_eRfQMmnSNy_p7Ih7HL7RduRpKFU",
-            ],
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
         )
@@ -493,6 +742,136 @@ class TestAsyncChats:
             )
 
     @parametrize
+    async def test_method_mark_read(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_method_mark_read_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            message_id="1343993",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_raw_response_mark_read(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = await response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_mark_read(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.mark_read(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = await response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_mark_read(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.chats.with_raw_response.mark_read(
+                chat_id="",
+            )
+
+    @parametrize
+    async def test_method_mark_unread(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_method_mark_unread_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+            message_id="1343993",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_raw_response_mark_unread(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = await response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_mark_unread(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.mark_unread(
+            chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = await response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_mark_unread(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.chats.with_raw_response.mark_unread(
+                chat_id="",
+            )
+
+    @parametrize
+    async def test_method_notify_anyway(self, async_client: AsyncBeeperDesktop) -> None:
+        chat = await async_client.chats.notify_anyway(
+            "!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_raw_response_notify_anyway(self, async_client: AsyncBeeperDesktop) -> None:
+        response = await async_client.chats.with_raw_response.notify_anyway(
+            "!NCdzlIaMjZUmvmvyHU:beeper.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        chat = await response.parse()
+        assert_matches_type(Chat, chat, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_notify_anyway(self, async_client: AsyncBeeperDesktop) -> None:
+        async with async_client.chats.with_streaming_response.notify_anyway(
+            "!NCdzlIaMjZUmvmvyHU:beeper.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            chat = await response.parse()
+            assert_matches_type(Chat, chat, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_path_params_notify_anyway(self, async_client: AsyncBeeperDesktop) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `chat_id` but received ''"):
+            await async_client.chats.with_raw_response.notify_anyway(
+                "",
+            )
+
+    @parametrize
     async def test_method_search(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.search()
         assert_matches_type(AsyncCursorSearch[Chat], chat, path=["response"])
@@ -500,10 +879,7 @@ class TestAsyncChats:
     @parametrize
     async def test_method_search_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.search(
-            account_ids=[
-                "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc",
-                "local-telegram_ba_QFrb5lrLPhO3OT5MFBeTWv0x4BI",
-            ],
+            account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
             inbox="primary",
@@ -538,9 +914,6 @@ class TestAsyncChats:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     async def test_method_start(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.start(
@@ -549,9 +922,6 @@ class TestAsyncChats:
         )
         assert_matches_type(ChatStartResponse, chat, path=["response"])
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     async def test_method_start_with_all_params(self, async_client: AsyncBeeperDesktop) -> None:
         chat = await async_client.chats.start(
@@ -568,9 +938,6 @@ class TestAsyncChats:
         )
         assert_matches_type(ChatStartResponse, chat, path=["response"])
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     async def test_raw_response_start(self, async_client: AsyncBeeperDesktop) -> None:
         response = await async_client.chats.with_raw_response.start(
@@ -583,9 +950,6 @@ class TestAsyncChats:
         chat = await response.parse()
         assert_matches_type(ChatStartResponse, chat, path=["response"])
 
-    @pytest.mark.skip(
-        reason="Stainless mock tests currently load the project-published OpenAPI spec URL, which may not include newly-added local-only endpoints during build checks."
-    )
     @parametrize
     async def test_streaming_response_start(self, async_client: AsyncBeeperDesktop) -> None:
         async with async_client.chats.with_streaming_response.start(

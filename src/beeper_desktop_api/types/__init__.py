@@ -3,7 +3,14 @@
 from __future__ import annotations
 
 from .chat import Chat as Chat
-from .shared import User as User, Error as Error, Message as Message, Reaction as Reaction, Attachment as Attachment
+from .shared import (
+    User as User,
+    Error as Error,
+    Message as Message,
+    Reaction as Reaction,
+    Attachment as Attachment,
+    AppStateSnapshot as AppStateSnapshot,
+)
 from .account import Account as Account
 from .focus_response import FocusResponse as FocusResponse
 from .search_response import SearchResponse as SearchResponse
@@ -14,12 +21,15 @@ from .chat_create_params import ChatCreateParams as ChatCreateParams
 from .chat_list_response import ChatListResponse as ChatListResponse
 from .chat_search_params import ChatSearchParams as ChatSearchParams
 from .chat_update_params import ChatUpdateParams as ChatUpdateParams
+from .app_status_response import AppStatusResponse as AppStatusResponse
 from .asset_upload_params import AssetUploadParams as AssetUploadParams
+from .bridge_availability import BridgeAvailability as BridgeAvailability
 from .chat_archive_params import ChatArchiveParams as ChatArchiveParams
 from .chat_start_response import ChatStartResponse as ChatStartResponse
 from .client_focus_params import ClientFocusParams as ClientFocusParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
+from .bridge_list_response import BridgeListResponse as BridgeListResponse
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_retrieve_params import ChatRetrieveParams as ChatRetrieveParams
 from .client_search_params import ClientSearchParams as ClientSearchParams

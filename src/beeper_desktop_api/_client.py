@@ -41,7 +41,7 @@ from ._response import (
     async_to_streamed_response_wrapper,
 )
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import APIStatusError, BeeperDesktopError
+from ._exceptions import APIStatusError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -76,7 +76,7 @@ __all__ = [
 
 class BeeperDesktop(SyncAPIClient):
     # client options
-    access_token: str
+    access_token: str | None
 
     def __init__(
         self,
@@ -107,10 +107,6 @@ class BeeperDesktop(SyncAPIClient):
         """
         if access_token is None:
             access_token = os.environ.get("BEEPER_ACCESS_TOKEN")
-        if access_token is None:
-            raise BeeperDesktopError(
-                "The access_token client option must be set either by passing access_token to the client or by setting the BEEPER_ACCESS_TOKEN environment variable"
-            )
         self.access_token = access_token
 
         if base_url is None:
@@ -219,6 +215,8 @@ class BeeperDesktop(SyncAPIClient):
     @property
     def _bearer_auth(self) -> dict[str, str]:
         access_token = self.access_token
+        if access_token is None:
+            return {}
         return {"Authorization": f"Bearer {access_token}"}
 
     @property
@@ -229,6 +227,15 @@ class BeeperDesktop(SyncAPIClient):
             "X-Stainless-Async": "false",
             **self._custom_headers,
         }
+
+    @override
+    def _validate_headers(self, headers: Headers, custom_headers: Headers) -> None:
+        if headers.get("Authorization") or isinstance(custom_headers.get("Authorization"), Omit):
+            return
+
+        raise TypeError(
+            '"Could not resolve authentication method. Expected the access_token to be set. Or for the `Authorization` headers to be explicitly omitted"'
+        )
 
     def copy(
         self,
@@ -409,7 +416,7 @@ class BeeperDesktop(SyncAPIClient):
 
 class AsyncBeeperDesktop(AsyncAPIClient):
     # client options
-    access_token: str
+    access_token: str | None
 
     def __init__(
         self,
@@ -440,10 +447,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         """
         if access_token is None:
             access_token = os.environ.get("BEEPER_ACCESS_TOKEN")
-        if access_token is None:
-            raise BeeperDesktopError(
-                "The access_token client option must be set either by passing access_token to the client or by setting the BEEPER_ACCESS_TOKEN environment variable"
-            )
         self.access_token = access_token
 
         if base_url is None:
@@ -552,6 +555,8 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     @property
     def _bearer_auth(self) -> dict[str, str]:
         access_token = self.access_token
+        if access_token is None:
+            return {}
         return {"Authorization": f"Bearer {access_token}"}
 
     @property
@@ -562,6 +567,15 @@ class AsyncBeeperDesktop(AsyncAPIClient):
             "X-Stainless-Async": f"async:{get_async_library()}",
             **self._custom_headers,
         }
+
+    @override
+    def _validate_headers(self, headers: Headers, custom_headers: Headers) -> None:
+        if headers.get("Authorization") or isinstance(custom_headers.get("Authorization"), Omit):
+            return
+
+        raise TypeError(
+            '"Could not resolve authentication method. Expected the access_token to be set. Or for the `Authorization` headers to be explicitly omitted"'
+        )
 
     def copy(
         self,

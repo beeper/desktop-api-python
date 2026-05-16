@@ -23,7 +23,12 @@ from beeper_desktop_api import BeeperDesktop, AsyncBeeperDesktop, APIResponseVal
 from beeper_desktop_api._types import Omit
 from beeper_desktop_api._utils import asyncify
 from beeper_desktop_api._models import BaseModel, FinalRequestOptions
-from beeper_desktop_api._exceptions import APIStatusError, APITimeoutError, APIResponseValidationError
+from beeper_desktop_api._exceptions import (
+    APIStatusError,
+    APITimeoutError,
+    BeeperDesktopError,
+    APIResponseValidationError,
+)
 from beeper_desktop_api._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -410,19 +415,10 @@ class TestBeeperDesktop:
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {access_token}"
 
-        with update_env(**{"BEEPER_ACCESS_TOKEN": Omit()}):
-            client2 = BeeperDesktop(base_url=base_url, access_token=None, _strict_response_validation=True)
-
-        with pytest.raises(
-            TypeError,
-            match="Could not resolve authentication method. Expected the access_token to be set. Or for the `Authorization` headers to be explicitly omitted",
-        ):
-            client2._build_request(FinalRequestOptions(method="get", url="/foo"))
-
-        request2 = client2._build_request(
-            FinalRequestOptions(method="get", url="/foo", headers={"Authorization": Omit()})
-        )
-        assert request2.headers.get("Authorization") is None
+        with pytest.raises(BeeperDesktopError):
+            with update_env(**{"BEEPER_ACCESS_TOKEN": Omit()}):
+                client2 = BeeperDesktop(base_url=base_url, access_token=None, _strict_response_validation=True)
+            _ = client2
 
     def test_default_query_option(self) -> None:
         client = BeeperDesktop(
@@ -1366,19 +1362,10 @@ class TestAsyncBeeperDesktop:
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {access_token}"
 
-        with update_env(**{"BEEPER_ACCESS_TOKEN": Omit()}):
-            client2 = AsyncBeeperDesktop(base_url=base_url, access_token=None, _strict_response_validation=True)
-
-        with pytest.raises(
-            TypeError,
-            match="Could not resolve authentication method. Expected the access_token to be set. Or for the `Authorization` headers to be explicitly omitted",
-        ):
-            client2._build_request(FinalRequestOptions(method="get", url="/foo"))
-
-        request2 = client2._build_request(
-            FinalRequestOptions(method="get", url="/foo", headers={"Authorization": Omit()})
-        )
-        assert request2.headers.get("Authorization") is None
+        with pytest.raises(BeeperDesktopError):
+            with update_env(**{"BEEPER_ACCESS_TOKEN": Omit()}):
+                client2 = AsyncBeeperDesktop(base_url=base_url, access_token=None, _strict_response_validation=True)
+            _ = client2
 
     async def test_default_query_option(self) -> None:
         client = AsyncBeeperDesktop(

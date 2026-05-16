@@ -41,7 +41,7 @@ from ._response import (
     async_to_streamed_response_wrapper,
 )
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import APIStatusError
+from ._exceptions import APIStatusError, BeeperDesktopError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -76,7 +76,7 @@ __all__ = [
 
 class BeeperDesktop(SyncAPIClient):
     # client options
-    access_token: str | None
+    access_token: str
 
     def __init__(
         self,
@@ -107,6 +107,10 @@ class BeeperDesktop(SyncAPIClient):
         """
         if access_token is None:
             access_token = os.environ.get("BEEPER_ACCESS_TOKEN")
+        if access_token is None:
+            raise BeeperDesktopError(
+                "The access_token client option must be set either by passing access_token to the client or by setting the BEEPER_ACCESS_TOKEN environment variable"
+            )
         self.access_token = access_token
 
         if base_url is None:
@@ -135,13 +139,6 @@ class BeeperDesktop(SyncAPIClient):
         )
 
     @cached_property
-    def app(self) -> AppResource:
-        """Manage Beeper app login and encrypted messaging setup"""
-        from .resources.app import AppResource
-
-        return AppResource(self)
-
-    @cached_property
     def accounts(self) -> AccountsResource:
         """Manage connected chat accounts"""
         from .resources.accounts import AccountsResource
@@ -154,13 +151,6 @@ class BeeperDesktop(SyncAPIClient):
         from .resources.bridges import BridgesResource
 
         return BridgesResource(self)
-
-    @cached_property
-    def matrix(self) -> MatrixResource:
-        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
-        from .resources.matrix import MatrixResource
-
-        return MatrixResource(self)
 
     @cached_property
     def chats(self) -> ChatsResource:
@@ -194,6 +184,20 @@ class BeeperDesktop(SyncAPIClient):
         return InfoResource(self)
 
     @cached_property
+    def app(self) -> AppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResource
+
+        return AppResource(self)
+
+    @cached_property
+    def matrix(self) -> MatrixResource:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import MatrixResource
+
+        return MatrixResource(self)
+
+    @cached_property
     def with_raw_response(self) -> BeeperDesktopWithRawResponse:
         return BeeperDesktopWithRawResponse(self)
 
@@ -215,8 +219,6 @@ class BeeperDesktop(SyncAPIClient):
     @property
     def _bearer_auth(self) -> dict[str, str]:
         access_token = self.access_token
-        if access_token is None:
-            return {}
         return {"Authorization": f"Bearer {access_token}"}
 
     @property
@@ -227,15 +229,6 @@ class BeeperDesktop(SyncAPIClient):
             "X-Stainless-Async": "false",
             **self._custom_headers,
         }
-
-    @override
-    def _validate_headers(self, headers: Headers, custom_headers: Headers) -> None:
-        if headers.get("Authorization") or isinstance(custom_headers.get("Authorization"), Omit):
-            return
-
-        raise TypeError(
-            '"Could not resolve authentication method. Expected the access_token to be set. Or for the `Authorization` headers to be explicitly omitted"'
-        )
 
     def copy(
         self,
@@ -416,7 +409,7 @@ class BeeperDesktop(SyncAPIClient):
 
 class AsyncBeeperDesktop(AsyncAPIClient):
     # client options
-    access_token: str | None
+    access_token: str
 
     def __init__(
         self,
@@ -447,6 +440,10 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         """
         if access_token is None:
             access_token = os.environ.get("BEEPER_ACCESS_TOKEN")
+        if access_token is None:
+            raise BeeperDesktopError(
+                "The access_token client option must be set either by passing access_token to the client or by setting the BEEPER_ACCESS_TOKEN environment variable"
+            )
         self.access_token = access_token
 
         if base_url is None:
@@ -475,13 +472,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         )
 
     @cached_property
-    def app(self) -> AsyncAppResource:
-        """Manage Beeper app login and encrypted messaging setup"""
-        from .resources.app import AsyncAppResource
-
-        return AsyncAppResource(self)
-
-    @cached_property
     def accounts(self) -> AsyncAccountsResource:
         """Manage connected chat accounts"""
         from .resources.accounts import AsyncAccountsResource
@@ -494,13 +484,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         from .resources.bridges import AsyncBridgesResource
 
         return AsyncBridgesResource(self)
-
-    @cached_property
-    def matrix(self) -> AsyncMatrixResource:
-        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
-        from .resources.matrix import AsyncMatrixResource
-
-        return AsyncMatrixResource(self)
 
     @cached_property
     def chats(self) -> AsyncChatsResource:
@@ -534,6 +517,20 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         return AsyncInfoResource(self)
 
     @cached_property
+    def app(self) -> AsyncAppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResource
+
+        return AsyncAppResource(self)
+
+    @cached_property
+    def matrix(self) -> AsyncMatrixResource:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import AsyncMatrixResource
+
+        return AsyncMatrixResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBeeperDesktopWithRawResponse:
         return AsyncBeeperDesktopWithRawResponse(self)
 
@@ -555,8 +552,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
     @property
     def _bearer_auth(self) -> dict[str, str]:
         access_token = self.access_token
-        if access_token is None:
-            return {}
         return {"Authorization": f"Bearer {access_token}"}
 
     @property
@@ -567,15 +562,6 @@ class AsyncBeeperDesktop(AsyncAPIClient):
             "X-Stainless-Async": f"async:{get_async_library()}",
             **self._custom_headers,
         }
-
-    @override
-    def _validate_headers(self, headers: Headers, custom_headers: Headers) -> None:
-        if headers.get("Authorization") or isinstance(custom_headers.get("Authorization"), Omit):
-            return
-
-        raise TypeError(
-            '"Could not resolve authentication method. Expected the access_token to be set. Or for the `Authorization` headers to be explicitly omitted"'
-        )
 
     def copy(
         self,
@@ -768,13 +754,6 @@ class BeeperDesktopWithRawResponse:
         )
 
     @cached_property
-    def app(self) -> app.AppResourceWithRawResponse:
-        """Manage Beeper app login and encrypted messaging setup"""
-        from .resources.app import AppResourceWithRawResponse
-
-        return AppResourceWithRawResponse(self._client.app)
-
-    @cached_property
     def accounts(self) -> accounts.AccountsResourceWithRawResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AccountsResourceWithRawResponse
@@ -787,13 +766,6 @@ class BeeperDesktopWithRawResponse:
         from .resources.bridges import BridgesResourceWithRawResponse
 
         return BridgesResourceWithRawResponse(self._client.bridges)
-
-    @cached_property
-    def matrix(self) -> matrix.MatrixResourceWithRawResponse:
-        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
-        from .resources.matrix import MatrixResourceWithRawResponse
-
-        return MatrixResourceWithRawResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.ChatsResourceWithRawResponse:
@@ -826,6 +798,20 @@ class BeeperDesktopWithRawResponse:
 
         return InfoResourceWithRawResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithRawResponse
+
+        return AppResourceWithRawResponse(self._client.app)
+
+    @cached_property
+    def matrix(self) -> matrix.MatrixResourceWithRawResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import MatrixResourceWithRawResponse
+
+        return MatrixResourceWithRawResponse(self._client.matrix)
+
 
 class AsyncBeeperDesktopWithRawResponse:
     _client: AsyncBeeperDesktop
@@ -841,13 +827,6 @@ class AsyncBeeperDesktopWithRawResponse:
         )
 
     @cached_property
-    def app(self) -> app.AsyncAppResourceWithRawResponse:
-        """Manage Beeper app login and encrypted messaging setup"""
-        from .resources.app import AsyncAppResourceWithRawResponse
-
-        return AsyncAppResourceWithRawResponse(self._client.app)
-
-    @cached_property
     def accounts(self) -> accounts.AsyncAccountsResourceWithRawResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AsyncAccountsResourceWithRawResponse
@@ -860,13 +839,6 @@ class AsyncBeeperDesktopWithRawResponse:
         from .resources.bridges import AsyncBridgesResourceWithRawResponse
 
         return AsyncBridgesResourceWithRawResponse(self._client.bridges)
-
-    @cached_property
-    def matrix(self) -> matrix.AsyncMatrixResourceWithRawResponse:
-        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
-        from .resources.matrix import AsyncMatrixResourceWithRawResponse
-
-        return AsyncMatrixResourceWithRawResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.AsyncChatsResourceWithRawResponse:
@@ -899,6 +871,20 @@ class AsyncBeeperDesktopWithRawResponse:
 
         return AsyncInfoResourceWithRawResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithRawResponse
+
+        return AsyncAppResourceWithRawResponse(self._client.app)
+
+    @cached_property
+    def matrix(self) -> matrix.AsyncMatrixResourceWithRawResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import AsyncMatrixResourceWithRawResponse
+
+        return AsyncMatrixResourceWithRawResponse(self._client.matrix)
+
 
 class BeeperDesktopWithStreamedResponse:
     _client: BeeperDesktop
@@ -914,13 +900,6 @@ class BeeperDesktopWithStreamedResponse:
         )
 
     @cached_property
-    def app(self) -> app.AppResourceWithStreamingResponse:
-        """Manage Beeper app login and encrypted messaging setup"""
-        from .resources.app import AppResourceWithStreamingResponse
-
-        return AppResourceWithStreamingResponse(self._client.app)
-
-    @cached_property
     def accounts(self) -> accounts.AccountsResourceWithStreamingResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AccountsResourceWithStreamingResponse
@@ -933,13 +912,6 @@ class BeeperDesktopWithStreamedResponse:
         from .resources.bridges import BridgesResourceWithStreamingResponse
 
         return BridgesResourceWithStreamingResponse(self._client.bridges)
-
-    @cached_property
-    def matrix(self) -> matrix.MatrixResourceWithStreamingResponse:
-        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
-        from .resources.matrix import MatrixResourceWithStreamingResponse
-
-        return MatrixResourceWithStreamingResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.ChatsResourceWithStreamingResponse:
@@ -972,6 +944,20 @@ class BeeperDesktopWithStreamedResponse:
 
         return InfoResourceWithStreamingResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithStreamingResponse
+
+        return AppResourceWithStreamingResponse(self._client.app)
+
+    @cached_property
+    def matrix(self) -> matrix.MatrixResourceWithStreamingResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import MatrixResourceWithStreamingResponse
+
+        return MatrixResourceWithStreamingResponse(self._client.matrix)
+
 
 class AsyncBeeperDesktopWithStreamedResponse:
     _client: AsyncBeeperDesktop
@@ -987,13 +973,6 @@ class AsyncBeeperDesktopWithStreamedResponse:
         )
 
     @cached_property
-    def app(self) -> app.AsyncAppResourceWithStreamingResponse:
-        """Manage Beeper app login and encrypted messaging setup"""
-        from .resources.app import AsyncAppResourceWithStreamingResponse
-
-        return AsyncAppResourceWithStreamingResponse(self._client.app)
-
-    @cached_property
     def accounts(self) -> accounts.AsyncAccountsResourceWithStreamingResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AsyncAccountsResourceWithStreamingResponse
@@ -1006,13 +985,6 @@ class AsyncBeeperDesktopWithStreamedResponse:
         from .resources.bridges import AsyncBridgesResourceWithStreamingResponse
 
         return AsyncBridgesResourceWithStreamingResponse(self._client.bridges)
-
-    @cached_property
-    def matrix(self) -> matrix.AsyncMatrixResourceWithStreamingResponse:
-        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
-        from .resources.matrix import AsyncMatrixResourceWithStreamingResponse
-
-        return AsyncMatrixResourceWithStreamingResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.AsyncChatsResourceWithStreamingResponse:
@@ -1044,6 +1016,20 @@ class AsyncBeeperDesktopWithStreamedResponse:
         from .resources.info import AsyncInfoResourceWithStreamingResponse
 
         return AsyncInfoResourceWithStreamingResponse(self._client.info)
+
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithStreamingResponse
+
+        return AsyncAppResourceWithStreamingResponse(self._client.app)
+
+    @cached_property
+    def matrix(self) -> matrix.AsyncMatrixResourceWithStreamingResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import AsyncMatrixResourceWithStreamingResponse
+
+        return AsyncMatrixResourceWithStreamingResponse(self._client.matrix)
 
 
 Client = BeeperDesktop

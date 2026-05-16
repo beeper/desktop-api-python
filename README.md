@@ -221,11 +221,16 @@ from beeper_desktop_api import BeeperDesktop
 
 client = BeeperDesktop()
 
-chat = client.chats.update(
-    chat_id="!NCdzlIaMjZUmvmvyHU:beeper.com",
-    draft={"text": "text"},
+response = client.matrix.rooms.join(
+    room_id_or_alias="!monkeys:matrix.org",
+    third_party_signed={
+        "token": "random8nonce",
+        "mxid": "bob",
+        "sender": "alice",
+        "signatures": {"example.org": {"ed25519:0": "some9signature"}},
+    },
 )
-print(chat.draft)
+print(response.third_party_signed)
 ```
 
 ## File uploads

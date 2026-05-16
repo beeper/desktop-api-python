@@ -52,11 +52,14 @@ from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
 
 if TYPE_CHECKING:
-    from .resources import info, chats, assets, accounts, messages
+    from .resources import app, info, chats, assets, matrix, bridges, accounts, messages
     from .resources.info import InfoResource, AsyncInfoResource
     from .resources.assets import AssetsResource, AsyncAssetsResource
+    from .resources.app.app import AppResource, AsyncAppResource
+    from .resources.bridges import BridgesResource, AsyncBridgesResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.chats.chats import ChatsResource, AsyncChatsResource
+    from .resources.matrix.matrix import MatrixResource, AsyncMatrixResource
     from .resources.accounts.accounts import AccountsResource, AsyncAccountsResource
 
 __all__ = [
@@ -136,11 +139,32 @@ class BeeperDesktop(SyncAPIClient):
         )
 
     @cached_property
+    def app(self) -> AppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResource
+
+        return AppResource(self)
+
+    @cached_property
     def accounts(self) -> AccountsResource:
         """Manage connected chat accounts"""
         from .resources.accounts import AccountsResource
 
         return AccountsResource(self)
+
+    @cached_property
+    def bridges(self) -> BridgesResource:
+        """Manage bridge-backed account types and account availability"""
+        from .resources.bridges import BridgesResource
+
+        return BridgesResource(self)
+
+    @cached_property
+    def matrix(self) -> MatrixResource:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import MatrixResource
+
+        return MatrixResource(self)
 
     @cached_property
     def chats(self) -> ChatsResource:
@@ -448,11 +472,32 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         )
 
     @cached_property
+    def app(self) -> AsyncAppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResource
+
+        return AsyncAppResource(self)
+
+    @cached_property
     def accounts(self) -> AsyncAccountsResource:
         """Manage connected chat accounts"""
         from .resources.accounts import AsyncAccountsResource
 
         return AsyncAccountsResource(self)
+
+    @cached_property
+    def bridges(self) -> AsyncBridgesResource:
+        """Manage bridge-backed account types and account availability"""
+        from .resources.bridges import AsyncBridgesResource
+
+        return AsyncBridgesResource(self)
+
+    @cached_property
+    def matrix(self) -> AsyncMatrixResource:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import AsyncMatrixResource
+
+        return AsyncMatrixResource(self)
 
     @cached_property
     def chats(self) -> AsyncChatsResource:
@@ -709,11 +754,32 @@ class BeeperDesktopWithRawResponse:
         )
 
     @cached_property
+    def app(self) -> app.AppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithRawResponse
+
+        return AppResourceWithRawResponse(self._client.app)
+
+    @cached_property
     def accounts(self) -> accounts.AccountsResourceWithRawResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AccountsResourceWithRawResponse
 
         return AccountsResourceWithRawResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.BridgesResourceWithRawResponse:
+        """Manage bridge-backed account types and account availability"""
+        from .resources.bridges import BridgesResourceWithRawResponse
+
+        return BridgesResourceWithRawResponse(self._client.bridges)
+
+    @cached_property
+    def matrix(self) -> matrix.MatrixResourceWithRawResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import MatrixResourceWithRawResponse
+
+        return MatrixResourceWithRawResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.ChatsResourceWithRawResponse:
@@ -761,11 +827,32 @@ class AsyncBeeperDesktopWithRawResponse:
         )
 
     @cached_property
+    def app(self) -> app.AsyncAppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithRawResponse
+
+        return AsyncAppResourceWithRawResponse(self._client.app)
+
+    @cached_property
     def accounts(self) -> accounts.AsyncAccountsResourceWithRawResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AsyncAccountsResourceWithRawResponse
 
         return AsyncAccountsResourceWithRawResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.AsyncBridgesResourceWithRawResponse:
+        """Manage bridge-backed account types and account availability"""
+        from .resources.bridges import AsyncBridgesResourceWithRawResponse
+
+        return AsyncBridgesResourceWithRawResponse(self._client.bridges)
+
+    @cached_property
+    def matrix(self) -> matrix.AsyncMatrixResourceWithRawResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import AsyncMatrixResourceWithRawResponse
+
+        return AsyncMatrixResourceWithRawResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.AsyncChatsResourceWithRawResponse:
@@ -813,11 +900,32 @@ class BeeperDesktopWithStreamedResponse:
         )
 
     @cached_property
+    def app(self) -> app.AppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithStreamingResponse
+
+        return AppResourceWithStreamingResponse(self._client.app)
+
+    @cached_property
     def accounts(self) -> accounts.AccountsResourceWithStreamingResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AccountsResourceWithStreamingResponse
 
         return AccountsResourceWithStreamingResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.BridgesResourceWithStreamingResponse:
+        """Manage bridge-backed account types and account availability"""
+        from .resources.bridges import BridgesResourceWithStreamingResponse
+
+        return BridgesResourceWithStreamingResponse(self._client.bridges)
+
+    @cached_property
+    def matrix(self) -> matrix.MatrixResourceWithStreamingResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import MatrixResourceWithStreamingResponse
+
+        return MatrixResourceWithStreamingResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.ChatsResourceWithStreamingResponse:
@@ -865,11 +973,32 @@ class AsyncBeeperDesktopWithStreamedResponse:
         )
 
     @cached_property
+    def app(self) -> app.AsyncAppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithStreamingResponse
+
+        return AsyncAppResourceWithStreamingResponse(self._client.app)
+
+    @cached_property
     def accounts(self) -> accounts.AsyncAccountsResourceWithStreamingResponse:
         """Manage connected chat accounts"""
         from .resources.accounts import AsyncAccountsResourceWithStreamingResponse
 
         return AsyncAccountsResourceWithStreamingResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.AsyncBridgesResourceWithStreamingResponse:
+        """Manage bridge-backed account types and account availability"""
+        from .resources.bridges import AsyncBridgesResourceWithStreamingResponse
+
+        return AsyncBridgesResourceWithStreamingResponse(self._client.bridges)
+
+    @cached_property
+    def matrix(self) -> matrix.AsyncMatrixResourceWithStreamingResponse:
+        """Matrix-compatible APIs for accounts, rooms, and connected network bridges."""
+        from .resources.matrix import AsyncMatrixResourceWithStreamingResponse
+
+        return AsyncMatrixResourceWithStreamingResponse(self._client.matrix)
 
     @cached_property
     def chats(self) -> chats.AsyncChatsResourceWithStreamingResponse:

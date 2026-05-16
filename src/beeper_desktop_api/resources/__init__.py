@@ -1,5 +1,13 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from .app import (
+    AppResource,
+    AsyncAppResource,
+    AppResourceWithRawResponse,
+    AsyncAppResourceWithRawResponse,
+    AppResourceWithStreamingResponse,
+    AsyncAppResourceWithStreamingResponse,
+)
 from .info import (
     InfoResource,
     AsyncInfoResource,
@@ -24,6 +32,22 @@ from .assets import (
     AssetsResourceWithStreamingResponse,
     AsyncAssetsResourceWithStreamingResponse,
 )
+from .matrix import (
+    MatrixResource,
+    AsyncMatrixResource,
+    MatrixResourceWithRawResponse,
+    AsyncMatrixResourceWithRawResponse,
+    MatrixResourceWithStreamingResponse,
+    AsyncMatrixResourceWithStreamingResponse,
+)
+from .bridges import (
+    BridgesResource,
+    AsyncBridgesResource,
+    BridgesResourceWithRawResponse,
+    AsyncBridgesResourceWithRawResponse,
+    BridgesResourceWithStreamingResponse,
+    AsyncBridgesResourceWithStreamingResponse,
+)
 from .accounts import (
     AccountsResource,
     AsyncAccountsResource,
@@ -42,12 +66,30 @@ from .messages import (
 )
 
 __all__ = [
+    "AppResource",
+    "AsyncAppResource",
+    "AppResourceWithRawResponse",
+    "AsyncAppResourceWithRawResponse",
+    "AppResourceWithStreamingResponse",
+    "AsyncAppResourceWithStreamingResponse",
     "AccountsResource",
     "AsyncAccountsResource",
     "AccountsResourceWithRawResponse",
     "AsyncAccountsResourceWithRawResponse",
     "AccountsResourceWithStreamingResponse",
     "AsyncAccountsResourceWithStreamingResponse",
+    "BridgesResource",
+    "AsyncBridgesResource",
+    "BridgesResourceWithRawResponse",
+    "AsyncBridgesResourceWithRawResponse",
+    "BridgesResourceWithStreamingResponse",
+    "AsyncBridgesResourceWithStreamingResponse",
+    "MatrixResource",
+    "AsyncMatrixResource",
+    "MatrixResourceWithRawResponse",
+    "AsyncMatrixResourceWithRawResponse",
+    "MatrixResourceWithStreamingResponse",
+    "AsyncMatrixResourceWithStreamingResponse",
     "ChatsResource",
     "AsyncChatsResource",
     "ChatsResourceWithRawResponse",

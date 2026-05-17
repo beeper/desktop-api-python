@@ -52,9 +52,10 @@ from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
 
 if TYPE_CHECKING:
-    from .resources import info, chats, assets, bridges, accounts, messages
+    from .resources import app, info, chats, assets, bridges, accounts, messages
     from .resources.info import InfoResource, AsyncInfoResource
     from .resources.assets import AssetsResource, AsyncAssetsResource
+    from .resources.app.app import AppResource, AsyncAppResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.chats.chats import ChatsResource, AsyncChatsResource
     from .resources.bridges.bridges import BridgesResource, AsyncBridgesResource
@@ -180,6 +181,13 @@ class BeeperDesktop(SyncAPIClient):
         from .resources.info import InfoResource
 
         return InfoResource(self)
+
+    @cached_property
+    def app(self) -> AppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResource
+
+        return AppResource(self)
 
     @cached_property
     def with_raw_response(self) -> BeeperDesktopWithRawResponse:
@@ -501,6 +509,13 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         return AsyncInfoResource(self)
 
     @cached_property
+    def app(self) -> AsyncAppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResource
+
+        return AsyncAppResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBeeperDesktopWithRawResponse:
         return AsyncBeeperDesktopWithRawResponse(self)
 
@@ -768,6 +783,13 @@ class BeeperDesktopWithRawResponse:
 
         return InfoResourceWithRawResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithRawResponse
+
+        return AppResourceWithRawResponse(self._client.app)
+
 
 class AsyncBeeperDesktopWithRawResponse:
     _client: AsyncBeeperDesktop
@@ -826,6 +848,13 @@ class AsyncBeeperDesktopWithRawResponse:
         from .resources.info import AsyncInfoResourceWithRawResponse
 
         return AsyncInfoResourceWithRawResponse(self._client.info)
+
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithRawResponse
+
+        return AsyncAppResourceWithRawResponse(self._client.app)
 
 
 class BeeperDesktopWithStreamedResponse:
@@ -886,6 +915,13 @@ class BeeperDesktopWithStreamedResponse:
 
         return InfoResourceWithStreamingResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithStreamingResponse
+
+        return AppResourceWithStreamingResponse(self._client.app)
+
 
 class AsyncBeeperDesktopWithStreamedResponse:
     _client: AsyncBeeperDesktop
@@ -944,6 +980,13 @@ class AsyncBeeperDesktopWithStreamedResponse:
         from .resources.info import AsyncInfoResourceWithStreamingResponse
 
         return AsyncInfoResourceWithStreamingResponse(self._client.info)
+
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithStreamingResponse
+
+        return AsyncAppResourceWithStreamingResponse(self._client.app)
 
 
 Client = BeeperDesktop

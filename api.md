@@ -211,5 +211,106 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import Verification
+from beeper_desktop_api.types import Verification, AppSessionResponse
 ```
+
+Methods:
+
+- <code title="get /v1/app/setup">client.app.<a href="./src/beeper_desktop_api/resources/app/app.py">session</a>() -> <a href="./src/beeper_desktop_api/types/app_session_response.py">AppSessionResponse</a></code>
+
+## Login
+
+Types:
+
+```python
+from beeper_desktop_api.types.app import (
+    LoginRegisterResponse,
+    LoginResponseResponse,
+    LoginStartResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/email">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login/login.py">email</a>(\*\*<a href="src/beeper_desktop_api/types/app/login_email_params.py">params</a>) -> None</code>
+- <code title="post /v1/app/setup/register">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login/login.py">register</a>(\*\*<a href="src/beeper_desktop_api/types/app/login_register_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login_register_response.py">LoginRegisterResponse</a></code>
+- <code title="post /v1/app/setup/response">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login/login.py">response</a>(\*\*<a href="src/beeper_desktop_api/types/app/login_response_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login_response_response.py">LoginResponseResponse</a></code>
+- <code title="post /v1/app/setup/start">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login/login.py">start</a>() -> <a href="./src/beeper_desktop_api/types/app/login_start_response.py">LoginStartResponse</a></code>
+
+### Verification
+
+#### RecoveryKey
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.login.verification import RecoveryKeyVerifyResponse
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verification/recovery-key">client.app.login.verification.recovery_key.<a href="./src/beeper_desktop_api/resources/app/login/verification/recovery_key/recovery_key.py">verify</a>(\*\*<a href="src/beeper_desktop_api/types/app/login/verification/recovery_key_verify_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login/verification/recovery_key_verify_response.py">RecoveryKeyVerifyResponse</a></code>
+
+##### Reset
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.login.verification.recovery_key import (
+    ResetCreateResponse,
+    ResetConfirmResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verification/recovery-key/reset">client.app.login.verification.recovery_key.reset.<a href="./src/beeper_desktop_api/resources/app/login/verification/recovery_key/reset.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/app/login/verification/recovery_key/reset_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login/verification/recovery_key/reset_create_response.py">ResetCreateResponse</a></code>
+- <code title="post /v1/app/setup/verification/recovery-key/reset/confirm">client.app.login.verification.recovery_key.reset.<a href="./src/beeper_desktop_api/resources/app/login/verification/recovery_key/reset.py">confirm</a>(\*\*<a href="src/beeper_desktop_api/types/app/login/verification/recovery_key/reset_confirm_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login/verification/recovery_key/reset_confirm_response.py">ResetConfirmResponse</a></code>
+
+## Verifications
+
+Types:
+
+```python
+from beeper_desktop_api.types.app import (
+    VerificationCreateResponse,
+    VerificationRetrieveResponse,
+    VerificationListResponse,
+    VerificationAcceptResponse,
+    VerificationCancelResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verifications">client.app.verifications.<a href="./src/beeper_desktop_api/resources/app/verifications/verifications.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/app/verification_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/verification_create_response.py">VerificationCreateResponse</a></code>
+- <code title="get /v1/app/setup/verifications/{verificationID}">client.app.verifications.<a href="./src/beeper_desktop_api/resources/app/verifications/verifications.py">retrieve</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/verification_retrieve_response.py">VerificationRetrieveResponse</a></code>
+- <code title="get /v1/app/setup/verifications">client.app.verifications.<a href="./src/beeper_desktop_api/resources/app/verifications/verifications.py">list</a>() -> <a href="./src/beeper_desktop_api/types/app/verification_list_response.py">VerificationListResponse</a></code>
+- <code title="post /v1/app/setup/verifications/{verificationID}/accept">client.app.verifications.<a href="./src/beeper_desktop_api/resources/app/verifications/verifications.py">accept</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/verification_accept_response.py">VerificationAcceptResponse</a></code>
+- <code title="post /v1/app/setup/verifications/{verificationID}/cancel">client.app.verifications.<a href="./src/beeper_desktop_api/resources/app/verifications/verifications.py">cancel</a>(verification_id, \*\*<a href="src/beeper_desktop_api/types/app/verification_cancel_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/verification_cancel_response.py">VerificationCancelResponse</a></code>
+
+### Qr
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.verifications import QrConfirmScannedResponse, QrScanResponse
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verifications/{verificationID}/qr/confirm-scanned">client.app.verifications.qr.<a href="./src/beeper_desktop_api/resources/app/verifications/qr.py">confirm_scanned</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/verifications/qr_confirm_scanned_response.py">QrConfirmScannedResponse</a></code>
+- <code title="post /v1/app/setup/verifications/qr/scan">client.app.verifications.qr.<a href="./src/beeper_desktop_api/resources/app/verifications/qr.py">scan</a>(\*\*<a href="src/beeper_desktop_api/types/app/verifications/qr_scan_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/verifications/qr_scan_response.py">QrScanResponse</a></code>
+
+### SAS
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.verifications import SASConfirmResponse, SASStartResponse
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verifications/{verificationID}/sas/confirm">client.app.verifications.sas.<a href="./src/beeper_desktop_api/resources/app/verifications/sas.py">confirm</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/verifications/sas_confirm_response.py">SASConfirmResponse</a></code>
+- <code title="post /v1/app/setup/verifications/{verificationID}/sas/start">client.app.verifications.sas.<a href="./src/beeper_desktop_api/resources/app/verifications/sas.py">start</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/verifications/sas_start_response.py">SASStartResponse</a></code>

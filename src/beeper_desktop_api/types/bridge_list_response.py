@@ -2,13 +2,13 @@
 
 from typing import List
 
+from .bridge import Bridge
 from .._models import BaseModel
-from .bridge_availability import BridgeAvailability
 
 __all__ = ["BridgeListResponse"]
 
 
 class BridgeListResponse(BaseModel):
-    """Bridge-backed account types and their connected accounts."""
+    """Available bridges and their connected accounts."""
 
-    items: List[BridgeAvailability]
+    items: List[Bridge]

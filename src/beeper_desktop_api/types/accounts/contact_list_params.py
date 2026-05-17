@@ -21,4 +21,4 @@ class ContactListParams(TypedDict, total=False):
     """Maximum contacts to return per page."""
 
     query: str
-    """Optional search query for blended contact lookup."""
+    """Optional search query for contact lookup."""

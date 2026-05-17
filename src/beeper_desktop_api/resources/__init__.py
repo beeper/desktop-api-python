@@ -1,13 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .app import (
-    AppResource,
-    AsyncAppResource,
-    AppResourceWithRawResponse,
-    AsyncAppResourceWithRawResponse,
-    AppResourceWithStreamingResponse,
-    AsyncAppResourceWithStreamingResponse,
-)
 from .info import (
     InfoResource,
     AsyncInfoResource,
@@ -31,14 +23,6 @@ from .assets import (
     AsyncAssetsResourceWithRawResponse,
     AssetsResourceWithStreamingResponse,
     AsyncAssetsResourceWithStreamingResponse,
-)
-from .matrix import (
-    MatrixResource,
-    AsyncMatrixResource,
-    MatrixResourceWithRawResponse,
-    AsyncMatrixResourceWithRawResponse,
-    MatrixResourceWithStreamingResponse,
-    AsyncMatrixResourceWithStreamingResponse,
 )
 from .bridges import (
     BridgesResource,
@@ -102,16 +86,4 @@ __all__ = [
     "AsyncInfoResourceWithRawResponse",
     "InfoResourceWithStreamingResponse",
     "AsyncInfoResourceWithStreamingResponse",
-    "AppResource",
-    "AsyncAppResource",
-    "AppResourceWithRawResponse",
-    "AsyncAppResourceWithRawResponse",
-    "AppResourceWithStreamingResponse",
-    "AsyncAppResourceWithStreamingResponse",
-    "MatrixResource",
-    "AsyncMatrixResource",
-    "MatrixResourceWithRawResponse",
-    "AsyncMatrixResourceWithRawResponse",
-    "MatrixResourceWithStreamingResponse",
-    "AsyncMatrixResourceWithStreamingResponse",
 ]

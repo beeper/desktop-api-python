@@ -11,8 +11,8 @@ class MessageSendResponse(BaseModel):
     chat_id: str = FieldInfo(alias="chatID")
     """Chat ID.
 
-    Input routes also accept the local chat ID from this Beeper Desktop installation
-    when available.
+    Input routes also accept the local chat ID from this installation when
+    available.
     """
 
     pending_message_id: str = FieldInfo(alias="pendingMessageID")

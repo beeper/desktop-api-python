@@ -34,6 +34,7 @@ from .chat_start_response import ChatStartResponse as ChatStartResponse
 from .client_focus_params import ClientFocusParams as ClientFocusParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
+from .app_session_response import AppSessionResponse as AppSessionResponse
 from .bridge_list_response import BridgeListResponse as BridgeListResponse
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_retrieve_params import ChatRetrieveParams as ChatRetrieveParams

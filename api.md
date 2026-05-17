@@ -1,7 +1,15 @@
 # Shared Types
 
 ```python
-from beeper_desktop_api.types import AppStateSnapshot, Attachment, Error, Message, Reaction, User
+from beeper_desktop_api.types import (
+    APIError,
+    AppStateSnapshot,
+    Attachment,
+    Error,
+    Message,
+    Reaction,
+    User,
+)
 ```
 
 # BeeperDesktop
@@ -22,11 +30,17 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import Account, AccountListResponse
+from beeper_desktop_api.types import (
+    Account,
+    AccountBridge,
+    AccountRetrieveResponse,
+    AccountListResponse,
+)
 ```
 
 Methods:
 
+- <code title="get /v1/accounts/{accountID}">client.accounts.<a href="./src/beeper_desktop_api/resources/accounts/accounts.py">retrieve</a>(account_id) -> <a href="./src/beeper_desktop_api/types/account_retrieve_response.py">AccountRetrieveResponse</a></code>
 - <code title="get /v1/accounts">client.accounts.<a href="./src/beeper_desktop_api/resources/accounts/accounts.py">list</a>() -> <a href="./src/beeper_desktop_api/types/account_list_response.py">AccountListResponse</a></code>
 
 ## Contacts
@@ -47,12 +61,59 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import BridgeAvailability, BridgeListResponse
+from beeper_desktop_api.types import (
+    Bridge,
+    CookieField,
+    DisappearingTimerCapability,
+    GroupFieldCapability,
+    GroupTypeCapabilities,
+    LoginFlow,
+    LoginInputField,
+    LoginSession,
+    ProvisioningCapabilities,
+    ResolveIdentifierCapabilities,
+    BridgeRetrieveResponse,
+    BridgeListResponse,
+)
 ```
 
 Methods:
 
-- <code title="get /v1/bridges">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges.py">list</a>() -> <a href="./src/beeper_desktop_api/types/bridge_list_response.py">BridgeListResponse</a></code>
+- <code title="get /v1/bridges/{bridgeID}">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges/bridges.py">retrieve</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/bridge_retrieve_response.py">BridgeRetrieveResponse</a></code>
+- <code title="get /v1/bridges">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges/bridges.py">list</a>() -> <a href="./src/beeper_desktop_api/types/bridge_list_response.py">BridgeListResponse</a></code>
+- <code title="get /v1/bridges/{bridgeID}/capabilities">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges/bridges.py">retrieve_capabilities</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/provisioning_capabilities.py">ProvisioningCapabilities</a></code>
+
+## LoginFlows
+
+Types:
+
+```python
+from beeper_desktop_api.types.bridges import LoginFlowListResponse
+```
+
+Methods:
+
+- <code title="get /v1/bridges/{bridgeID}/login-flows">client.bridges.login_flows.<a href="./src/beeper_desktop_api/resources/bridges/login_flows.py">list</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/bridges/login_flow_list_response.py">LoginFlowListResponse</a></code>
+
+## LoginSessions
+
+Types:
+
+```python
+from beeper_desktop_api.types.bridges import LoginSessionCancelResponse
+```
+
+Methods:
+
+- <code title="post /v1/bridges/{bridgeID}/login-sessions">client.bridges.login_sessions.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/login_sessions.py">create</a>(bridge_id, \*\*<a href="src/beeper_desktop_api/types/bridges/login_session_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/login_session.py">LoginSession</a></code>
+- <code title="get /v1/bridges/{bridgeID}/login-sessions/{loginSessionID}">client.bridges.login_sessions.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/login_sessions.py">retrieve</a>(login_session_id, \*, bridge_id) -> <a href="./src/beeper_desktop_api/types/login_session.py">LoginSession</a></code>
+- <code title="delete /v1/bridges/{bridgeID}/login-sessions/{loginSessionID}">client.bridges.login_sessions.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/login_sessions.py">cancel</a>(login_session_id, \*, bridge_id) -> <a href="./src/beeper_desktop_api/types/bridges/login_session_cancel_response.py">LoginSessionCancelResponse</a></code>
+
+### Steps
+
+Methods:
+
+- <code title="post /v1/bridges/{bridgeID}/login-sessions/{loginSessionID}/steps/{stepID}">client.bridges.login_sessions.steps.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/steps.py">submit</a>(step_id, \*, bridge_id, login_session_id, \*\*<a href="src/beeper_desktop_api/types/bridges/login_sessions/step_submit_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/login_session.py">LoginSession</a></code>
 
 # Chats
 
@@ -150,260 +211,5 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import (
-    LoginRegistrationRequiredResponse,
-    LoginResponse,
-    LoginResponseOutput,
-    RecoveryCodeResetResponse,
-    StartVerificationResponse,
-    StateMutationResponse,
-    AppStatusResponse,
-)
+from beeper_desktop_api.types import Verification
 ```
-
-Methods:
-
-- <code title="get /v1/app/status">client.app.<a href="./src/beeper_desktop_api/resources/app/app.py">status</a>() -> <a href="./src/beeper_desktop_api/types/app_status_response.py">AppStatusResponse</a></code>
-
-## Login
-
-Types:
-
-```python
-from beeper_desktop_api.types.app import (
-    LoginRegisterResponse,
-    LoginResponseResponse,
-    LoginStartResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v1/app/login/email">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login.py">email</a>(\*\*<a href="src/beeper_desktop_api/types/app/login_email_params.py">params</a>) -> object</code>
-- <code title="post /v1/app/login/register">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login.py">register</a>(\*\*<a href="src/beeper_desktop_api/types/app/login_register_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login_register_response.py">LoginRegisterResponse</a></code>
-- <code title="post /v1/app/login/response">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login.py">response</a>(\*\*<a href="src/beeper_desktop_api/types/app/login_response_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/login_response_response.py">LoginResponseResponse</a></code>
-- <code title="post /v1/app/login/start">client.app.login.<a href="./src/beeper_desktop_api/resources/app/login.py">start</a>() -> <a href="./src/beeper_desktop_api/types/app/login_start_response.py">LoginStartResponse</a></code>
-
-## E2ee
-
-### RecoveryCode
-
-Types:
-
-```python
-from beeper_desktop_api.types.app.e2ee import (
-    RecoveryCodeMarkBackedUpResponse,
-    RecoveryCodeVerifyResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v1/app/e2ee/recovery-code/mark-backed-up">client.app.e2ee.recovery_code.<a href="./src/beeper_desktop_api/resources/app/e2ee/recovery_code/recovery_code.py">mark_backed_up</a>() -> <a href="./src/beeper_desktop_api/types/app/e2ee/recovery_code_mark_backed_up_response.py">RecoveryCodeMarkBackedUpResponse</a></code>
-- <code title="post /v1/app/e2ee/recovery-code/verify">client.app.e2ee.recovery_code.<a href="./src/beeper_desktop_api/resources/app/e2ee/recovery_code/recovery_code.py">verify</a>(\*\*<a href="src/beeper_desktop_api/types/app/e2ee/recovery_code_verify_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/e2ee/recovery_code_verify_response.py">RecoveryCodeVerifyResponse</a></code>
-
-#### Reset
-
-Types:
-
-```python
-from beeper_desktop_api.types.app.e2ee.recovery_code import (
-    ResetCreateResponse,
-    ResetConfirmResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v1/app/e2ee/recovery-code/reset">client.app.e2ee.recovery_code.reset.<a href="./src/beeper_desktop_api/resources/app/e2ee/recovery_code/reset.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/app/e2ee/recovery_code/reset_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/e2ee/recovery_code/reset_create_response.py">ResetCreateResponse</a></code>
-- <code title="post /v1/app/e2ee/recovery-code/reset/confirm">client.app.e2ee.recovery_code.reset.<a href="./src/beeper_desktop_api/resources/app/e2ee/recovery_code/reset.py">confirm</a>(\*\*<a href="src/beeper_desktop_api/types/app/e2ee/recovery_code/reset_confirm_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/e2ee/recovery_code/reset_confirm_response.py">ResetConfirmResponse</a></code>
-
-### Verification
-
-Types:
-
-```python
-from beeper_desktop_api.types.app.e2ee import (
-    VerificationCreateResponse,
-    VerificationAcceptResponse,
-    VerificationCancelResponse,
-)
-```
-
-Methods:
-
-- <code title="post /v1/app/e2ee/verification">client.app.e2ee.verification.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/verification.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/app/e2ee/verification_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification_create_response.py">VerificationCreateResponse</a></code>
-- <code title="post /v1/app/e2ee/verification/{verificationID}/accept">client.app.e2ee.verification.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/verification.py">accept</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification_accept_response.py">VerificationAcceptResponse</a></code>
-- <code title="post /v1/app/e2ee/verification/{verificationID}/cancel">client.app.e2ee.verification.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/verification.py">cancel</a>(verification_id, \*\*<a href="src/beeper_desktop_api/types/app/e2ee/verification_cancel_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification_cancel_response.py">VerificationCancelResponse</a></code>
-
-#### Qr
-
-Types:
-
-```python
-from beeper_desktop_api.types.app.e2ee.verification import QrConfirmScannedResponse, QrScanResponse
-```
-
-Methods:
-
-- <code title="post /v1/app/e2ee/verification/{verificationID}/qr/confirm-scanned">client.app.e2ee.verification.qr.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/qr.py">confirm_scanned</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification/qr_confirm_scanned_response.py">QrConfirmScannedResponse</a></code>
-- <code title="post /v1/app/e2ee/verification/qr/scan">client.app.e2ee.verification.qr.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/qr.py">scan</a>(\*\*<a href="src/beeper_desktop_api/types/app/e2ee/verification/qr_scan_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification/qr_scan_response.py">QrScanResponse</a></code>
-
-#### Sas
-
-Types:
-
-```python
-from beeper_desktop_api.types.app.e2ee.verification import SaConfirmResponse, SaStartResponse
-```
-
-Methods:
-
-- <code title="post /v1/app/e2ee/verification/{verificationID}/sas/confirm">client.app.e2ee.verification.sas.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/sas.py">confirm</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification/sa_confirm_response.py">SaConfirmResponse</a></code>
-- <code title="post /v1/app/e2ee/verification/{verificationID}/sas/start">client.app.e2ee.verification.sas.<a href="./src/beeper_desktop_api/resources/app/e2ee/verification/sas.py">start</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/e2ee/verification/sa_start_response.py">SaStartResponse</a></code>
-
-# Matrix
-
-## Users
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix import UserRetrieveProfileResponse
-```
-
-Methods:
-
-- <code title="get /_matrix/client/v3/profile/{userId}">client.matrix.users.<a href="./src/beeper_desktop_api/resources/matrix/users/users.py">retrieve_profile</a>(user_id) -> <a href="./src/beeper_desktop_api/types/matrix/user_retrieve_profile_response.py">UserRetrieveProfileResponse</a></code>
-
-### AccountData
-
-Methods:
-
-- <code title="get /_matrix/client/v3/user/{userId}/account_data/{type}">client.matrix.users.account_data.<a href="./src/beeper_desktop_api/resources/matrix/users/account_data.py">retrieve</a>(type, \*, user_id) -> object</code>
-- <code title="put /_matrix/client/v3/user/{userId}/account_data/{type}">client.matrix.users.account_data.<a href="./src/beeper_desktop_api/resources/matrix/users/account_data.py">update</a>(type, \*, user_id, \*\*<a href="src/beeper_desktop_api/types/matrix/users/account_data_update_params.py">params</a>) -> object</code>
-
-## Rooms
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix import RoomCreateResponse, RoomJoinResponse
-```
-
-Methods:
-
-- <code title="post /_matrix/client/v3/createRoom">client.matrix.rooms.<a href="./src/beeper_desktop_api/resources/matrix/rooms/rooms.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/matrix/room_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/room_create_response.py">RoomCreateResponse</a></code>
-- <code title="post /_matrix/client/v3/join/{roomIdOrAlias}">client.matrix.rooms.<a href="./src/beeper_desktop_api/resources/matrix/rooms/rooms.py">join</a>(room_id_or_alias, \*\*<a href="src/beeper_desktop_api/types/matrix/room_join_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/room_join_response.py">RoomJoinResponse</a></code>
-- <code title="post /_matrix/client/v3/rooms/{roomId}/leave">client.matrix.rooms.<a href="./src/beeper_desktop_api/resources/matrix/rooms/rooms.py">leave</a>(room_id, \*\*<a href="src/beeper_desktop_api/types/matrix/room_leave_params.py">params</a>) -> object</code>
-
-### AccountData
-
-Methods:
-
-- <code title="get /_matrix/client/v3/user/{userId}/rooms/{roomId}/account_data/{type}">client.matrix.rooms.account_data.<a href="./src/beeper_desktop_api/resources/matrix/rooms/account_data.py">retrieve</a>(type, \*, user_id, room_id) -> object</code>
-- <code title="put /_matrix/client/v3/user/{userId}/rooms/{roomId}/account_data/{type}">client.matrix.rooms.account_data.<a href="./src/beeper_desktop_api/resources/matrix/rooms/account_data.py">update</a>(type, \*, user_id, room_id, \*\*<a href="src/beeper_desktop_api/types/matrix/rooms/account_data_update_params.py">params</a>) -> object</code>
-
-### State
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.rooms import StateRetrieveResponse, StateListResponse
-```
-
-Methods:
-
-- <code title="get /_matrix/client/v3/rooms/{roomId}/state/{eventType}/{stateKey}">client.matrix.rooms.state.<a href="./src/beeper_desktop_api/resources/matrix/rooms/state.py">retrieve</a>(state_key, \*, room_id, event_type, \*\*<a href="src/beeper_desktop_api/types/matrix/rooms/state_retrieve_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/rooms/state_retrieve_response.py">StateRetrieveResponse</a></code>
-- <code title="get /_matrix/client/v3/rooms/{roomId}/state">client.matrix.rooms.state.<a href="./src/beeper_desktop_api/resources/matrix/rooms/state.py">list</a>(room_id) -> <a href="./src/beeper_desktop_api/types/matrix/rooms/state_list_response.py">StateListResponse</a></code>
-
-### Events
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.rooms import EventRetrieveResponse
-```
-
-Methods:
-
-- <code title="get /_matrix/client/v3/rooms/{roomId}/event/{eventId}">client.matrix.rooms.events.<a href="./src/beeper_desktop_api/resources/matrix/rooms/events.py">retrieve</a>(event_id, \*, room_id) -> <a href="./src/beeper_desktop_api/types/matrix/rooms/event_retrieve_response.py">EventRetrieveResponse</a></code>
-
-## Bridges
-
-### Auth
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.bridges import (
-    AuthListFlowsResponse,
-    AuthListLoginsResponse,
-    AuthStartLoginResponse,
-    AuthSubmitCookiesResponse,
-    AuthSubmitUserInputResponse,
-    AuthWaitForStepResponse,
-    AuthWhoamiResponse,
-)
-```
-
-Methods:
-
-- <code title="get /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/login/flows">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">list_flows</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_list_flows_response.py">AuthListFlowsResponse</a></code>
-- <code title="get /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/logins">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">list_logins</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_list_logins_response.py">AuthListLoginsResponse</a></code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/logout/{loginID}">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">logout</a>(login_id, \*, bridge_id) -> object</code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/login/start/{flowID}">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">start_login</a>(flow_id, \*, bridge_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/auth_start_login_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_start_login_response.py">AuthStartLoginResponse</a></code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/login/step/{loginProcessID}/{stepID}/cookies">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">submit_cookies</a>(step_id, \*, bridge_id, login_process_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/auth_submit_cookies_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_submit_cookies_response.py">AuthSubmitCookiesResponse</a></code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/login/step/{loginProcessID}/{stepID}/user_input">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">submit_user_input</a>(step_id, \*, bridge_id, login_process_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/auth_submit_user_input_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_submit_user_input_response.py">AuthSubmitUserInputResponse</a></code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/login/step/{loginProcessID}/{stepID}/display_and_wait">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">wait_for_step</a>(step_id, \*, bridge_id, login_process_id) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_wait_for_step_response.py">AuthWaitForStepResponse</a></code>
-- <code title="get /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/whoami">client.matrix.bridges.auth.<a href="./src/beeper_desktop_api/resources/matrix/bridges/auth.py">whoami</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/auth_whoami_response.py">AuthWhoamiResponse</a></code>
-
-### Contacts
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.bridges import ContactListResponse
-```
-
-Methods:
-
-- <code title="get /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/contacts">client.matrix.bridges.contacts.<a href="./src/beeper_desktop_api/resources/matrix/bridges/contacts.py">list</a>(bridge_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/contact_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/contact_list_response.py">ContactListResponse</a></code>
-
-### Users
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.bridges import UserResolveResponse, UserSearchResponse
-```
-
-Methods:
-
-- <code title="get /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/resolve_identifier/{identifier}">client.matrix.bridges.users.<a href="./src/beeper_desktop_api/resources/matrix/bridges/users.py">resolve</a>(identifier, \*, bridge_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/user_resolve_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/user_resolve_response.py">UserResolveResponse</a></code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/search_users">client.matrix.bridges.users.<a href="./src/beeper_desktop_api/resources/matrix/bridges/users.py">search</a>(bridge_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/user_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/user_search_response.py">UserSearchResponse</a></code>
-
-### Rooms
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.bridges import RoomCreateDmResponse, RoomCreateGroupResponse
-```
-
-Methods:
-
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/create_dm/{identifier}">client.matrix.bridges.rooms.<a href="./src/beeper_desktop_api/resources/matrix/bridges/rooms.py">create_dm</a>(identifier, \*, bridge_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/room_create_dm_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/room_create_dm_response.py">RoomCreateDmResponse</a></code>
-- <code title="post /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/create_group/{groupType}">client.matrix.bridges.rooms.<a href="./src/beeper_desktop_api/resources/matrix/bridges/rooms.py">create_group</a>(group_type, \*, bridge_id, \*\*<a href="src/beeper_desktop_api/types/matrix/bridges/room_create_group_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/room_create_group_response.py">RoomCreateGroupResponse</a></code>
-
-### Capabilities
-
-Types:
-
-```python
-from beeper_desktop_api.types.matrix.bridges import CapabilityRetrieveResponse
-```
-
-Methods:
-
-- <code title="get /_matrix/client/unstable/com.beeper.bridge/{bridgeID}/_matrix/provision/v3/capabilities">client.matrix.bridges.capabilities.<a href="./src/beeper_desktop_api/resources/matrix/bridges/capabilities.py">retrieve</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/matrix/bridges/capability_retrieve_response.py">CapabilityRetrieveResponse</a></code>

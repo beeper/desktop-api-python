@@ -7,10 +7,20 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["AppStateSnapshot", "E2ee", "E2eeSecrets", "Matrix", "Verification", "VerificationError", "VerificationSas"]
+__all__ = [
+    "AppStateSnapshot",
+    "E2EE",
+    "E2EESecrets",
+    "Matrix",
+    "Verification",
+    "VerificationError",
+    "VerificationOtherDevice",
+    "VerificationQr",
+    "VerificationSAS",
+]
 
 
-class E2eeSecrets(BaseModel):
+class E2EESecrets(BaseModel):
     """Encrypted messaging keys available on this device."""
 
     master_key: bool = FieldInfo(alias="masterKey")
@@ -19,7 +29,7 @@ class E2eeSecrets(BaseModel):
     megolm_backup_key: bool = FieldInfo(alias="megolmBackupKey")
     """Whether the encrypted message backup key is available."""
 
-    recovery_code: bool = FieldInfo(alias="recoveryCode")
+    recovery_key: bool = FieldInfo(alias="recoveryKey")
     """Whether a recovery key is available."""
 
     self_signing_key: bool = FieldInfo(alias="selfSigningKey")
@@ -29,7 +39,7 @@ class E2eeSecrets(BaseModel):
     """Whether the user trust key is available."""
 
 
-class E2ee(BaseModel):
+class E2EE(BaseModel):
     """Encrypted messaging setup status."""
 
     cross_signing: bool = FieldInfo(alias="crossSigning")
@@ -38,7 +48,7 @@ class E2ee(BaseModel):
     first_sync_done: bool = FieldInfo(alias="firstSyncDone")
     """Whether the first encrypted message sync is complete."""
 
-    has_backed_up_code: bool = FieldInfo(alias="hasBackedUpCode")
+    has_backed_up_recovery_key: bool = FieldInfo(alias="hasBackedUpRecoveryKey")
     """Whether the user confirmed that they saved their recovery key."""
 
     initialized: bool
@@ -47,7 +57,7 @@ class E2ee(BaseModel):
     key_backup: bool = FieldInfo(alias="keyBackup")
     """Whether encrypted message backup is available."""
 
-    secrets: E2eeSecrets
+    secrets: E2EESecrets
     """Encrypted messaging keys available on this device."""
 
     secret_storage: bool = FieldInfo(alias="secretStorage")
@@ -56,7 +66,7 @@ class E2ee(BaseModel):
     verified: bool
     """Whether this device is trusted for encrypted messages."""
 
-    recovery_code_generated_at: Optional[float] = FieldInfo(alias="recoveryCodeGeneratedAt", default=None)
+    recovery_key_generated_at: Optional[float] = FieldInfo(alias="recoveryKeyGeneratedAt", default=None)
     """Unix timestamp for when the recovery key was created."""
 
 
@@ -67,7 +77,7 @@ class Matrix(BaseModel):
     """Current device ID."""
 
     homeserver: str
-    """Beeper server URL for this account."""
+    """Beeper homeserver URL for this account."""
 
     user_id: str = FieldInfo(alias="userID")
     """Signed-in Beeper user ID."""
@@ -83,57 +93,74 @@ class VerificationError(BaseModel):
     """User-facing verification error message."""
 
 
-class VerificationSas(BaseModel):
-    """Emoji or number comparison data for verification."""
+class VerificationOtherDevice(BaseModel):
+    """Other device participating in verification."""
 
-    decimals: str
-    """Number sequence to compare on both devices."""
+    id: str
+    """Other device ID."""
+
+    name: Optional[str] = None
+    """Other device display name, if known."""
+
+
+class VerificationQr(BaseModel):
+    """QR verification data."""
+
+    data: str
+    """QR code payload to display for verification."""
+
+
+class VerificationSAS(BaseModel):
+    """Emoji or number comparison data for verification."""
 
     emojis: str
     """Emoji sequence to compare on both devices."""
 
+    decimals: Optional[str] = None
+    """Number sequence to compare on both devices."""
+
 
 class Verification(BaseModel):
-    """Trusted-device verification progress."""
+    """Trusted device verification progress."""
 
-    available_actions: List[
-        Literal["create", "qr.scan", "accept", "cancel", "qr.confirmScanned", "sas.start", "sas.confirm"]
-    ] = FieldInfo(alias="availableActions")
+    id: str
+    """Verification ID to pass in verification action paths."""
+
+    available_actions: List[Literal["accept", "cancel", "qr.confirmScanned", "sas.start", "sas.confirm"]] = FieldInfo(
+        alias="availableActions"
+    )
     """Verification actions that are valid for the current state."""
 
-    state: Literal["idle", "requested", "ready", "sas_ready", "qr_scanned", "done", "cancelled", "error"]
+    direction: Literal["incoming", "outgoing"]
+    """Whether this device started or received the verification."""
+
+    methods: List[Literal["qr", "sas"]]
+    """Verification methods supported for this transaction."""
+
+    purpose: Literal["login", "device"]
+    """Why this verification exists."""
+
+    state: Literal["requested", "ready", "sas_ready", "qr_scanned", "done", "cancelled", "error"]
     """Current trusted-device verification state."""
 
     error: Optional[VerificationError] = None
     """Verification error details, if verification stopped."""
 
-    from_: Optional[str] = FieldInfo(alias="from", default=None)
-    """User ID that started verification."""
-
-    from_device: Optional[str] = FieldInfo(alias="fromDevice", default=None)
-    """Device that started verification."""
-
-    other_device: Optional[str] = FieldInfo(alias="otherDevice", default=None)
+    other_device: Optional[VerificationOtherDevice] = FieldInfo(alias="otherDevice", default=None)
     """Other device participating in verification."""
 
-    qr_data: Optional[str] = FieldInfo(alias="qrData", default=None)
-    """QR code payload to display for verification."""
+    other_user_id: Optional[str] = FieldInfo(alias="otherUserID", default=None)
+    """Other Beeper user participating in verification."""
 
-    sas: Optional[VerificationSas] = None
+    qr: Optional[VerificationQr] = None
+    """QR verification data."""
+
+    sas: Optional[VerificationSAS] = None
     """Emoji or number comparison data for verification."""
-
-    supports_sas: Optional[bool] = FieldInfo(alias="supportsSAS", default=None)
-    """Whether emoji comparison is available."""
-
-    supports_scan_qr_code: Optional[bool] = FieldInfo(alias="supportsScanQRCode", default=None)
-    """Whether QR code verification is available."""
-
-    verification_id: Optional[str] = FieldInfo(alias="verificationID", default=None)
-    """Verification ID to pass in verification action paths."""
 
 
 class AppStateSnapshot(BaseModel):
-    e2ee: E2ee
+    e2ee: E2EE
     """Encrypted messaging setup status."""
 
     state: Literal[
@@ -145,10 +172,13 @@ class AppStateSnapshot(BaseModel):
         "needs-first-sync",
         "ready",
     ]
-    """Current onboarding state for Beeper Desktop."""
+    """
+    Current sign-in and encrypted messaging setup state for Beeper Desktop or Beeper
+    Server.
+    """
 
     matrix: Optional[Matrix] = None
     """Signed-in account details. Omitted until sign-in is complete."""
 
     verification: Optional[Verification] = None
-    """Trusted-device verification progress."""
+    """Trusted device verification progress."""

@@ -64,7 +64,7 @@ class Platform(BaseModel):
 
 class Server(BaseModel):
     base_url: str
-    """Base URL of the Beeper Desktop API server"""
+    """Base URL of the Beeper Client API server"""
 
     hostname: str
     """Listening host"""

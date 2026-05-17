@@ -33,14 +33,14 @@ class Link(BaseModel):
     favicon: Optional[str] = None
     """Favicon URL if available.
 
-    May be temporary or local-only to this device; download promptly if durable
+    May be temporary or available only on this device; download promptly if durable
     access is needed.
     """
 
     img: Optional[str] = None
     """Preview image URL if available.
 
-    May be temporary or local-only to this device; download promptly if durable
+    May be temporary or available only on this device; download promptly if durable
     access is needed.
     """
 
@@ -67,7 +67,10 @@ class SendStatus(BaseModel):
     """User IDs the message was delivered to, when reported by the network."""
 
     internal_error: Optional[str] = FieldInfo(alias="internalError", default=None)
-    """Internal bridge error detail. Intended for diagnostics, not end-user display."""
+    """Diagnostic error detail from the messaging network adapter.
+
+    Do not show directly to users.
+    """
 
     message: Optional[str] = None
     """Human-readable send status or failure message."""
@@ -86,14 +89,14 @@ class Message(BaseModel):
     chat_id: str = FieldInfo(alias="chatID")
     """Chat ID.
 
-    Input routes also accept the local chat ID from this Beeper Desktop installation
-    when available.
+    Input routes also accept the local chat ID from this installation when
+    available.
     """
 
     sender_id: str = FieldInfo(alias="senderID")
-    """
-    Matrix-style fully-qualified sender user ID, usually including a bridge prefix
-    and homeserver.
+    """Fully qualified sender user ID.
+
+    Network-backed IDs usually include the network prefix and homeserver.
     """
 
     sort_key: str = FieldInfo(alias="sortKey")
@@ -139,15 +142,13 @@ class Message(BaseModel):
     """Read receipt state for this message, when available."""
 
     sender_name: Optional[str] = FieldInfo(alias="senderName", default=None)
-    """
-    Resolved sender display name (impersonator/full name/username/participant name).
-    """
+    """Resolved sender display name."""
 
     send_status: Optional[SendStatus] = FieldInfo(alias="sendStatus", default=None)
     """Message send status for this message, when reported by the bridge."""
 
     text: Optional[str] = None
-    """Matrix HTML body if present."""
+    """Rich-text message body if present."""
 
     type: Optional[
         Literal["TEXT", "NOTICE", "IMAGE", "VIDEO", "VOICE", "AUDIO", "FILE", "STICKER", "LOCATION", "REACTION"]

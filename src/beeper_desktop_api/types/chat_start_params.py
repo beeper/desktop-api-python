@@ -14,7 +14,7 @@ class ChatStartParams(TypedDict, total=False):
     """Account to create or start the chat on."""
 
     user: Required[User]
-    """Merged user-like contact payload used to resolve the best identifier."""
+    """Contact-like user payload used to resolve the best identifier."""
 
     allow_invite: Annotated[bool, PropertyInfo(alias="allowInvite")]
     """Whether invite-based DM creation is allowed when required by the platform."""
@@ -24,7 +24,7 @@ class ChatStartParams(TypedDict, total=False):
 
 
 class User(TypedDict, total=False):
-    """Merged user-like contact payload used to resolve the best identifier."""
+    """Contact-like user payload used to resolve the best identifier."""
 
     id: str
     """Known user ID when available."""

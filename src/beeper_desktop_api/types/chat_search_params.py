@@ -14,10 +14,7 @@ __all__ = ["ChatSearchParams"]
 
 class ChatSearchParams(TypedDict, total=False):
     account_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="accountIDs")]
-    """
-    Provide an array of account IDs to filter chats from specific messaging accounts
-    only
-    """
+    """Limit results to specific chat accounts."""
 
     cursor: str
     """Opaque pagination cursor; do not inspect. Use together with 'direction'."""
@@ -41,25 +38,19 @@ class ChatSearchParams(TypedDict, total=False):
     """
 
     last_activity_after: Annotated[Union[str, datetime], PropertyInfo(alias="lastActivityAfter", format="iso8601")]
-    """
-    Provide an ISO datetime string to only retrieve chats with last activity after
-    this time
-    """
+    """Only include chats with last activity after this ISO 8601 datetime."""
 
     last_activity_before: Annotated[Union[str, datetime], PropertyInfo(alias="lastActivityBefore", format="iso8601")]
-    """
-    Provide an ISO datetime string to only retrieve chats with last activity before
-    this time
-    """
+    """Only include chats with last activity before this ISO 8601 datetime."""
 
     limit: int
     """Set the maximum number of chats to retrieve. Valid range: 1-200, default is 50"""
 
     query: str
-    """Literal token search (non-semantic).
+    """Literal chat search.
 
-    Use single words users type (e.g., "dinner"). When multiple words provided, ALL
-    must match. Case-insensitive.
+    Use words the user typed, such as "dinner". When multiple words are provided,
+    all must match. Case-insensitive.
     """
 
     scope: Literal["titles", "participants"]

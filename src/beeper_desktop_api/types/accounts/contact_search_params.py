@@ -9,4 +9,4 @@ __all__ = ["ContactSearchParams"]
 
 class ContactSearchParams(TypedDict, total=False):
     query: Required[str]
-    """Text to search users by. Network-specific behavior."""
+    """Text to search contacts by. Matching behavior depends on the network."""

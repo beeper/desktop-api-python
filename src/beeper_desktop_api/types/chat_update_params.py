@@ -95,8 +95,8 @@ class Draft(TypedDict, total=False):
     text: Required[str]
     """Draft text.
 
-    Plain text and Markdown are converted to Matrix HTML with the same rules used by
-    send and edit.
+    Plain text and Markdown are converted to Beeper rich text with the same rules
+    used by send and edit.
     """
 
     attachments: Dict[str, DraftAttachments]

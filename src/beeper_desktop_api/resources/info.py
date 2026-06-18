@@ -56,7 +56,7 @@ class InfoResource(SyncAPIResource):
     ) -> InfoRetrieveResponse:
         """
         Returns app, platform, server, endpoint discovery, OAuth, and WebSocket metadata
-        for this Beeper Desktop instance.
+        for this Beeper Client API server.
         """
         return self._get(
             "/v1/info",
@@ -108,7 +108,7 @@ class AsyncInfoResource(AsyncAPIResource):
     ) -> InfoRetrieveResponse:
         """
         Returns app, platform, server, endpoint discovery, OAuth, and WebSocket metadata
-        for this Beeper Desktop instance.
+        for this Beeper Client API server.
         """
         return await self._get(
             "/v1/info",

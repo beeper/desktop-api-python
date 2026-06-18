@@ -1,5 +1,21 @@
 # Changelog
 
+## 5.1.0 (2026-06-18)
+
+Full Changelog: [v5.0.0...v5.1.0](https://github.com/beeper/desktop-api-python/compare/v5.0.0...v5.1.0)
+
+### Features
+
+* **api:** add app resource with login and verification endpoints ([9868f77](https://github.com/beeper/desktop-api-python/commit/9868f77423a998bfc443bc60fc00d6c7d0e58f53))
+* **api:** api update ([9c92ab4](https://github.com/beeper/desktop-api-python/commit/9c92ab490194b4640b4c152e197df698b87d465b))
+* **internal/types:** support eagerly validating pydantic iterators ([1850c8a](https://github.com/beeper/desktop-api-python/commit/1850c8a7b7d3e45407524a6ebffe902d4a3f8a71))
+
+
+### Bug Fixes
+
+* **auth:** prioritize first auth header ([4500314](https://github.com/beeper/desktop-api-python/commit/4500314d39d676c21e20749e1344e0100a5d2b26))
+* **client:** add missing f-string prefix in file type error message ([78424e2](https://github.com/beeper/desktop-api-python/commit/78424e24ad4e1f336f843222ff19bf70a50f073f))
+
 ## 5.0.0 (2026-05-06)
 
 Full Changelog: [v4.3.0...v5.0.0](https://github.com/beeper/desktop-api-python/compare/v4.3.0...v5.0.0)

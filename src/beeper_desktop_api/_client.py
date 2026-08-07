@@ -52,11 +52,13 @@ from .types.focus_response import FocusResponse
 from .types.search_response import SearchResponse
 
 if TYPE_CHECKING:
-    from .resources import info, chats, assets, accounts, messages
+    from .resources import app, info, chats, assets, bridges, accounts, messages
     from .resources.info import InfoResource, AsyncInfoResource
     from .resources.assets import AssetsResource, AsyncAssetsResource
+    from .resources.app.app import AppResource, AsyncAppResource
     from .resources.messages import MessagesResource, AsyncMessagesResource
     from .resources.chats.chats import ChatsResource, AsyncChatsResource
+    from .resources.bridges.bridges import BridgesResource, AsyncBridgesResource
     from .resources.accounts.accounts import AccountsResource, AsyncAccountsResource
 
 __all__ = [
@@ -143,6 +145,13 @@ class BeeperDesktop(SyncAPIClient):
         return AccountsResource(self)
 
     @cached_property
+    def bridges(self) -> BridgesResource:
+        """Manage bridge-backed account types, connections, and login sessions"""
+        from .resources.bridges import BridgesResource
+
+        return BridgesResource(self)
+
+    @cached_property
     def chats(self) -> ChatsResource:
         """Manage chats"""
         from .resources.chats import ChatsResource
@@ -174,6 +183,13 @@ class BeeperDesktop(SyncAPIClient):
         return InfoResource(self)
 
     @cached_property
+    def app(self) -> AppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResource
+
+        return AppResource(self)
+
+    @cached_property
     def with_raw_response(self) -> BeeperDesktopWithRawResponse:
         return BeeperDesktopWithRawResponse(self)
 
@@ -188,9 +204,11 @@ class BeeperDesktop(SyncAPIClient):
 
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
-        }
+        headers: dict[str, str] = {}
+        if security.get("bearer_auth", False):
+            for key, value in self._bearer_auth.items():
+                headers.setdefault(key, value)
+        return headers
 
     @property
     def _bearer_auth(self) -> dict[str, str]:
@@ -272,14 +290,14 @@ class BeeperDesktop(SyncAPIClient):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FocusResponse:
         """
-        Focus Beeper Desktop and optionally navigate to a specific chat, message, or
-        pre-fill plain text and an image path.
+        Focus Beeper Desktop and optionally open a specific chat, jump to a message, or
+        pre-fill text and an image.
 
         Args:
           chat_id: Optional Beeper chat ID (or local chat ID) to focus after opening the app. If
               omitted, only opens/focuses the app.
 
-          draft_attachment_path: Optional image path to populate in the message input field.
+          draft_attachment_path: Optional local image path to populate in the message input field.
 
           draft_text: Optional plain text to populate in the message input field.
 
@@ -322,12 +340,12 @@ class BeeperDesktop(SyncAPIClient):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SearchResponse:
         """
-        Returns matching chats, participant name matches in groups, and the first page
-        of messages in one call. Paginate messages via search-messages. Paginate chats
-        via search-chats.
+        Return matching chats, participant matches in group chats, and the first page of
+        message results in one call. Use the dedicated chat and message search endpoints
+        for pagination.
 
         Args:
-          query: User-typed search text. Literal word matching (non-semantic).
+          query: User-typed search text. Uses literal word matching.
 
           extra_headers: Send extra headers
 
@@ -455,6 +473,13 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         return AsyncAccountsResource(self)
 
     @cached_property
+    def bridges(self) -> AsyncBridgesResource:
+        """Manage bridge-backed account types, connections, and login sessions"""
+        from .resources.bridges import AsyncBridgesResource
+
+        return AsyncBridgesResource(self)
+
+    @cached_property
     def chats(self) -> AsyncChatsResource:
         """Manage chats"""
         from .resources.chats import AsyncChatsResource
@@ -486,6 +511,13 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         return AsyncInfoResource(self)
 
     @cached_property
+    def app(self) -> AsyncAppResource:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResource
+
+        return AsyncAppResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBeeperDesktopWithRawResponse:
         return AsyncBeeperDesktopWithRawResponse(self)
 
@@ -500,9 +532,11 @@ class AsyncBeeperDesktop(AsyncAPIClient):
 
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
-        }
+        headers: dict[str, str] = {}
+        if security.get("bearer_auth", False):
+            for key, value in self._bearer_auth.items():
+                headers.setdefault(key, value)
+        return headers
 
     @property
     def _bearer_auth(self) -> dict[str, str]:
@@ -584,14 +618,14 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FocusResponse:
         """
-        Focus Beeper Desktop and optionally navigate to a specific chat, message, or
-        pre-fill plain text and an image path.
+        Focus Beeper Desktop and optionally open a specific chat, jump to a message, or
+        pre-fill text and an image.
 
         Args:
           chat_id: Optional Beeper chat ID (or local chat ID) to focus after opening the app. If
               omitted, only opens/focuses the app.
 
-          draft_attachment_path: Optional image path to populate in the message input field.
+          draft_attachment_path: Optional local image path to populate in the message input field.
 
           draft_text: Optional plain text to populate in the message input field.
 
@@ -634,12 +668,12 @@ class AsyncBeeperDesktop(AsyncAPIClient):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SearchResponse:
         """
-        Returns matching chats, participant name matches in groups, and the first page
-        of messages in one call. Paginate messages via search-messages. Paginate chats
-        via search-chats.
+        Return matching chats, participant matches in group chats, and the first page of
+        message results in one call. Use the dedicated chat and message search endpoints
+        for pagination.
 
         Args:
-          query: User-typed search text. Literal word matching (non-semantic).
+          query: User-typed search text. Uses literal word matching.
 
           extra_headers: Send extra headers
 
@@ -716,6 +750,13 @@ class BeeperDesktopWithRawResponse:
         return AccountsResourceWithRawResponse(self._client.accounts)
 
     @cached_property
+    def bridges(self) -> bridges.BridgesResourceWithRawResponse:
+        """Manage bridge-backed account types, connections, and login sessions"""
+        from .resources.bridges import BridgesResourceWithRawResponse
+
+        return BridgesResourceWithRawResponse(self._client.bridges)
+
+    @cached_property
     def chats(self) -> chats.ChatsResourceWithRawResponse:
         """Manage chats"""
         from .resources.chats import ChatsResourceWithRawResponse
@@ -746,6 +787,13 @@ class BeeperDesktopWithRawResponse:
 
         return InfoResourceWithRawResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithRawResponse
+
+        return AppResourceWithRawResponse(self._client.app)
+
 
 class AsyncBeeperDesktopWithRawResponse:
     _client: AsyncBeeperDesktop
@@ -766,6 +814,13 @@ class AsyncBeeperDesktopWithRawResponse:
         from .resources.accounts import AsyncAccountsResourceWithRawResponse
 
         return AsyncAccountsResourceWithRawResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.AsyncBridgesResourceWithRawResponse:
+        """Manage bridge-backed account types, connections, and login sessions"""
+        from .resources.bridges import AsyncBridgesResourceWithRawResponse
+
+        return AsyncBridgesResourceWithRawResponse(self._client.bridges)
 
     @cached_property
     def chats(self) -> chats.AsyncChatsResourceWithRawResponse:
@@ -798,6 +853,13 @@ class AsyncBeeperDesktopWithRawResponse:
 
         return AsyncInfoResourceWithRawResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithRawResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithRawResponse
+
+        return AsyncAppResourceWithRawResponse(self._client.app)
+
 
 class BeeperDesktopWithStreamedResponse:
     _client: BeeperDesktop
@@ -818,6 +880,13 @@ class BeeperDesktopWithStreamedResponse:
         from .resources.accounts import AccountsResourceWithStreamingResponse
 
         return AccountsResourceWithStreamingResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.BridgesResourceWithStreamingResponse:
+        """Manage bridge-backed account types, connections, and login sessions"""
+        from .resources.bridges import BridgesResourceWithStreamingResponse
+
+        return BridgesResourceWithStreamingResponse(self._client.bridges)
 
     @cached_property
     def chats(self) -> chats.ChatsResourceWithStreamingResponse:
@@ -850,6 +919,13 @@ class BeeperDesktopWithStreamedResponse:
 
         return InfoResourceWithStreamingResponse(self._client.info)
 
+    @cached_property
+    def app(self) -> app.AppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AppResourceWithStreamingResponse
+
+        return AppResourceWithStreamingResponse(self._client.app)
+
 
 class AsyncBeeperDesktopWithStreamedResponse:
     _client: AsyncBeeperDesktop
@@ -870,6 +946,13 @@ class AsyncBeeperDesktopWithStreamedResponse:
         from .resources.accounts import AsyncAccountsResourceWithStreamingResponse
 
         return AsyncAccountsResourceWithStreamingResponse(self._client.accounts)
+
+    @cached_property
+    def bridges(self) -> bridges.AsyncBridgesResourceWithStreamingResponse:
+        """Manage bridge-backed account types, connections, and login sessions"""
+        from .resources.bridges import AsyncBridgesResourceWithStreamingResponse
+
+        return AsyncBridgesResourceWithStreamingResponse(self._client.bridges)
 
     @cached_property
     def chats(self) -> chats.AsyncChatsResourceWithStreamingResponse:
@@ -901,6 +984,13 @@ class AsyncBeeperDesktopWithStreamedResponse:
         from .resources.info import AsyncInfoResourceWithStreamingResponse
 
         return AsyncInfoResourceWithStreamingResponse(self._client.info)
+
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithStreamingResponse:
+        """Manage Beeper app login and encrypted messaging setup"""
+        from .resources.app import AsyncAppResourceWithStreamingResponse
+
+        return AsyncAppResourceWithStreamingResponse(self._client.app)
 
 
 Client = BeeperDesktop

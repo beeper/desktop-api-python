@@ -3,12 +3,26 @@
 from __future__ import annotations
 
 from .chat import Chat as Chat
-from .shared import User as User, Error as Error, Message as Message, Reaction as Reaction, Attachment as Attachment
+from .bridge import Bridge as Bridge
+from .shared import (
+    User as User,
+    Error as Error,
+    Message as Message,
+    APIError as APIError,
+    Reaction as Reaction,
+    Attachment as Attachment,
+    AppStateSnapshot as AppStateSnapshot,
+)
 from .account import Account as Account
+from .login_flow import LoginFlow as LoginFlow
+from .cookie_field import CookieField as CookieField
+from .login_session import LoginSession as LoginSession
+from .account_bridge import AccountBridge as AccountBridge
 from .focus_response import FocusResponse as FocusResponse
 from .search_response import SearchResponse as SearchResponse
 from .chat_list_params import ChatListParams as ChatListParams
 from .chat_start_params import ChatStartParams as ChatStartParams
+from .login_input_field import LoginInputField as LoginInputField
 from .asset_serve_params import AssetServeParams as AssetServeParams
 from .chat_create_params import ChatCreateParams as ChatCreateParams
 from .chat_list_response import ChatListResponse as ChatListResponse
@@ -20,6 +34,8 @@ from .chat_start_response import ChatStartResponse as ChatStartResponse
 from .client_focus_params import ClientFocusParams as ClientFocusParams
 from .message_list_params import MessageListParams as MessageListParams
 from .message_send_params import MessageSendParams as MessageSendParams
+from .app_session_response import AppSessionResponse as AppSessionResponse
+from .bridge_list_response import BridgeListResponse as BridgeListResponse
 from .chat_create_response import ChatCreateResponse as ChatCreateResponse
 from .chat_retrieve_params import ChatRetrieveParams as ChatRetrieveParams
 from .client_search_params import ClientSearchParams as ClientSearchParams
@@ -31,9 +47,16 @@ from .message_delete_params import MessageDeleteParams as MessageDeleteParams
 from .message_search_params import MessageSearchParams as MessageSearchParams
 from .message_send_response import MessageSendResponse as MessageSendResponse
 from .message_update_params import MessageUpdateParams as MessageUpdateParams
+from .group_field_capability import GroupFieldCapability as GroupFieldCapability
 from .info_retrieve_response import InfoRetrieveResponse as InfoRetrieveResponse
 from .asset_download_response import AssetDownloadResponse as AssetDownloadResponse
 from .chat_mark_unread_params import ChatMarkUnreadParams as ChatMarkUnreadParams
+from .group_type_capabilities import GroupTypeCapabilities as GroupTypeCapabilities
 from .message_update_response import MessageUpdateResponse as MessageUpdateResponse
+from .bridge_retrieve_response import BridgeRetrieveResponse as BridgeRetrieveResponse
+from .account_retrieve_response import AccountRetrieveResponse as AccountRetrieveResponse
+from .provisioning_capabilities import ProvisioningCapabilities as ProvisioningCapabilities
 from .asset_upload_base64_params import AssetUploadBase64Params as AssetUploadBase64Params
 from .asset_upload_base64_response import AssetUploadBase64Response as AssetUploadBase64Response
+from .disappearing_timer_capability import DisappearingTimerCapability as DisappearingTimerCapability
+from .resolve_identifier_capabilities import ResolveIdentifierCapabilities as ResolveIdentifierCapabilities

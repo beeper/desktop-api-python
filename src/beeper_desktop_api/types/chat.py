@@ -38,7 +38,7 @@ class ParticipantsItem(User):
     """True if this participant has admin privileges in the chat."""
 
     is_network_bot: Optional[bool] = FieldInfo(alias="isNetworkBot", default=None)
-    """True if this participant represents a network or bridge bot."""
+    """True if this participant represents an automated network account."""
 
     is_pending: Optional[bool] = FieldInfo(alias="isPending", default=None)
     """True if this participant has been invited but has not joined yet."""
@@ -370,7 +370,7 @@ class Draft(BaseModel):
     """Current draft object for this chat, or null when no draft is set."""
 
     text: str
-    """Matrix HTML draft body."""
+    """Rich-text draft body as returned by Beeper."""
 
     attachments: Optional[Dict[str, DraftAttachments]] = None
     """Draft attachments keyed by attachment ID."""
@@ -455,7 +455,7 @@ class Chat(BaseModel):
     """Last read message sortKey."""
 
     local_chat_id: Optional[str] = FieldInfo(alias="localChatID", default=None)
-    """Local chat ID specific to this Beeper Desktop installation."""
+    """Local chat ID specific to this installation."""
 
     message_expiry_seconds: Optional[int] = FieldInfo(alias="messageExpirySeconds", default=None)
     """Disappearing-message timer in seconds when available."""

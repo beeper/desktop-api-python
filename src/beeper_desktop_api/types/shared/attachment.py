@@ -36,7 +36,7 @@ class Attachment(BaseModel):
     """Attachment type."""
 
     id: Optional[str] = None
-    """Attachment identifier (typically an mxc:// URL).
+    """Attachment identifier, typically an mxc:// URL.
 
     Use the download file endpoint to get a local file path.
     """
@@ -65,7 +65,7 @@ class Attachment(BaseModel):
     poster_img: Optional[str] = FieldInfo(alias="posterImg", default=None)
     """Preview image URL for video attachments (poster frame).
 
-    May be temporary or local-only to this device; download promptly if durable
+    May be temporary or available only on this device; download promptly if durable
     access is needed.
     """
 
@@ -75,7 +75,7 @@ class Attachment(BaseModel):
     src_url: Optional[str] = FieldInfo(alias="srcURL", default=None)
     """Public URL or local file path to fetch the file.
 
-    May be temporary or local-only to this device; download promptly if durable
+    May be temporary or available only on this device; download promptly if durable
     access is needed.
     """
 

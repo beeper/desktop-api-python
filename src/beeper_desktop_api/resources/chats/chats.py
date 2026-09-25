@@ -157,11 +157,11 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Chat:
         """
-        Retrieve chat details including metadata, participants, and latest message
+        Retrieve chat details, including metadata, participants, and the latest message.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0-500.
               Defaults to 100. List and search endpoints return up to 20 participants per
@@ -213,13 +213,13 @@ class ChatsResource(SyncAPIResource):
     ) -> Chat:
         """Update supported chat fields.
 
-        Non-empty draft objects are accepted only when the
+        Non-empty drafts are accepted only when the
         current draft is empty. Send draft=null to clear the draft before setting new
         draft text or attachments.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           description: Group chat description/topic. Support depends on the chat account and chat
               permissions.
@@ -281,6 +281,7 @@ class ChatsResource(SyncAPIResource):
         account_ids: SequenceNotStr[str] | Omit = omit,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -300,6 +301,8 @@ class ChatsResource(SyncAPIResource):
 
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
+
+          limit: Set the maximum number of chats to retrieve. Valid range: 1-200, default is 25
 
           extra_headers: Send extra headers
 
@@ -322,6 +325,7 @@ class ChatsResource(SyncAPIResource):
                         "account_ids": account_ids,
                         "cursor": cursor,
                         "direction": direction,
+                        "limit": limit,
                     },
                     chat_list_params.ChatListParams,
                 ),
@@ -343,12 +347,12 @@ class ChatsResource(SyncAPIResource):
     ) -> None:
         """Archive or unarchive a chat.
 
-        Set archived=true to move to archive,
-        archived=false to move back to inbox
+        Set archived=true to move it to Archive, or
+        archived=false to move it back to the inbox.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           archived: True to archive, false to unarchive
 
@@ -388,8 +392,8 @@ class ChatsResource(SyncAPIResource):
         Mark a chat as read, optionally through a specific message ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Optional message ID to mark read through.
 
@@ -428,8 +432,8 @@ class ChatsResource(SyncAPIResource):
         Mark a chat as unread, optionally from a specific message ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Optional message ID to mark unread from.
 
@@ -464,12 +468,13 @@ class ChatsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Chat:
         """
-        Force a delivery notification when supported by the underlying network.
-        Currently intended for iMessage on macOS; unsupported networks return an error.
+        Send a notification despite the recipient focus state when the network supports
+        it. Currently intended for iMessage on macOS; unsupported networks return an
+        error.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           extra_headers: Send extra headers
 
@@ -483,6 +488,7 @@ class ChatsResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return self._post(
             path_template("/v1/chats/{chat_id}/notify-anyway", chat_id=chat_id),
+            body={},
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -497,6 +503,7 @@ class ChatsResource(SyncAPIResource):
         direction: Literal["after", "before"] | Omit = omit,
         inbox: Literal["primary", "low-priority", "archive"] | Omit = omit,
         include_muted: Optional[bool] | Omit = omit,
+        label_id: str | Omit = omit,
         last_activity_after: Union[str, datetime] | Omit = omit,
         last_activity_before: Union[str, datetime] | Omit = omit,
         limit: int | Omit = omit,
@@ -515,30 +522,30 @@ class ChatsResource(SyncAPIResource):
         Search chats by title, network, or participant names.
 
         Args:
-          account_ids: Provide an array of account IDs to filter chats from specific messaging accounts
-              only
+          account_ids: Limit results to specific chat accounts.
 
           cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
 
-          inbox: Filter by inbox type: "primary" (non-archived, non-low-priority),
-              "low-priority", or "archive". If not specified, shows all chats.
+          inbox: Filter by inbox type: "primary" (the chats the Beeper inbox shows: non-archived,
+              non-low-priority, honoring inbox visibility rules and labels), "low-priority",
+              or "archive". If not specified, shows all chats.
 
           include_muted: Include chats marked as Muted by the user, which are usually less important.
               Default: true. Set to false if the user wants a more refined search.
 
-          last_activity_after: Provide an ISO datetime string to only retrieve chats with last activity after
-              this time
+          label_id: Only include chats that carry this label. Label IDs come from GET /v1/labels.
 
-          last_activity_before: Provide an ISO datetime string to only retrieve chats with last activity before
-              this time
+          last_activity_after: Only include chats with last activity after this ISO 8601 datetime.
+
+          last_activity_before: Only include chats with last activity before this ISO 8601 datetime.
 
           limit: Set the maximum number of chats to retrieve. Valid range: 1-200, default is 50
 
-          query: Literal token search (non-semantic). Use single words users type (e.g.,
-              "dinner"). When multiple words provided, ALL must match. Case-insensitive.
+          query: Literal chat search. Use words the user typed, such as "dinner". When multiple
+              words are provided, all must match. Case-insensitive.
 
           scope: Search scope: 'titles' matches title + network; 'participants' matches
               participant names.
@@ -571,6 +578,7 @@ class ChatsResource(SyncAPIResource):
                         "direction": direction,
                         "inbox": inbox,
                         "include_muted": include_muted,
+                        "label_id": label_id,
                         "last_activity_after": last_activity_after,
                         "last_activity_before": last_activity_before,
                         "limit": limit,
@@ -602,12 +610,12 @@ class ChatsResource(SyncAPIResource):
         """Resolve a user/contact and open a direct chat.
 
         Reuses and returns an existing
-        direct chat when one is found. Available in Beeper Desktop v4.2.808+.
+        direct chat when one is found. Available in Beeper v4.2.808+.
 
         Args:
           account_id: Account to create or start the chat on.
 
-          user: Merged user-like contact payload used to resolve the best identifier.
+          user: Contact-like user payload used to resolve the best identifier.
 
           allow_invite: Whether invite-based DM creation is allowed when required by the platform.
 
@@ -741,11 +749,11 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Chat:
         """
-        Retrieve chat details including metadata, participants, and latest message
+        Retrieve chat details, including metadata, participants, and the latest message.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           max_participant_count: Maximum number of participants to return. Use -1 for all; otherwise 0-500.
               Defaults to 100. List and search endpoints return up to 20 participants per
@@ -797,13 +805,13 @@ class AsyncChatsResource(AsyncAPIResource):
     ) -> Chat:
         """Update supported chat fields.
 
-        Non-empty draft objects are accepted only when the
+        Non-empty drafts are accepted only when the
         current draft is empty. Send draft=null to clear the draft before setting new
         draft text or attachments.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           description: Group chat description/topic. Support depends on the chat account and chat
               permissions.
@@ -865,6 +873,7 @@ class AsyncChatsResource(AsyncAPIResource):
         account_ids: SequenceNotStr[str] | Omit = omit,
         cursor: str | Omit = omit,
         direction: Literal["after", "before"] | Omit = omit,
+        limit: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -884,6 +893,8 @@ class AsyncChatsResource(AsyncAPIResource):
 
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
+
+          limit: Set the maximum number of chats to retrieve. Valid range: 1-200, default is 25
 
           extra_headers: Send extra headers
 
@@ -906,6 +917,7 @@ class AsyncChatsResource(AsyncAPIResource):
                         "account_ids": account_ids,
                         "cursor": cursor,
                         "direction": direction,
+                        "limit": limit,
                     },
                     chat_list_params.ChatListParams,
                 ),
@@ -927,12 +939,12 @@ class AsyncChatsResource(AsyncAPIResource):
     ) -> None:
         """Archive or unarchive a chat.
 
-        Set archived=true to move to archive,
-        archived=false to move back to inbox
+        Set archived=true to move it to Archive, or
+        archived=false to move it back to the inbox.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           archived: True to archive, false to unarchive
 
@@ -972,8 +984,8 @@ class AsyncChatsResource(AsyncAPIResource):
         Mark a chat as read, optionally through a specific message ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Optional message ID to mark read through.
 
@@ -1012,8 +1024,8 @@ class AsyncChatsResource(AsyncAPIResource):
         Mark a chat as unread, optionally from a specific message ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Optional message ID to mark unread from.
 
@@ -1048,12 +1060,13 @@ class AsyncChatsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Chat:
         """
-        Force a delivery notification when supported by the underlying network.
-        Currently intended for iMessage on macOS; unsupported networks return an error.
+        Send a notification despite the recipient focus state when the network supports
+        it. Currently intended for iMessage on macOS; unsupported networks return an
+        error.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           extra_headers: Send extra headers
 
@@ -1067,6 +1080,7 @@ class AsyncChatsResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `chat_id` but received {chat_id!r}")
         return await self._post(
             path_template("/v1/chats/{chat_id}/notify-anyway", chat_id=chat_id),
+            body={},
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -1081,6 +1095,7 @@ class AsyncChatsResource(AsyncAPIResource):
         direction: Literal["after", "before"] | Omit = omit,
         inbox: Literal["primary", "low-priority", "archive"] | Omit = omit,
         include_muted: Optional[bool] | Omit = omit,
+        label_id: str | Omit = omit,
         last_activity_after: Union[str, datetime] | Omit = omit,
         last_activity_before: Union[str, datetime] | Omit = omit,
         limit: int | Omit = omit,
@@ -1099,30 +1114,30 @@ class AsyncChatsResource(AsyncAPIResource):
         Search chats by title, network, or participant names.
 
         Args:
-          account_ids: Provide an array of account IDs to filter chats from specific messaging accounts
-              only
+          account_ids: Limit results to specific chat accounts.
 
           cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
           direction: Pagination direction used with 'cursor': 'before' fetches older results, 'after'
               fetches newer results. Defaults to 'before' when only 'cursor' is provided.
 
-          inbox: Filter by inbox type: "primary" (non-archived, non-low-priority),
-              "low-priority", or "archive". If not specified, shows all chats.
+          inbox: Filter by inbox type: "primary" (the chats the Beeper inbox shows: non-archived,
+              non-low-priority, honoring inbox visibility rules and labels), "low-priority",
+              or "archive". If not specified, shows all chats.
 
           include_muted: Include chats marked as Muted by the user, which are usually less important.
               Default: true. Set to false if the user wants a more refined search.
 
-          last_activity_after: Provide an ISO datetime string to only retrieve chats with last activity after
-              this time
+          label_id: Only include chats that carry this label. Label IDs come from GET /v1/labels.
 
-          last_activity_before: Provide an ISO datetime string to only retrieve chats with last activity before
-              this time
+          last_activity_after: Only include chats with last activity after this ISO 8601 datetime.
+
+          last_activity_before: Only include chats with last activity before this ISO 8601 datetime.
 
           limit: Set the maximum number of chats to retrieve. Valid range: 1-200, default is 50
 
-          query: Literal token search (non-semantic). Use single words users type (e.g.,
-              "dinner"). When multiple words provided, ALL must match. Case-insensitive.
+          query: Literal chat search. Use words the user typed, such as "dinner". When multiple
+              words are provided, all must match. Case-insensitive.
 
           scope: Search scope: 'titles' matches title + network; 'participants' matches
               participant names.
@@ -1155,6 +1170,7 @@ class AsyncChatsResource(AsyncAPIResource):
                         "direction": direction,
                         "inbox": inbox,
                         "include_muted": include_muted,
+                        "label_id": label_id,
                         "last_activity_after": last_activity_after,
                         "last_activity_before": last_activity_before,
                         "limit": limit,
@@ -1186,12 +1202,12 @@ class AsyncChatsResource(AsyncAPIResource):
         """Resolve a user/contact and open a direct chat.
 
         Reuses and returns an existing
-        direct chat when one is found. Available in Beeper Desktop v4.2.808+.
+        direct chat when one is found. Available in Beeper v4.2.808+.
 
         Args:
           account_id: Account to create or start the chat on.
 
-          user: Merged user-like contact payload used to resolve the best identifier.
+          user: Contact-like user payload used to resolve the best identifier.
 
           allow_invite: Whether invite-based DM creation is allowed when required by the platform.
 

@@ -17,7 +17,7 @@ class ClientFocusParams(TypedDict, total=False):
     """
 
     draft_attachment_path: Annotated[str, PropertyInfo(alias="draftAttachmentPath")]
-    """Optional image path to populate in the message input field."""
+    """Optional local image path to populate in the message input field."""
 
     draft_text: Annotated[str, PropertyInfo(alias="draftText")]
     """Optional plain text to populate in the message input field."""

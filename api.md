@@ -1,7 +1,22 @@
 # Shared Types
 
 ```python
-from beeper_desktop_api.types import Attachment, Error, Message, Reaction, User
+from beeper_desktop_api.types import (
+    APIError,
+    AppStateSnapshot,
+    Attachment,
+    AttachmentCapabilities,
+    ChatCapabilities,
+    ChatDraft,
+    ChatStateCapabilities,
+    DraftAttachment,
+    Error,
+    LinkPreview,
+    Message,
+    Reaction,
+    SendStatus,
+    User,
+)
 ```
 
 # BeeperDesktop
@@ -22,11 +37,17 @@ Methods:
 Types:
 
 ```python
-from beeper_desktop_api.types import Account, AccountListResponse
+from beeper_desktop_api.types import (
+    Account,
+    AccountBridge,
+    AccountRetrieveResponse,
+    AccountListResponse,
+)
 ```
 
 Methods:
 
+- <code title="get /v1/accounts/{accountID}">client.accounts.<a href="./src/beeper_desktop_api/resources/accounts/accounts.py">retrieve</a>(account_id) -> <a href="./src/beeper_desktop_api/types/account_retrieve_response.py">AccountRetrieveResponse</a></code>
 - <code title="get /v1/accounts">client.accounts.<a href="./src/beeper_desktop_api/resources/accounts/accounts.py">list</a>() -> <a href="./src/beeper_desktop_api/types/account_list_response.py">AccountListResponse</a></code>
 
 ## Contacts
@@ -41,6 +62,80 @@ Methods:
 
 - <code title="get /v1/accounts/{accountID}/contacts/list">client.accounts.contacts.<a href="./src/beeper_desktop_api/resources/accounts/contacts.py">list</a>(account_id, \*\*<a href="src/beeper_desktop_api/types/accounts/contact_list_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/shared/user.py">SyncCursorSearch[User]</a></code>
 - <code title="get /v1/accounts/{accountID}/contacts">client.accounts.contacts.<a href="./src/beeper_desktop_api/resources/accounts/contacts.py">search</a>(account_id, \*\*<a href="src/beeper_desktop_api/types/accounts/contact_search_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/accounts/contact_search_response.py">ContactSearchResponse</a></code>
+
+# Bridges
+
+Types:
+
+```python
+from beeper_desktop_api.types import (
+    Bridge,
+    BridgeLogin,
+    CookieField,
+    DisappearingTimerCapability,
+    GroupFieldCapability,
+    GroupTypeCapabilities,
+    LoginFlow,
+    LoginInputField,
+    LoginSession,
+    ProvisioningCapabilities,
+    ResolveIdentifierCapabilities,
+    BridgeRetrieveResponse,
+    BridgeListResponse,
+)
+```
+
+Methods:
+
+- <code title="get /v1/bridges/{bridgeID}">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges/bridges.py">retrieve</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/bridge_retrieve_response.py">BridgeRetrieveResponse</a></code>
+- <code title="get /v1/bridges">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges/bridges.py">list</a>() -> <a href="./src/beeper_desktop_api/types/bridge_list_response.py">BridgeListResponse</a></code>
+- <code title="get /v1/bridges/{bridgeID}/capabilities">client.bridges.<a href="./src/beeper_desktop_api/resources/bridges/bridges.py">retrieve_capabilities</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/provisioning_capabilities.py">ProvisioningCapabilities</a></code>
+
+## LoginFlows
+
+Types:
+
+```python
+from beeper_desktop_api.types.bridges import LoginFlowListResponse
+```
+
+Methods:
+
+- <code title="get /v1/bridges/{bridgeID}/login-flows">client.bridges.login_flows.<a href="./src/beeper_desktop_api/resources/bridges/login_flows.py">list</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/bridges/login_flow_list_response.py">LoginFlowListResponse</a></code>
+
+## Logins
+
+Types:
+
+```python
+from beeper_desktop_api.types.bridges import LoginListResponse, LoginRemoveResponse
+```
+
+Methods:
+
+- <code title="get /v1/bridges/{bridgeID}/logins/{loginID}">client.bridges.logins.<a href="./src/beeper_desktop_api/resources/bridges/logins.py">retrieve</a>(login_id, \*, bridge_id) -> <a href="./src/beeper_desktop_api/types/bridge_login.py">BridgeLogin</a></code>
+- <code title="get /v1/bridges/{bridgeID}/logins">client.bridges.logins.<a href="./src/beeper_desktop_api/resources/bridges/logins.py">list</a>(bridge_id) -> <a href="./src/beeper_desktop_api/types/bridges/login_list_response.py">LoginListResponse</a></code>
+- <code title="post /v1/bridges/{bridgeID}/logins/{loginID}/remove">client.bridges.logins.<a href="./src/beeper_desktop_api/resources/bridges/logins.py">remove</a>(login_id, \*, bridge_id, \*\*<a href="src/beeper_desktop_api/types/bridges/login_remove_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/bridges/login_remove_response.py">LoginRemoveResponse</a></code>
+
+## LoginSessions
+
+Types:
+
+```python
+from beeper_desktop_api.types.bridges import LoginSessionCancelResponse
+```
+
+Methods:
+
+- <code title="post /v1/bridges/{bridgeID}/login-sessions">client.bridges.login_sessions.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/login_sessions.py">create</a>(bridge_id, \*\*<a href="src/beeper_desktop_api/types/bridges/login_session_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/login_session.py">LoginSession</a></code>
+- <code title="get /v1/bridges/{bridgeID}/login-sessions/{loginSessionID}">client.bridges.login_sessions.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/login_sessions.py">retrieve</a>(login_session_id, \*, bridge_id) -> <a href="./src/beeper_desktop_api/types/login_session.py">LoginSession</a></code>
+- <code title="delete /v1/bridges/{bridgeID}/login-sessions/{loginSessionID}">client.bridges.login_sessions.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/login_sessions.py">cancel</a>(login_session_id, \*, bridge_id) -> <a href="./src/beeper_desktop_api/types/bridges/login_session_cancel_response.py">LoginSessionCancelResponse</a></code>
+
+### Steps
+
+Methods:
+
+- <code title="post /v1/bridges/{bridgeID}/login-sessions/{loginSessionID}/steps/{stepID}">client.bridges.login_sessions.steps.<a href="./src/beeper_desktop_api/resources/bridges/login_sessions/steps.py">submit</a>(step_id, \*, bridge_id, login_session_id, \*\*<a href="src/beeper_desktop_api/types/bridges/login_sessions/step_submit_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/login_session.py">LoginSession</a></code>
 
 # Chats
 
@@ -84,6 +179,18 @@ Methods:
 
 - <code title="delete /v1/chats/{chatID}/messages/{messageID}/reactions/{reactionKey}">client.chats.messages.reactions.<a href="./src/beeper_desktop_api/resources/chats/messages/reactions.py">delete</a>(reaction_key, \*, chat_id, message_id) -> <a href="./src/beeper_desktop_api/types/chats/messages/reaction_delete_response.py">ReactionDeleteResponse</a></code>
 - <code title="post /v1/chats/{chatID}/messages/{messageID}/reactions">client.chats.messages.reactions.<a href="./src/beeper_desktop_api/resources/chats/messages/reactions.py">add</a>(message_id, \*, chat_id, \*\*<a href="src/beeper_desktop_api/types/chats/messages/reaction_add_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/chats/messages/reaction_add_response.py">ReactionAddResponse</a></code>
+
+# Labels
+
+Types:
+
+```python
+from beeper_desktop_api.types import Label, LabelListResponse
+```
+
+Methods:
+
+- <code title="get /v1/labels">client.labels.<a href="./src/beeper_desktop_api/resources/labels.py">list</a>() -> <a href="./src/beeper_desktop_api/types/label_list_response.py">LabelListResponse</a></code>
 
 # Messages
 
@@ -132,3 +239,119 @@ from beeper_desktop_api.types import InfoRetrieveResponse
 Methods:
 
 - <code title="get /v1/info">client.info.<a href="./src/beeper_desktop_api/resources/info.py">retrieve</a>() -> <a href="./src/beeper_desktop_api/types/info_retrieve_response.py">InfoRetrieveResponse</a></code>
+
+# App
+
+Types:
+
+```python
+from beeper_desktop_api.types import (
+    RecoveryKeyResetResponse,
+    SetupCompleteResponse,
+    SetupRegistrationRequiredResponse,
+    SetupResponseOutput,
+    SetupStateResponse,
+    Verification,
+    VerificationResponse,
+)
+```
+
+## Setup
+
+Types:
+
+```python
+from beeper_desktop_api.types.app import (
+    SetupRetrieveResponse,
+    SetupRegisterResponse,
+    SetupResponseResponse,
+    SetupStartResponse,
+)
+```
+
+Methods:
+
+- <code title="get /v1/app/setup">client.app.setup.<a href="./src/beeper_desktop_api/resources/app/setup/setup.py">retrieve</a>() -> <a href="./src/beeper_desktop_api/types/app/setup_retrieve_response.py">SetupRetrieveResponse</a></code>
+- <code title="post /v1/app/setup/email">client.app.setup.<a href="./src/beeper_desktop_api/resources/app/setup/setup.py">email</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup_email_params.py">params</a>) -> None</code>
+- <code title="post /v1/app/setup/register">client.app.setup.<a href="./src/beeper_desktop_api/resources/app/setup/setup.py">register</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup_register_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup_register_response.py">SetupRegisterResponse</a></code>
+- <code title="post /v1/app/setup/response">client.app.setup.<a href="./src/beeper_desktop_api/resources/app/setup/setup.py">response</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup_response_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup_response_response.py">SetupResponseResponse</a></code>
+- <code title="post /v1/app/setup/start">client.app.setup.<a href="./src/beeper_desktop_api/resources/app/setup/setup.py">start</a>() -> <a href="./src/beeper_desktop_api/types/app/setup_start_response.py">SetupStartResponse</a></code>
+
+### RecoveryKey
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.setup import RecoveryKeyVerifyResponse
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verification/recovery-key">client.app.setup.recovery_key.<a href="./src/beeper_desktop_api/resources/app/setup/recovery_key/recovery_key.py">verify</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup/recovery_key_verify_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup/recovery_key_verify_response.py">RecoveryKeyVerifyResponse</a></code>
+
+#### Reset
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.setup.recovery_key import (
+    ResetCreateResponse,
+    ResetConfirmResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verification/recovery-key/reset">client.app.setup.recovery_key.reset.<a href="./src/beeper_desktop_api/resources/app/setup/recovery_key/reset.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup/recovery_key/reset_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup/recovery_key/reset_create_response.py">ResetCreateResponse</a></code>
+- <code title="post /v1/app/setup/verification/recovery-key/reset/confirm">client.app.setup.recovery_key.reset.<a href="./src/beeper_desktop_api/resources/app/setup/recovery_key/reset.py">confirm</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup/recovery_key/reset_confirm_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup/recovery_key/reset_confirm_response.py">ResetConfirmResponse</a></code>
+
+### Verifications
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.setup import (
+    VerificationCreateResponse,
+    VerificationRetrieveResponse,
+    VerificationListResponse,
+    VerificationAcceptResponse,
+    VerificationCancelResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verifications">client.app.setup.verifications.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/verifications.py">create</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup/verification_create_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup/verification_create_response.py">VerificationCreateResponse</a></code>
+- <code title="get /v1/app/setup/verifications/{verificationID}">client.app.setup.verifications.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/verifications.py">retrieve</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/setup/verification_retrieve_response.py">VerificationRetrieveResponse</a></code>
+- <code title="get /v1/app/setup/verifications">client.app.setup.verifications.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/verifications.py">list</a>() -> <a href="./src/beeper_desktop_api/types/app/setup/verification_list_response.py">VerificationListResponse</a></code>
+- <code title="post /v1/app/setup/verifications/{verificationID}/accept">client.app.setup.verifications.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/verifications.py">accept</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/setup/verification_accept_response.py">VerificationAcceptResponse</a></code>
+- <code title="post /v1/app/setup/verifications/{verificationID}/cancel">client.app.setup.verifications.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/verifications.py">cancel</a>(verification_id, \*\*<a href="src/beeper_desktop_api/types/app/setup/verification_cancel_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup/verification_cancel_response.py">VerificationCancelResponse</a></code>
+
+#### QR
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.setup.verifications import (
+    QRConfirmScannedResponse,
+    QRScanResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verifications/{verificationID}/qr/confirm-scanned">client.app.setup.verifications.qr.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/qr.py">confirm_scanned</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/setup/verifications/qr_confirm_scanned_response.py">QRConfirmScannedResponse</a></code>
+- <code title="post /v1/app/setup/verifications/qr/scan">client.app.setup.verifications.qr.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/qr.py">scan</a>(\*\*<a href="src/beeper_desktop_api/types/app/setup/verifications/qr_scan_params.py">params</a>) -> <a href="./src/beeper_desktop_api/types/app/setup/verifications/qr_scan_response.py">QRScanResponse</a></code>
+
+#### SAS
+
+Types:
+
+```python
+from beeper_desktop_api.types.app.setup.verifications import SASConfirmResponse, SASStartResponse
+```
+
+Methods:
+
+- <code title="post /v1/app/setup/verifications/{verificationID}/sas/confirm">client.app.setup.verifications.sas.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/sas.py">confirm</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/setup/verifications/sas_confirm_response.py">SASConfirmResponse</a></code>
+- <code title="post /v1/app/setup/verifications/{verificationID}/sas/start">client.app.setup.verifications.sas.<a href="./src/beeper_desktop_api/resources/app/setup/verifications/sas.py">start</a>(verification_id) -> <a href="./src/beeper_desktop_api/types/app/setup/verifications/sas_start_response.py">SASStartResponse</a></code>

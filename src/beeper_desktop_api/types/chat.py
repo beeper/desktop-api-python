@@ -1,34 +1,18 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 from datetime import datetime
 from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
+from .label import Label
 from .._models import BaseModel
 from .shared.user import User
+from .shared.chat_draft import ChatDraft
+from .shared.chat_capabilities import ChatCapabilities
 
-__all__ = [
-    "Chat",
-    "Participants",
-    "ParticipantsItem",
-    "Capabilities",
-    "CapabilitiesAttachments",
-    "CapabilitiesDisappearingTimer",
-    "CapabilitiesMessageRequest",
-    "CapabilitiesParticipantActions",
-    "CapabilitiesState",
-    "CapabilitiesStateAvatar",
-    "CapabilitiesStateDescription",
-    "CapabilitiesStateDisappearingTimer",
-    "CapabilitiesStateTitle",
-    "Draft",
-    "DraftAttachments",
-    "DraftAttachmentsSize",
-    "Reminder",
-    "Snooze",
-]
+__all__ = ["Chat", "Participants", "ParticipantsItem", "Merge", "Reminder", "Snooze"]
 
 
 class ParticipantsItem(User):
@@ -38,7 +22,7 @@ class ParticipantsItem(User):
     """True if this participant has admin privileges in the chat."""
 
     is_network_bot: Optional[bool] = FieldInfo(alias="isNetworkBot", default=None)
-    """True if this participant represents a network or bridge bot."""
+    """True if this participant represents an automated network account."""
 
     is_pending: Optional[bool] = FieldInfo(alias="isPending", default=None)
     """True if this participant has been invited but has not joined yet."""
@@ -57,323 +41,20 @@ class Participants(BaseModel):
     """Total number of participants in the chat."""
 
 
-class CapabilitiesAttachments(BaseModel):
-    """Capabilities for one attachment message type."""
-
-    mime_types: Dict[str, Literal[-2, -1, 0, 1, 2]] = FieldInfo(alias="mimeTypes")
-    """Supported MIME types or MIME patterns for this file message type.
-
-    Missing MIME types should be treated as rejected.
+class Merge(BaseModel):
+    """
+    Present when this chat is a merged chat: one person whose conversations across networks (or across accounts on the same network) are grouped into a single chat. A merged chat holds no messages of its own - read messages from the member chats, and send either to a member directly or to the merged chat ID to route automatically.
     """
 
-    caption: Optional[Literal[-2, -1, 0, 1, 2]] = None
+    chat_ids: List[str] = FieldInfo(alias="chatIDs")
+    """Chat IDs of the member chats grouped by this merged chat."""
+
+    default_chat_id: Optional[str] = FieldInfo(alias="defaultChatID", default=None)
     """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
+    Member chat that receives messages sent to the merged chat, when the user has
+    picked one. This preference is per-device; when absent, sends route to the most
+    recently active member.
     """
-
-    max_caption_length: Optional[int] = FieldInfo(alias="maxCaptionLength", default=None)
-    """Maximum caption length when captions are supported."""
-
-    max_duration: Optional[int] = FieldInfo(alias="maxDuration", default=None)
-    """Maximum audio or video duration in seconds."""
-
-    max_height: Optional[int] = FieldInfo(alias="maxHeight", default=None)
-    """Maximum image or video height in pixels."""
-
-    max_size: Optional[int] = FieldInfo(alias="maxSize", default=None)
-    """Maximum file size in bytes."""
-
-    max_width: Optional[int] = FieldInfo(alias="maxWidth", default=None)
-    """Maximum image or video width in pixels."""
-
-    view_once: Optional[bool] = FieldInfo(alias="viewOnce", default=None)
-    """True if this file type can be sent as view-once media."""
-
-
-class CapabilitiesDisappearingTimer(BaseModel):
-    """Disappearing-message timer capabilities."""
-
-    omit_empty_timer: Optional[bool] = FieldInfo(alias="omitEmptyTimer", default=None)
-    """True if empty timer objects should be omitted from message content."""
-
-    timers: Optional[List[int]] = None
-    """Allowed disappearing timer values in milliseconds.
-
-    Omitted means any timer is allowed.
-    """
-
-    types: Optional[List[Literal["afterRead", "afterSend"]]] = None
-    """Supported disappearing timer types."""
-
-
-class CapabilitiesMessageRequest(BaseModel):
-    """Message request capabilities."""
-
-    accept_with_button: Optional[Literal[-2, -1, 0, 1, 2]] = FieldInfo(alias="acceptWithButton", default=None)
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    accept_with_message: Optional[Literal[-2, -1, 0, 1, 2]] = FieldInfo(alias="acceptWithMessage", default=None)
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-
-class CapabilitiesParticipantActions(BaseModel):
-    """Participant management capabilities."""
-
-    ban: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    invite: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    kick: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    leave: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    revoke_invite: Optional[Literal[-2, -1, 0, 1, 2]] = FieldInfo(alias="revokeInvite", default=None)
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-
-class CapabilitiesStateAvatar(BaseModel):
-    """Chat avatar state capability."""
-
-    level: Literal[-2, -1, 0, 1, 2]
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-
-class CapabilitiesStateDescription(BaseModel):
-    """Chat description/topic state capability."""
-
-    level: Literal[-2, -1, 0, 1, 2]
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-
-class CapabilitiesStateDisappearingTimer(BaseModel):
-    """Disappearing-message timer state capability."""
-
-    level: Literal[-2, -1, 0, 1, 2]
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-
-class CapabilitiesStateTitle(BaseModel):
-    """Chat title state capability."""
-
-    level: Literal[-2, -1, 0, 1, 2]
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-
-class CapabilitiesState(BaseModel):
-    """Chat state update capabilities."""
-
-    avatar: Optional[CapabilitiesStateAvatar] = None
-    """Chat avatar state capability."""
-
-    description: Optional[CapabilitiesStateDescription] = None
-    """Chat description/topic state capability."""
-
-    disappearing_timer: Optional[CapabilitiesStateDisappearingTimer] = FieldInfo(
-        alias="disappearingTimer", default=None
-    )
-    """Disappearing-message timer state capability."""
-
-    title: Optional[CapabilitiesStateTitle] = None
-    """Chat title state capability."""
-
-
-class Capabilities(BaseModel):
-    """Chat capabilities reported by the platform."""
-
-    allowed_reactions: Optional[List[str]] = FieldInfo(alias="allowedReactions", default=None)
-    """Allowed Unicode reactions. Omitted means all emoji reactions are allowed."""
-
-    archive: Optional[bool] = None
-    """True if archive/unarchive is supported."""
-
-    attachments: Optional[Dict[str, CapabilitiesAttachments]] = None
-    """
-    Supported attachment message types and their per-type constraints, keyed by
-    Matrix msgtype or pseudo-msgtype (for example m.image, m.video,
-    org.matrix.msc3245.voice). Missing message types should be treated as rejected.
-    """
-
-    custom_emoji_reactions: Optional[bool] = FieldInfo(alias="customEmojiReactions", default=None)
-    """True if custom emoji reactions are supported."""
-
-    delete: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    delete_chat: Optional[bool] = FieldInfo(alias="deleteChat", default=None)
-    """True if deleting chats for the authenticated user is supported."""
-
-    delete_chat_for_everyone: Optional[bool] = FieldInfo(alias="deleteChatForEveryone", default=None)
-    """True if deleting chats for everyone is supported."""
-
-    delete_for_me: Optional[bool] = FieldInfo(alias="deleteForMe", default=None)
-    """True if deleting messages only for the authenticated user is supported."""
-
-    delete_max_age: Optional[int] = FieldInfo(alias="deleteMaxAge", default=None)
-    """Maximum message age for delete-for-everyone, in seconds."""
-
-    disappearing_timer: Optional[CapabilitiesDisappearingTimer] = FieldInfo(alias="disappearingTimer", default=None)
-    """Disappearing-message timer capabilities."""
-
-    edit: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    edit_max_age: Optional[int] = FieldInfo(alias="editMaxAge", default=None)
-    """Maximum message age for edits, in seconds."""
-
-    edit_max_count: Optional[int] = FieldInfo(alias="editMaxCount", default=None)
-    """Maximum number of edits allowed for one message."""
-
-    formatting: Optional[Dict[str, Literal[-2, -1, 0, 1, 2]]] = None
-    """
-    Supported rich-text formatting features keyed by feature name (for example bold,
-    inline_code, code_block.syntax_highlighting). Omitted means no formatting
-    support is advertised.
-    """
-
-    location_message: Optional[Literal[-2, -1, 0, 1, 2]] = FieldInfo(alias="locationMessage", default=None)
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    mark_as_unread: Optional[bool] = FieldInfo(alias="markAsUnread", default=None)
-    """True if marking chats unread is supported."""
-
-    max_text_length: Optional[int] = FieldInfo(alias="maxTextLength", default=None)
-    """Maximum length of normal text messages."""
-
-    message_request: Optional[CapabilitiesMessageRequest] = FieldInfo(alias="messageRequest", default=None)
-    """Message request capabilities."""
-
-    participant_actions: Optional[CapabilitiesParticipantActions] = FieldInfo(alias="participantActions", default=None)
-    """Participant management capabilities."""
-
-    poll: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    reaction: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    reaction_count: Optional[int] = FieldInfo(alias="reactionCount", default=None)
-    """Maximum number of reactions allowed on a single message."""
-
-    read_receipts: Optional[bool] = FieldInfo(alias="readReceipts", default=None)
-    """True if read receipts are supported."""
-
-    reply: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    state: Optional[CapabilitiesState] = None
-    """Chat state update capabilities."""
-
-    thread: Optional[Literal[-2, -1, 0, 1, 2]] = None
-    """
-    -2: rejected, -1: dropped, 0: unsupported, 1: partially supported, 2: fully
-    supported.
-    """
-
-    typing_notifications: Optional[bool] = FieldInfo(alias="typingNotifications", default=None)
-    """True if typing notifications are supported."""
-
-
-class DraftAttachmentsSize(BaseModel):
-    """Pixel dimensions of the attachment."""
-
-    height: Optional[float] = None
-
-    width: Optional[float] = None
-
-
-class DraftAttachments(BaseModel):
-    id: str
-    """Draft attachment identifier."""
-
-    type: Literal["file", "gif", "recorded_audio"]
-    """Draft attachment type. GIF and recorded audio are mutually exclusive types."""
-
-    audio_duration_seconds: Optional[float] = FieldInfo(alias="audioDurationSeconds", default=None)
-    """Audio duration in seconds if known."""
-
-    file_name: Optional[str] = FieldInfo(alias="fileName", default=None)
-    """Original filename if available."""
-
-    file_path: Optional[str] = FieldInfo(alias="filePath", default=None)
-    """Local filesystem path for the draft attachment."""
-
-    file_size: Optional[float] = FieldInfo(alias="fileSize", default=None)
-    """File size in bytes if known."""
-
-    mime_type: Optional[str] = FieldInfo(alias="mimeType", default=None)
-    """MIME type if known."""
-
-    size: Optional[DraftAttachmentsSize] = None
-    """Pixel dimensions of the attachment."""
-
-    sticker_id: Optional[str] = FieldInfo(alias="stickerID", default=None)
-    """Sticker identifier if the draft attachment is a sticker."""
-
-
-class Draft(BaseModel):
-    """Current draft object for this chat, or null when no draft is set."""
-
-    text: str
-    """Matrix HTML draft body."""
-
-    attachments: Optional[Dict[str, DraftAttachments]] = None
-    """Draft attachments keyed by attachment ID."""
 
 
 class Reminder(BaseModel):
@@ -418,13 +99,13 @@ class Chat(BaseModel):
     unread_count: int = FieldInfo(alias="unreadCount")
     """Number of unread messages."""
 
-    capabilities: Optional[Capabilities] = None
+    capabilities: Optional[ChatCapabilities] = None
     """Chat capabilities reported by the platform."""
 
     description: Optional[str] = None
     """Group chat description/topic when available."""
 
-    draft: Optional[Draft] = None
+    draft: Optional[ChatDraft] = None
     """Current draft object for this chat, or null when no draft is set."""
 
     img_url: Optional[str] = FieldInfo(alias="imgURL", default=None)
@@ -448,6 +129,12 @@ class Chat(BaseModel):
     is_read_only: Optional[bool] = FieldInfo(alias="isReadOnly", default=None)
     """True if messages cannot be sent in this chat."""
 
+    labels: Optional[List[Label]] = None
+    """Labels applied to this chat.
+
+    Absent when the chat has none, or when labels are not enabled for this user.
+    """
+
     last_activity: Optional[datetime] = FieldInfo(alias="lastActivity", default=None)
     """Timestamp of last activity."""
 
@@ -455,7 +142,23 @@ class Chat(BaseModel):
     """Last read message sortKey."""
 
     local_chat_id: Optional[str] = FieldInfo(alias="localChatID", default=None)
-    """Local chat ID specific to this Beeper Desktop installation."""
+    """Local chat ID specific to this installation."""
+
+    merge: Optional[Merge] = None
+    """
+    Present when this chat is a merged chat: one person whose conversations across
+    networks (or across accounts on the same network) are grouped into a single
+    chat. A merged chat holds no messages of its own - read messages from the member
+    chats, and send either to a member directly or to the merged chat ID to route
+    automatically.
+    """
+
+    merged_into_chat_id: Optional[str] = FieldInfo(alias="mergedIntoChatID", default=None)
+    """When this chat is a member of a merged chat, the ID of that merged chat.
+
+    Clients that render merged chats as one conversation should list the merged chat
+    and hide chats carrying this field.
+    """
 
     message_expiry_seconds: Optional[int] = FieldInfo(alias="messageExpirySeconds", default=None)
     """Disappearing-message timer in seconds when available."""

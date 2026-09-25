@@ -32,6 +32,6 @@ class Reaction(BaseModel):
     img_url: Optional[str] = FieldInfo(alias="imgURL", default=None)
     """URL to the reaction's image.
 
-    May be temporary or local-only to this device; download promptly if durable
+    May be temporary or available only on this device; download promptly if durable
     access is needed.
     """

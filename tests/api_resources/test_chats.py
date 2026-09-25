@@ -199,6 +199,7 @@ class TestChats:
             account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
+            limit=1,
         )
         assert_matches_type(SyncCursorNoLimit[ChatListResponse], chat, path=["response"])
 
@@ -411,6 +412,7 @@ class TestChats:
             direction="before",
             inbox="primary",
             include_muted=True,
+            label_id="labelID",
             last_activity_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             last_activity_before=parse_datetime("2019-12-27T18:11:19.117Z"),
             limit=1,
@@ -672,6 +674,7 @@ class TestAsyncChats:
             account_ids=["matrix", "discordgo", "local-whatsapp_ba_EvYDBBsZbRQAy3UOSWqG0LuTVkc"],
             cursor="1725489123456|c29tZUltc2dQYWdl",
             direction="before",
+            limit=1,
         )
         assert_matches_type(AsyncCursorNoLimit[ChatListResponse], chat, path=["response"])
 
@@ -884,6 +887,7 @@ class TestAsyncChats:
             direction="before",
             inbox="primary",
             include_muted=True,
+            label_id="labelID",
             last_activity_after=parse_datetime("2019-12-27T18:11:19.117Z"),
             last_activity_before=parse_datetime("2019-12-27T18:11:19.117Z"),
             limit=1,

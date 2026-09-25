@@ -75,7 +75,7 @@ class ContactsResource(SyncAPIResource):
 
           limit: Maximum contacts to return per page.
 
-          query: Optional search query for blended contact lookup.
+          query: Optional search query for contact lookup.
 
           extra_headers: Send extra headers
 
@@ -122,12 +122,17 @@ class ContactsResource(SyncAPIResource):
     ) -> ContactSearchResponse:
         """
         Search contacts on a specific account using merged account contacts, network
-        search, and exact identifier lookup.
+        search, and exact identifier lookup. The exact lookup only runs when the query
+        is a phone number, email address, or username; pass one of those to resolve a
+        specific person.
 
         Args:
           account_id: Account ID this resource belongs to.
 
-          query: Text to search users by. Network-specific behavior.
+          query: Text to search contacts by. A phone number, email address, or username written
+              with a leading @ is additionally looked up as an exact identifier on the
+              network; any other text, such as a bare handle or a person or business name,
+              searches existing contacts only. Matching behavior depends on the network.
 
           extra_headers: Send extra headers
 
@@ -202,7 +207,7 @@ class AsyncContactsResource(AsyncAPIResource):
 
           limit: Maximum contacts to return per page.
 
-          query: Optional search query for blended contact lookup.
+          query: Optional search query for contact lookup.
 
           extra_headers: Send extra headers
 
@@ -249,12 +254,17 @@ class AsyncContactsResource(AsyncAPIResource):
     ) -> ContactSearchResponse:
         """
         Search contacts on a specific account using merged account contacts, network
-        search, and exact identifier lookup.
+        search, and exact identifier lookup. The exact lookup only runs when the query
+        is a phone number, email address, or username; pass one of those to resolve a
+        specific person.
 
         Args:
           account_id: Account ID this resource belongs to.
 
-          query: Text to search users by. Network-specific behavior.
+          query: Text to search contacts by. A phone number, email address, or username written
+              with a leading @ is additionally looked up as an exact identifier on the
+              network; any other text, such as a bare handle or a person or business name,
+              searches existing contacts only. Matching behavior depends on the network.
 
           extra_headers: Send extra headers
 

@@ -70,11 +70,11 @@ class MessagesResource(SyncAPIResource):
     ) -> Message:
         """
         Retrieve a message by final message ID, pendingMessageID, or Matrix event ID.
-        Chat ID may be a Beeper chat ID or local chat ID.
+        chatID may be a Beeper chat ID or a local chat ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -117,8 +117,8 @@ class MessagesResource(SyncAPIResource):
         be edited.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -163,8 +163,8 @@ class MessagesResource(SyncAPIResource):
         Sorted by timestamp.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
@@ -219,8 +219,8 @@ class MessagesResource(SyncAPIResource):
         because messages cannot be deleted while sending.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -307,10 +307,10 @@ class MessagesResource(SyncAPIResource):
           media_types: Filter messages by media types. Use ['any'] for any media type, or specify exact
               types like ['video', 'image']. Omit for no media filtering.
 
-          query: Literal word search (non-semantic). Finds messages containing these EXACT words
-              in any order. Use single words users actually type, not concepts or phrases.
-              Example: use "dinner" not "dinner plans", use "sick" not "health issues". If
-              omitted, returns results filtered only by other parameters.
+          query: Literal word search. Finds messages containing these words in any order. Use
+              words the user actually typed, not inferred concepts. Example: use "dinner"
+              rather than "dinner plans". If omitted, returns results filtered only by the
+              other parameters.
 
           sender: Filter by sender: 'me' (messages sent by the authenticated user), 'others'
               (messages sent by others), or a specific user ID string (user.id).
@@ -373,15 +373,15 @@ class MessagesResource(SyncAPIResource):
         Returns a pending message ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           attachment: Single attachment to send with the message
 
           reply_to_message_id: Provide a message ID to send this as a reply to an existing message
 
-          text: Draft text. Plain text and Markdown are converted to Matrix HTML with the same
-              rules used by send and edit.
+          text: Draft text. Plain text and Markdown are converted to Beeper rich text with the
+              same rules used by send and edit.
 
           extra_headers: Send extra headers
 
@@ -446,11 +446,11 @@ class AsyncMessagesResource(AsyncAPIResource):
     ) -> Message:
         """
         Retrieve a message by final message ID, pendingMessageID, or Matrix event ID.
-        Chat ID may be a Beeper chat ID or local chat ID.
+        chatID may be a Beeper chat ID or a local chat ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -493,8 +493,8 @@ class AsyncMessagesResource(AsyncAPIResource):
         be edited.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -539,8 +539,8 @@ class AsyncMessagesResource(AsyncAPIResource):
         Sorted by timestamp.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           cursor: Opaque pagination cursor; do not inspect. Use together with 'direction'.
 
@@ -595,8 +595,8 @@ class AsyncMessagesResource(AsyncAPIResource):
         because messages cannot be deleted while sending.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -685,10 +685,10 @@ class AsyncMessagesResource(AsyncAPIResource):
           media_types: Filter messages by media types. Use ['any'] for any media type, or specify exact
               types like ['video', 'image']. Omit for no media filtering.
 
-          query: Literal word search (non-semantic). Finds messages containing these EXACT words
-              in any order. Use single words users actually type, not concepts or phrases.
-              Example: use "dinner" not "dinner plans", use "sick" not "health issues". If
-              omitted, returns results filtered only by other parameters.
+          query: Literal word search. Finds messages containing these words in any order. Use
+              words the user actually typed, not inferred concepts. Example: use "dinner"
+              rather than "dinner plans". If omitted, returns results filtered only by the
+              other parameters.
 
           sender: Filter by sender: 'me' (messages sent by the authenticated user), 'others'
               (messages sent by others), or a specific user ID string (user.id).
@@ -751,15 +751,15 @@ class AsyncMessagesResource(AsyncAPIResource):
         Returns a pending message ID.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           attachment: Single attachment to send with the message
 
           reply_to_message_id: Provide a message ID to send this as a reply to an existing message
 
-          text: Draft text. Plain text and Markdown are converted to Matrix HTML with the same
-              rules used by send and edit.
+          text: Draft text. Plain text and Markdown are converted to Beeper rich text with the
+              same rules used by send and edit.
 
           extra_headers: Send extra headers
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..._types import Body, Query, Headers, NotGiven, not_given
+from ..._utils import path_template
 from .contacts import (
     ContactsResource,
     AsyncContactsResource,
@@ -23,6 +24,7 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.account_list_response import AccountListResponse
+from ...types.account_retrieve_response import AccountRetrieveResponse
 
 __all__ = ["AccountsResource", "AsyncAccountsResource"]
 
@@ -54,6 +56,41 @@ class AccountsResource(SyncAPIResource):
         """
         return AccountsResourceWithStreamingResponse(self)
 
+    def retrieve(
+        self,
+        account_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AccountRetrieveResponse:
+        """
+        Get one chat account connected to this Beeper Client API server.
+
+        Args:
+          account_id: Account ID this resource belongs to.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not account_id:
+            raise ValueError(f"Expected a non-empty value for `account_id` but received {account_id!r}")
+        return self._get(
+            path_template("/v1/accounts/{account_id}", account_id=account_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AccountRetrieveResponse,
+        )
+
     def list(
         self,
         *,
@@ -65,8 +102,8 @@ class AccountsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AccountListResponse:
         """
-        List Chat Accounts connected to this Beeper Desktop instance, including bridge
-        metadata and network identity.
+        List chat accounts connected to this Beeper Client API server, including bridge,
+        network, user identity, and connection status.
         """
         return self._get(
             "/v1/accounts",
@@ -104,6 +141,41 @@ class AsyncAccountsResource(AsyncAPIResource):
         """
         return AsyncAccountsResourceWithStreamingResponse(self)
 
+    async def retrieve(
+        self,
+        account_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> AccountRetrieveResponse:
+        """
+        Get one chat account connected to this Beeper Client API server.
+
+        Args:
+          account_id: Account ID this resource belongs to.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not account_id:
+            raise ValueError(f"Expected a non-empty value for `account_id` but received {account_id!r}")
+        return await self._get(
+            path_template("/v1/accounts/{account_id}", account_id=account_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=AccountRetrieveResponse,
+        )
+
     async def list(
         self,
         *,
@@ -115,8 +187,8 @@ class AsyncAccountsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AccountListResponse:
         """
-        List Chat Accounts connected to this Beeper Desktop instance, including bridge
-        metadata and network identity.
+        List chat accounts connected to this Beeper Client API server, including bridge,
+        network, user identity, and connection status.
         """
         return await self._get(
             "/v1/accounts",
@@ -131,6 +203,9 @@ class AccountsResourceWithRawResponse:
     def __init__(self, accounts: AccountsResource) -> None:
         self._accounts = accounts
 
+        self.retrieve = to_raw_response_wrapper(
+            accounts.retrieve,
+        )
         self.list = to_raw_response_wrapper(
             accounts.list,
         )
@@ -145,6 +220,9 @@ class AsyncAccountsResourceWithRawResponse:
     def __init__(self, accounts: AsyncAccountsResource) -> None:
         self._accounts = accounts
 
+        self.retrieve = async_to_raw_response_wrapper(
+            accounts.retrieve,
+        )
         self.list = async_to_raw_response_wrapper(
             accounts.list,
         )
@@ -159,6 +237,9 @@ class AccountsResourceWithStreamingResponse:
     def __init__(self, accounts: AccountsResource) -> None:
         self._accounts = accounts
 
+        self.retrieve = to_streamed_response_wrapper(
+            accounts.retrieve,
+        )
         self.list = to_streamed_response_wrapper(
             accounts.list,
         )
@@ -173,6 +254,9 @@ class AsyncAccountsResourceWithStreamingResponse:
     def __init__(self, accounts: AsyncAccountsResource) -> None:
         self._accounts = accounts
 
+        self.retrieve = async_to_streamed_response_wrapper(
+            accounts.retrieve,
+        )
         self.list = async_to_streamed_response_wrapper(
             accounts.list,
         )

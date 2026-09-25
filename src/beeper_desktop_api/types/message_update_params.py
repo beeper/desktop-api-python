@@ -13,8 +13,8 @@ class MessageUpdateParams(TypedDict, total=False):
     chat_id: Required[Annotated[str, PropertyInfo(alias="chatID")]]
     """Chat ID.
 
-    Input routes also accept the local chat ID from this Beeper Desktop installation
-    when available.
+    Input routes also accept the local chat ID from this installation when
+    available.
     """
 
     text: Required[str]

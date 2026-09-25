@@ -9,10 +9,9 @@ __all__ = ["MessageSendResponse"]
 
 class MessageSendResponse(BaseModel):
     chat_id: str = FieldInfo(alias="chatID")
-    """Chat ID.
+    """Chat the message was actually sent to.
 
-    Input routes also accept the local chat ID from this Beeper Desktop installation
-    when available.
+    When sending to a merged chat, this is the member chat the send was routed to.
     """
 
     pending_message_id: str = FieldInfo(alias="pendingMessageID")

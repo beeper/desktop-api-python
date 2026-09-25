@@ -35,7 +35,7 @@ __all__ = ["AssetsResource", "AsyncAssetsResource"]
 
 
 class AssetsResource(SyncAPIResource):
-    """Manage assets in Beeper Desktop, like message attachments"""
+    """Manage files for message attachments"""
 
     @cached_property
     def with_raw_response(self) -> AssetsResourceWithRawResponse:
@@ -68,11 +68,11 @@ class AssetsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AssetDownloadResponse:
         """
-        Download a Matrix file using its mxc:// or localmxc:// URL to the device running
-        Beeper Desktop and return the local file URL.
+        Download a file from an mxc:// or localmxc:// URL to the device running the
+        Beeper Client API and return the local file URL.
 
         Args:
-          url: Matrix content URL (mxc:// or localmxc://) for the file to download.
+          url: Beeper media URL (mxc:// or localmxc://) for the file to download.
 
           extra_headers: Send extra headers
 
@@ -147,7 +147,7 @@ class AssetsResource(SyncAPIResource):
         """Upload a file to a temporary location using multipart/form-data.
 
         Returns an
-        uploadID that can be referenced when sending a message or materializing a draft
+        uploadID that can be referenced when sending a message or creating a draft
         attachment.
 
         Args:
@@ -204,8 +204,8 @@ class AssetsResource(SyncAPIResource):
         """Upload a file using a JSON body with base64-encoded content.
 
         Returns an uploadID
-        that can be referenced when sending a message or materializing a draft
-        attachment. Alternative to the multipart upload endpoint.
+        that can be referenced when sending a message or creating a draft attachment.
+        Alternative to the multipart upload endpoint.
 
         Args:
           content: Base64-encoded file content (max ~500MB decoded)
@@ -240,7 +240,7 @@ class AssetsResource(SyncAPIResource):
 
 
 class AsyncAssetsResource(AsyncAPIResource):
-    """Manage assets in Beeper Desktop, like message attachments"""
+    """Manage files for message attachments"""
 
     @cached_property
     def with_raw_response(self) -> AsyncAssetsResourceWithRawResponse:
@@ -273,11 +273,11 @@ class AsyncAssetsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AssetDownloadResponse:
         """
-        Download a Matrix file using its mxc:// or localmxc:// URL to the device running
-        Beeper Desktop and return the local file URL.
+        Download a file from an mxc:// or localmxc:// URL to the device running the
+        Beeper Client API and return the local file URL.
 
         Args:
-          url: Matrix content URL (mxc:// or localmxc://) for the file to download.
+          url: Beeper media URL (mxc:// or localmxc://) for the file to download.
 
           extra_headers: Send extra headers
 
@@ -352,7 +352,7 @@ class AsyncAssetsResource(AsyncAPIResource):
         """Upload a file to a temporary location using multipart/form-data.
 
         Returns an
-        uploadID that can be referenced when sending a message or materializing a draft
+        uploadID that can be referenced when sending a message or creating a draft
         attachment.
 
         Args:
@@ -409,8 +409,8 @@ class AsyncAssetsResource(AsyncAPIResource):
         """Upload a file using a JSON body with base64-encoded content.
 
         Returns an uploadID
-        that can be referenced when sending a message or materializing a draft
-        attachment. Alternative to the multipart upload endpoint.
+        that can be referenced when sending a message or creating a draft attachment.
+        Alternative to the multipart upload endpoint.
 
         Args:
           content: Base64-encoded file content (max ~500MB decoded)

@@ -61,8 +61,8 @@ class ReactionsResource(SyncAPIResource):
         Remove the reaction added by the authenticated user from an existing message.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -114,8 +114,8 @@ class ReactionsResource(SyncAPIResource):
         Args:
           chat_id: Chat ID.
 
-        Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+        Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -192,8 +192,8 @@ class AsyncReactionsResource(AsyncAPIResource):
         Remove the reaction added by the authenticated user from an existing message.
 
         Args:
-          chat_id: Chat ID. Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+          chat_id: Chat ID. Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
@@ -245,8 +245,8 @@ class AsyncReactionsResource(AsyncAPIResource):
         Args:
           chat_id: Chat ID.
 
-        Input routes also accept the local chat ID from this Beeper Desktop
-              installation when available.
+        Input routes also accept the local chat ID from this installation when
+              available.
 
           message_id: Message ID.
 
